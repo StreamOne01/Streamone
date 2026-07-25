@@ -104,8 +104,8 @@ http://45.181.122.46:8090/play/a015
 #EXTINF:-1 tvg-id="47" tvg-name="14 ESPN Preemium" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN Preemium 
 http://45.181.122.46:8090/play/a01m
  
-#EXTINF:-1 tvg-id="47" tvg-name="15 TyC Sports 2" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TyC Sports 2
-http://200.91.32.158:8080/tyc2hd/tracks-v1a1/mono.ts.m3u8
+#EXTINF:-1 tvg-id="47" tvg-name="15 TyC Sports " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TyC Sports 2
+http://45.181.87.106/TYCSPORTSHD/index.m3u8
  
 #EXTINF:-1 tvg-id="47" tvg-name="16 Fox Sports" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Fox Sports
 https://futbol9865.ultratv13.workers.dev/deportivo111/78.m3u8

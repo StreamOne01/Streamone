@@ -1,0 +1,552 @@
+#EXTM3U
+ 
+ 
+# **********************************
+# 📺 Canales de TV  Online
+# 🔥 Recopilado por: STREAM ONE
+# 🌐 Contacto: https://whatsapp.com/channel/0029Vb6jeHu5Ejy0YdlsRu1g
+# 🎥 Playlist: https://pastebin.com/raw/CkBupHCy
+# 📲 Compatible con: PC, Mac, iPhone, Android, Linux, Raspberry Pi, Smart TV, etc.
+# **********************************
+ 
+ 
+# ==========================================
+# SECCIÓN: CANALES EN VIVO
+# ==========================================
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="01 Dragon ball Super 1-14" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",Dragon ball Super 1-14
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/526353
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="02 DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",DRAGON BALL TV
+https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="03 24/7 La casa del dragon (Temp 1)" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",24/7 La casa del dragon (Temp 1)
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/526362
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="04 DEPORTES TVC" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",DEPORTES TVC
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/357701
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="05 TNT SERIES " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TNT SERIES 
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/414476
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="06 WIN SPORTS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",WIN SPORTS 
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/167739
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="07 CHILEVISION HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",CHILEVISION HD
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/58287
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="08 El Chavo TV " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",El Chavo TV 
+https://live20.bozztv.com/giatvplayout7/giatv-211465/tracks-v1a1/mono.ts.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="09 Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",Distrito Comedia 
+http://177.234.249.135:8888/DistritoComedia/tracks-v1a1/mono.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="010 Golden Edge" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",Golden Edge 
+http://138.186.23.7:8082/GOLDENEDGE/tracks-v1a1/mono.ts.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="011 TVE Internacional" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TVE Internacional
+https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/tvei_ame_main_1080.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="012 TVE Star HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TVE Star HD
+https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/star_main_dvr_1080.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="013 TNT NOVELAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TNT NOVELAS
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/422647
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="014 C1NEMAX" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",C1NEMAX
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/414457
+ 
+ 
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="001 ESPN Deportes" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN Deportes
+http://40.160.24.58/ESPN_DEPORTES/tracks-v1a1/mono.ts.m3u8
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="01 WINSPORT" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",WINSPORT
+http://181.78.8.199:8000/play/a0cc/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="02 CLARO SPORTS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CLARO SPORTS
+https://dai.google.com/linear/hls/event/yINISWAPQ0CPhPixe-40wQ/master.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="03 ITV DEPORTES" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ITV DEPORTES
+https://thm-it-roku.otteravision.com/thm/it/it.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="04 TUDN USA" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TUDN USA
+https://dcs3-live.mp.lura.live/server/play/08B9B4TW61Rdc58j/manifest.m3u8?encp=zuvPJYoOOdEMDNF2j2mvmg:N2OOXmh9wfa3civuEGrTdnQzVN6KJw_4n9FoAMLcA3UPM32hOZahXZDo9VGE4qp2ctShs4E8hZSHSLYi3aecRFC6QGVV6kzLsVLPkS0fq-4vXFjGV6ONSYepsbhnqVG1&anvauth=tb=0~te=2147483000~sgn=3c466ba83c45a098f05dfac9206881e9d042b57942068ee403094cf98d69a55b&t=1746459401&an=%7B%7BappName%7D%7D&msid=%7B%7BappPackage%7D%7D&app_bundle=%7B%7BappPackage%7D%7D&idtype=%7B%7BIFA_TYPE%7D%7D&rdid=%7B%7BDID%7D%7D&is_lat=%7B%7BDNT%7D%7D&ip=%7B%7BipAddr%7D%7D&user_agent=%7B%7BUserAgent%7D%7D
+ 
+#EXTINF:-1 tvg-id="46" tvg-name="05 BEIN SPORTS ESPAÑOL" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",BEIN SPORTS ESPAÑOL
+https://bein-esp-xumo.amagi.tv:443/playlistR720P.m3u8
+ 
+#EXTINF:-1 tvg-id="46" tvg-name="06 ESPN 1" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 1
+http://181.78.8.199:8000/play/a0b1/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="07 ESPN 2" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 2
+http://181.78.8.199:8000/play/a0b2/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="08 ESPN 3" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 3
+http://181.78.8.199:8000/play/a0b3/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="09 ESPN 4" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 4
+http://181.78.8.199:8000/play/a0do/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="10 ESPN 5" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 5
+http://45.181.122.46:8090/play/a01i
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="11 ESPN 6" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 6
+http://45.181.122.46:8090/play/a01u
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="12 ESPN 7" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN 7
+http://181.78.8.199:8000/play/a08o/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="13 ESPN Preemium HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN Preemium HD
+http://45.181.122.46:8090/play/a015
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="14 ESPN Preemium" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN Preemium 
+http://45.181.122.46:8090/play/a01m
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="15 TyC Sports 2" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TyC Sports 2
+http://200.91.32.158:8080/tyc2hd/tracks-v1a1/mono.ts.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="16 MOTORVISION" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",MOTORVISION
+https://jmp2.uk/stvp-ESBD3200001EG
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="17  FIFA plus" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",FIFA plus
+https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="18  BARCELONA TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",BARCELONA TV
+https://amg17560-fcb-amg17560c2-rakuten-es-4889.playouts.now.amagi.tv/playlist/amg17560-fcbarcelona-topbarcaspanish-rakutenes/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="19  REAL MADRID TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",REAL MADRID TV
+https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="20 Fox Soccer Plus" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Fox Soccer Plus
+http://40.160.24.52/FOX_SOCCER_PLUS/tracks-v1a1/mono.ts.m3u8
+ 
+ 
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="21 DISCOVERY CHANNEL" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DISCOVERY CHANNEL
+http://181.78.8.199:8000/play/a0c4/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="22 DEPELICULA" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DEPELICULA
+http://181.78.8.199:8000/play/a0au/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="23 STAR CHANNEL HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",STAR CHANNEL HD
+http://45.181.122.46:8090/play/a03n
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="24 FX" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",FX
+http://181.78.8.199:8000/play/a0ds/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="25 GOLDEN EDGE" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",GOLDEN EDGE
+http://181.78.8.199:8000/play/a0ab/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="26 GOLDEN " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",GOLDEN 
+http://181.78.8.199:8000/play/a0cj/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="27 CINE MEXICANO HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CINE MEXICANO HD
+http://181.78.8.199:8000/play/a0e1/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="28 Cine Premium HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Cine Premium HD
+http://181.78.8.199:8000/play/a09q/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="29 A&E" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",A&E
+http://181.78.8.199:8000/play/a0ct/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="30 Paramount HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Paramount HD
+http://181.78.8.199:8000/play/a06u/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="31 SONY CHANNEL" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",SONY CHANNEL
+http://181.78.8.199:8000/play/a0ao/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="32 SONY MUVIES" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",SONY MUVIES
+http://181.78.8.199:8000/play/a0ap/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="33 SPACE" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",SPACE
+http://181.78.8.199:8000/play/a096/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="34 USA Latam" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",USA Latam
+http://181.78.8.199:8000/play/a0cl/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="35 UNIVERSAL" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",UNIVERSAL
+http://181.78.8.199:8000/play/a09x/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="36 UNIVERSAL TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",UNIVERSAL TV
+http://181.78.8.199:8000/play/a0cf/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="37 Cine Familiar HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Cine Familiar HD
+http://181.78.8.199:8000/play/a09p/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="38 HBO 2" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HBO 2
+http://45.181.122.46:8090/play/a043
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="39 Family HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Family HD
+http://45.181.122.46:8090/play/a017
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="40 HBO PLUS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HBO PLUS
+http://45.181.122.46:8090/play/a039
+ 
+#EXTINF:-1 tvg-id="16" tvg-name="41 HBO 1" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HBO HD
+http://45.181.122.46:8090/play/a029
+ 
+#EXTINF:-1 tvg-id="17" tvg-name="42 HBO POP " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HBO POP HD
+http://45.181.122.46:8090/play/a00j
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="43 HBO XTREME " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HBO XTREME HD
+http://45.181.122.46:8090/play/a018
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="44 GoUSA TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",GoUSA TV
+https://jmp2.uk/stvp-ESBC27000040I
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="45 Rakuten TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Rakuten TV
+https://jmp2.uk/stvp-ES2600003UM
+ 
+#EXTINF:-1 tvg-id="089" tvg-name="46 SONI CINE" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",SONI CINE
+https://a-cdn.klowdtv.com/live1/cine_720p/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="090" tvg-name="46 Teleseries" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Teleseries
+https://origin.dpsgo.com/ssai/event/f4TrySe8SoiGF8Lu3EIq1g/master.m3u8
+ 
+#EXTINF:-1 tvg-id="090" tvg-name="47 Sony Channel HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Sony Channel HD
+http://138.121.15.230:9002/SONY/tracks-v1a1/mono.m3u8
+ 
+#EXTINF:-1 tvg-id="090" tvg-name="48 WISPTV RETRO" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",WISPTV RETRO
+https://live20.bozztv.com/giatvplayout7/giatv-209595/tracks-v1a1/mono.ts.m3u8
+ 
+ 
+ 
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="56 CARTOONITO" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CARTOONITO 
+http://181.78.8.199:8000/play/a09f/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="57 CARTOON NETWORK " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CARTOON NETWORK 
+http://181.78.8.199:8000/play/a095/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="58 NICKJRL" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",NICKJRL-HD
+http://181.78.8.199:8000/play/a0a0/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="59 Canal Infantil " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Canal Infantil HD
+http://181.78.8.199:8000/play/a09o/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="60 DISNEY CHANNEL " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DISNEY CHANNEL  
+http://181.78.8.199:8000/play/a0dn/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="61 DISNEY JR" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DISNEY JR
+http://181.78.8.199:8000/play/a084/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="62 Discovery Kids" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Discovery Kids
+http://181.78.8.199:8000/play/a070/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="63 ZYOONTV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ZYOONTV
+https://live20.bozztv.com/giatv/giatv-ZYOONTV/ZYOONTV/chunks.m3u8?WebM3UCL
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="64 LOS PITUFOS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",LOS PITUFOS
+https://jmp2.uk/stvp-ESBD130000205
+ 
+ 
+ 
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="76 HCH" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HCH
+https://live.streamhch.com/live/streams/hch1.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="77 LITORAL ATLANTICO" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",LITORAL ATLANTICO
+https://cdn4.streamgato.us:3595/live/litoralhdlive.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="78 Canal 11 Honduras" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Canal 11 Honduras
+https://redirector.rudo.video/hls-video/c54ac2799874375c81c1672abb700870537c5223/canal11hn/canal11hn.smil/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="79 CANAL 5 HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CANAL 5 HD
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/357707
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="80 Lenca TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Lenca TV
+https://lencatelevision.com/hls/0/stream.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="81 CANAL 5 HN SD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CANAL 5 HN SD
+https://mdstrm.com/live-stream-playlist/6287fda8ea3b8b397d1ca2ed.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="82 TSI HN" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TSI HN
+https://mdstrm.com/live-stream-playlist/6287fda8ea3b8b397d1ca2ed.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="83 UNE TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",UNE TV
+https://stream.radiosmundiales.com/hls/globotvhonduras/globotvhonduras.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="84 Telecadena HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Telecadena HD
+http://45.167.2.101:8000/play/a07n/85698726.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="85 Teleceiba" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Teleceiba
+https://teleceiba.com/stream/tlcb720.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="86 Teleceiba HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Teleceiba HD
+https://teleceiba.com/stream/tlcb720.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="87 UNE TV HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",UNE TV
+https://stream.radiosmundiales.com/hls/globotvhonduras/globotvhonduras.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="88 UNE TV HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",UNE TV
+https://stream-gtlc.telecentro.net.ar/hls/canal26hls/0/playlist.m3u8?uid=79df6e2a7737c320a4e0df9d0bd87cf6
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="89 Suyapa TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Suyapa TV
+https://streamingcws30.com/suyapa2/videosuyapa2/chunks.m3u8?nimblesessionid=31753996
+ 
+ 
+ 
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="90 Azteca Internacional " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Azteca Internacional 
+https://dujft6o2exhah.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-0lvc4h1b07aou/mun.m3u8
+ 
+#EXTINF:-1 tvg-id="04" tvg-name="91 TELEMUNDO PUERTO RICO " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TELEMUNDO PUERTO RICO 
+https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream2/master.m3u8
+ 
+#EXTINF:-1 tvg-id="05" tvg-name="92 LAS ESTRELLAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",LAS ESTRELLAS
+https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="93 TELEMUND0 3" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TELEMUND0 3
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/490412
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="94 TELEMUNDO 4" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TELEMUNDO 4
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/490414
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="95 Canal 5 MX" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Canal 5 MX
+http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/135430
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="96 Kanal D Drama" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Kanal D Drama
+http://45.181.122.46:8090/play/a03d
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="97 TELENOVELAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TELENOVELAS
+http://181.78.8.199:8000/play/a0bs/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="98 AXN" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",AXN
+http://181.78.8.199:8000/play/a0am/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="99 Animal Planet" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Animal Planet
+http://181.78.8.199:8000/play/a0by/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="100 Naturaleza" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Naturaleza
+https://jmp2.uk/stvp-ES1600003FF
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="101 Telemax Sonora" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Telemax Sonora
+http://s5.mexside.net:1935/telemax/telemax/chunklist_w586584359.m3u8
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="102 Rakuten TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Rakuten TV
+https://jmp2.uk/stvp-ES2600003UM
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="103 Telemundo HD PR" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Telemundo HD PR
+https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="104 TELEVISA NOVELAS " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TELEVISA NOVELAS 
+https://televisa-televisa-1-it.samsung.wurl.tv/playlist.m3u8?
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="105 CARACOL" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CARACOL 
+http://181.78.8.199:8000/play/a0b0/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="106 RCN MAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",RCN MAS
+https://rcntv-rcnmas-1-us.plex.wurl.tv/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="107 Telemundo Acción" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Telemundo Acción 
+https://d3rciv7av2te5a.cloudfront.net/v1/manifest/3fec3e5cac39a52b2132f9c66c83dae043dc17d4/prod-plex/9f109101-c7f9-4806-a962-7773af05a0d4/0.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="108 Univision 24-7" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Univision 24-7
+http://45.181.122.46:8090/play/a039
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="109 DW Español" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DW Español  
+https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8?PlaylistM3UCL
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="110 CGTN ES HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CGTN ES HD
+https://espanol-livews.cgtn.com/hls/LSveOGBaBw41Ea7ukkVAUdKQ220802LSTexu6xAuFH8VZNBLE1ZNEa220802cd/playlist.m3u8
+ 
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="111 CGTN ES HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CGTN ES HD
+https://rt-esp.rttv.com/live/rtesp/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="112 HISTORY" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HISTORY
+http://181.78.8.199:8000/play/a0an/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="113 HISTORY 2" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",HISTORY 2
+http://181.78.8.199:8000/play/a0cq/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="114 CNN Español" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CNN Español
+http://181.78.8.199:8000/play/a0dt/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="115 Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Distrito Comedia
+http://181.78.8.199:8000/play/a07i/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="116 DHE" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DHE
+http://181.78.8.199:8000/play/a086/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="117 Investigation Discovery" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Investigation Discovery
+http://181.78.8.199:8000/play/a0c5/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="118 Food Network" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Food Network
+http://181.78.8.199:8000/play/a0hu/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="119 Home & Health" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Home & Health
+http://181.78.8.199:8000/play/a071/index.m3u8
+ 
+#EXTINF:-1 tvg-id="01" tvg-name="0120 Ver Red+" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Ver Red+
+https://inforedvos.lcdn.claro.net.co/Content/HLS_HLS_DIR/Live/channel(REDMASHDWEB)/03.m3u8
+ 
+ 
+ 
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="120 Mundo de la Musica TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Mundo de la Musica TV
+https://tv.arkeo.cl:1936/mundodelamusica/mundodelamusica/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="121 Telehit Musica" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Telehit Musica
+http://181.78.8.199:8000/play/a0g7/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="122 Musica HD Reggaeton" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Musica HD Reggaeton
+http://181.78.8.199:8000/play/a09r/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="123 Portal Fox Mix" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Portal Fox Mix
+http://181.78.8.199:8000/play/a09r/index.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="124 Urbano TV CR" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Urbano TV CR
+https://59ef525c24caa.streamlock.net/tvurbano/tvurbano/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="125 Canal 5 santa fe " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Canal 5 santa fe 
+https://stream.arcast.com.ar/c5sf/c5sf/chunklist_w989309702.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="126 Retro Plus TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Retro Plus TV
+https://tls-cl.cdnz.cl/retroplustvuno/live/chunklist_w1567607095.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="128 NOW ROCK" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",NOW ROCK
+https://bit.ly/3B1M54o?/playlist.m3u8
+ 
+#EXTINF:-1 tvg-id="47" tvg-name="129 TRACE URBAN" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TRACE URBAN
+https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playlist/amg01131-tracetvfast-traceurban-rakutenus/playlist.m3u8
+ 
+ 
+ 
+ 
+ 
+ 
+# ==========================================
+# SECCIÓN: PELÍCULAS (VOD)
+# ==========================================
+ 
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BM2IyOTY3MTYtMmZiZS00MmU0LWFlZjctYTM4ZDdkNmUxNjA2XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Todopoderoso 1
+http://ia801404.us.archive.org/24/items/terugi_newairmail_14/14.mp4
+ 
+#EXTINF:-1 tvg-logo="https://es.web.img3.acsta.net/pictures/17/10/17/15/37/4218287.jpg" group-title="Películas:",Saw 8
+https://archive.org/download/JS8SRREGIO_201801/JS8SRREGIO.mkv
+ 
+ 
+#EXTINF:-1 tvg-logo="https://images.cdn1.buscalibre.com/fit-in/360x360/5d/80/5d80c1b97b1f9913571158eab796bd6d.jpg" group-title="Películas:",Prometheus 
+https://archive.org/download/PROMEPELIXMAX1/PROMEPELIXMAX1.mp4
+ 
+#EXTINF:-1 tvg-logo="https://es.web.img3.acsta.net/img/8e/7b/8e7b890aa60af17a1874b3765b10677c.jpg" group-title="Películas:",VOLVER AL FUTURO I 
+http://ia801507.us.archive.org/2/items/R3gR3S04LFvTvR01/R3gR3S0%204L%20FvTvR0%201.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNjMyZWY4ZDEtOWU4Mi00ZWQyLTk1YjktNjc4ZTQxYWFlNmFiXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",VOLVER AL FUTURO 2
+http://archive.org/download/Videoplayback1_20181013/videoplayback%20%281%29.mp4
+ 
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/1/10/Venom_%282018_film%29_poster.png" group-title="Películas:",VENOM 
+http://archive.org/download/V32N2OW23K115/V32N2OW23K11%285%29.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/S/pv-target-images/4f328f9e7ff4937d4ca666612c2a3310227855171daaf1c76f229a3c6a25eaae.jpg" group-title="Películas:",UNA CASA PATAS ARRIBA 
+http://archive.org/download/0trece/6.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://es.web.img2.acsta.net/medias/nmedia/18/91/34/51/20140963.jpg" group-title="Películas:",UN PAPA GENIAL
+http://archive.org/download/ppfpfpffsfjdhdkskjdjdyffybxjdjxdbfjc/ppfpfpffsfjdhdkskjdjdyffybxjdjxdbfjc.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://static.wixstatic.com/media/d61107_92a619eea99143219a66d8d867838a74~mv2.jpg/v1/fill/w_700,h_876,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/d61107_92a619eea99143219a66d8d867838a74~mv2.jpg" group-title="Películas:",Elementos (2023)
+http://archive.org/download/Peliculas-wii/Elementos.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMDZhY2Y4ZGQtODk4MC00NGQwLWFiMWItNzU2M2Q3Nzk2MmVlXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Tetris (2023)
+https://od.lk/s/OTZfNzc3MTU1MDlf/Tetris%20%282023%29%20Online.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BZmE3NzU0ODgtMGVkMi00ZWZiLWJmNGUtOWZkYzA4NjliMWYzXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Un príncipe en Nueva York 1
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismarz%2FComing%20to%20America%20(1988)%20LAT.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BN2NhODZjMTktOGNmOC00OTllLTk3NWItYzNiNmRlNTYwMTcxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Un príncipe en Nueva York 2
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismarz%2F%E2%96%B7%20Ver%20Un%20Pr%C3%ADncipe%20en%20Nueva%20York%202%20Online%20en%20Espa%C3%B1ol%20Latino%20y%20Subtitulado.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BZTg1OTM5NDctM2YyMC00M2ExLWI1MmEtOGFlNTYwYjFjMDdlXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",G.I. Joe 1 (2009)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisarregladas%2F%E2%96%B7%20Ver%20G.I.%20Joe-%20El%20Origen%20de%20Cobra%20Pelicula%20Completa%20Online%20en%20Espa%C3%B1ol%20Latino.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BODUxMGQxMmQtYTYwOC00NTIzLWJiY2EtYzNlMzE3Mjc5NjBmXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Bad Boys 4 (2024)
+https://grrfff66me7t.objectstorage.sa-saopaulo-1.oci.customer-oci.com/n/grrfff66me7t/b/Cubojoselyn/o/reset%2Fpeliculas%2Fjul24%2FVer%20Bad%20Boys-%20Hasta%20la%20muerte%20online%20HD%20-%20Cuevana%202.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNjc0MDFjZmQtMWMxZi00YzY4LWI5N2EtOGQwM2IzZjRkYmY1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",El Ejército de los muertos (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismay%2F%E2%96%B7%20Ver%20El%20Ej%C3%A9rcito%20de%20los%20Muertos%20(2021)%20Pel%C3%ADcula%20Completa%20Online%20Latino.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMWY5MjljNjctZjhjZS00MWY0LTgwYzUtZTJiYTVmMmJkM2E0XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Cruella (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismay%2FCruella.2021.1080p.Latino.mkv.mp4%20at%20Streamtape.com.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BZTkwZTg2OWEtNWM2Yi00MjBkLTg3OWItYjk3Yzc3ZjBiYTlmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Aquellos que desean mi muerte (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismay%2FMixDrop%20-%20Watch%20Aquellos%20que%20desean%20mi%20muerte%20(2021)%201080p%20Latino.mp4
+ 
+#EXTINF:-1 tvg-logo="https://www.sonypictures.com.co/sites/colombia/files/2022-04/UNHOLYTHE2021_Spanish%28LatinAm%29%20%282%29.jpg" group-title="Películas:",Ruega por nosotros (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismay%2FVer%20Ruega%20por%20nosotros%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNzk3NDk5MTItMTJkYS00YmNhLThhOGYtOGM3ZTdjY2E3Nzc3XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Creed II (2018)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisarregladas%2Fparte5%2FVer%20Creed%202-%20La%20leyenda%20de%20Rocky%20(Defendiendo%20el%20legado)%20Online%20(2018)%20-%20REPELIS.mp4
+ 
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKebP9896Tw2a799Zji89otItF5Dn4pxf90y0J7A4r-O1cU7KVoTjUgIM&s=10" group-title="Películas:",Wonder Woman 1984 (2020)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisdic%2Fnuevas%2Fiwonder%201984.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BOWY5OTI0OTQtMWRhOC00YzFjLWIyZTAtMjcyMzc2ZWMxZTNkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Dead Zone (2022)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fene%2FVer%20Dead%20Zone%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull_2.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BOWJiYWMyYTktZThhOS00ZjgxLWE0YTQtZDMyNTQxMjMyYjI2XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Sin novedad en el frente (2022)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2022pelicu%2Foctubr%2FVer%20Sin%20novedad%20en%20el%20frente%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4# 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BYmZjYzM4OTYtMGI1YS00MGRjLWE3ZmItOWY4NzQwNmNiMjI3XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Misterio a la vista (2023)
+https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisabr23%2FVer%20Murder%20Mystery%202%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNTgwMmVlZjgtMDhjMC00ZGU2LTgyNGEtOGM1ZDQ0Y2VmZjdlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",El vuelo de los ladrones (2023)
+https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisabr23%2FVer%20El%20vuelo%20de%20los%20ladrones%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNzQyZWJmYjctYWJjMi00OTE1LTlhOGEtNzJhMDc4MTliMmY3XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Viven (1993)
+https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisabr23%2FVer%20%C2%A1Viven!%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNDEwYWY5ZjEtNjA5OC00ZGEyLWE3YjgtOWRiNmFiNzU0ZGFiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Sangre por sangre (1993)https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisabr23%2FVer%20Sangre%20por%20sangre%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/S/pv-target-images/b9985291e94a1556aa56da8ce34d14c6c82a491f3eef550599d815453278bc05.jpg" group-title="Películas:",Condena brutal (1989)https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisabr23%2FVer%20Condena%20brutal%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://es.web.img2.acsta.net/pictures/15/03/16/10/31/174151.jpg" group-title="Películas:",Ben-Hur (1959)
+https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisabr23%2Fcristianas%2FVer%20Ben-Hur%20(1959)%20Online%20-%20Cuevana%203%20Peliculas%20Online.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BZGI0YWNiYmUtNzRlYi00YWI1LTk1MmEtNzcyOTQzNDM5MTUxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Chupa (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fabril%2FVer%20Chupa%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://pics.filmaffinity.com/extraction_2-640259780-large.jpg" group-title="Películas:",Misión de rescate 2 (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fjunn%2FVer%20Tyler%20Rake%202%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVa4lq_glrBhnJiF4-QSv8JR_ItwKeK153EturGicgG8IK0GWX3iXjH977&s=10" group-title="Películas:",Misión de rescate 1 (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fjunn%2FVer%20Misi%C3%B3n%20de%20rescate%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMGQ3YjMwZDctZTkwNi00NmZjLWEyYmItZGFiYTYyMDUzZjFjXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Super Mario Bros: La película (2023)
+https://od.lk/s/NV8xODUzNTIxNDZf/Super%20Mario%20Bros.%20La%20pel%C3%ADcula%20online%202023%20HD.mp4
+ 
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEex3cuQ7obO5zoviUuL2wuW8tiHIa7-USHMNjpDtwOI-wLHjgabg8bNY&s=10" group-title="Películas:",Los Caballeros del Zodiaco (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fmayooo%2FVer%20Los%20Caballeros%20del%20Zodiaco-%20Saint%20Seiya%20-%20El%20inicio%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsjSRfsAdZZGDh8olBNn8frl66bAEkfBaRNzZJ-yHZRw&s=10" group-title="Películas:",Calabozos y Dragones 2023
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fabril%2FVer%20Calabozos%20%26%20Dragones-%20Honor%20entre%20ladrones%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/original/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" group-title="Películas:",John Wick 4 (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fmayooo%2FVer%20John%20Wick%204%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol_2.mp4
+ 
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5ZfhqiCqjHmJF8NfX2Cccz5jbfmAag7nQVLWUdfPEXS60PvOY3HF2P6em&s=10" group-title="Películas:",Rápidos y furiosos 10 (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fjunn%2FVer%20R%C3%A1pidos%20y%20furiosos%20X%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol_2.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMzQ2MTJiMzQtYzRlNC00MGJkLTg3NWItMWI0YzE1Y2FhZDBlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Guardianes de la galaxia Vol. 3 (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fmayooo%2FVer%20Guardianes%20de%20la%20Galaxia-%20Volumen%203%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMmFlNWJiYjYtODJlNS00ZjNlLWI5NjAtOTEwZjQ3OGVhYjBlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",El exorcista del papa (2023) (2023)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fabril%2FVer%20El%20exorcista%20del%20papa%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 

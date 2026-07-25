@@ -14,26 +14,10 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
  
-#EXTINF:-1 tvg-id="01" tvg-name="01 Dragon ball Super 1-14" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",Dragon ball Super 1-14
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/526353
- 
+
+
 #EXTINF:-1 tvg-id="01" tvg-name="02 DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",DRAGON BALL TV
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
- 
-#EXTINF:-1 tvg-id="01" tvg-name="03 24/7 La casa del dragon (Temp 1)" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",24/7 La casa del dragon (Temp 1)
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/526362
- 
-#EXTINF:-1 tvg-id="01" tvg-name="04 DEPORTES TVC" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",DEPORTES TVC
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/357701
- 
-#EXTINF:-1 tvg-id="01" tvg-name="05 TNT SERIES " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TNT SERIES 
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/414476
- 
-#EXTINF:-1 tvg-id="01" tvg-name="06 WIN SPORTS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",WIN SPORTS 
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/167739
- 
-#EXTINF:-1 tvg-id="01" tvg-name="07 CHILEVISION HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",CHILEVISION HD
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/58287
  
 #EXTINF:-1 tvg-id="01" tvg-name="08 El Chavo TV " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",El Chavo TV 
 https://live20.bozztv.com/giatvplayout7/giatv-211465/tracks-v1a1/mono.ts.m3u8
@@ -49,21 +33,11 @@ https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/tvei_ame_main_1080.m3u8
  
 #EXTINF:-1 tvg-id="01" tvg-name="012 TVE Star HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TVE Star HD
 https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/star_main_dvr_1080.m3u8
- 
-#EXTINF:-1 tvg-id="01" tvg-name="013 TNT NOVELAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TNT NOVELAS
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/422647
- 
-#EXTINF:-1 tvg-id="01" tvg-name="014 C1NEMAX" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",C1NEMAX
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/414457
- 
- 
- 
- 
+  
 #EXTINF:-1 tvg-id="01" tvg-name="001 ESPN Deportes" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN Deportes
 http://40.160.24.58/ESPN_DEPORTES/tracks-v1a1/mono.ts.m3u8
  
- 
-#EXTINF:-1 tvg-id="01" tvg-name="01 WINSPORT" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",WINSPORT
+ #EXTINF:-1 tvg-id="01" tvg-name="01 WINSPORT" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",WINSPORT
 http://181.78.8.199:8000/play/a0cc/index.m3u8
  
 #EXTINF:-1 tvg-id="01" tvg-name="02 CLARO SPORTS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CLARO SPORTS

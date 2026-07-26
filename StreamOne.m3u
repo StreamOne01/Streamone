@@ -441,7 +441,22 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # ==========================================
 # SECCIÓN: PELÍCULAS (VOD)
 # ==========================================
- 
+
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMTRlYmI1NTMtYTVkYi00MjJkLWE3ZGItOThkYTdhNzBhMThhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Enola.Holmes.2020
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/fuego%2FVer%20Pelicula%20Enola%20Holmes%20Online%20Latino%20en%20HD%20-%20Poseidonhdd.com_2.mp4
+
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-8f6Fti6mlXGIhfJQCFpviZ0U-JbGM8dzSIJqLgbwgg&s" group-title="Películas:",Enola Holmes 2
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2022pelicu%2Foctubr%2FVer%20Enola%20Holmes%202%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+
+
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMTQxODE3NjM1Ml5BMl5BanBnXkFtZTcwMzkzNjc4OA@@._V1_QL75_UX190_CR0,0,190,281_.jpg" group-title="Películas:",This Is the End
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisoctubre%2Feste%20es%20el%20fin.mp4
+
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzxoikimrrf_NIUpLvgk82XJSUhMgdlsBPwxYWsKM_ShajzBh7dJnBofI&s=10" group-title="Películas:",La forma del agua (2017)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisarregladas%2Fparte6%2FVer%20pel%C3%ADcula%20La%20forma%20del%20agua%20online%20gratis%20en%20HD%20%E2%80%A2%20Gnula.mp4
+
 #EXTINF:-1 tvg-logo="https://es.web.img3.acsta.net/pictures/20/11/17/18/54/4616136.jpg" group-title="Películas:",La última gran estafa (2020)
 https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisene%2F%E2%96%B7%20Ver%20La%20%C3%9Altima%20Estafa%20(2020)%20Pel%C3%ADcula%20Completa%20Online%20Latino.mp4
  

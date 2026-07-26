@@ -16,37 +16,28 @@
  
  
  
-#EXTINF:-1 tvg-id="01" tvg-name="02 DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",DRAGON BALL TV
+#EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",DRAGON BALL TV
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
  
- 
- 
- 
- 
-#EXTINF:-1 tvg-id="01" tvg-name="06 WIN SPORTS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",WIN SPORTS 
-http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/167739
- 
- 
- 
-#EXTINF:-1 tvg-id="01" tvg-name="08 El Chavo TV " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",El Chavo TV 
+#EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",El Chavo TV 
 https://live20.bozztv.com/giatvplayout7/giatv-211465/tracks-v1a1/mono.ts.m3u8
  
-#EXTINF:-1 tvg-id="01" tvg-name="09 Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",Distrito Comedia 
+#EXTINF:-1 tvg-id="01" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Distrito Comedia 
 http://177.234.249.135:8888/DistritoComedia/tracks-v1a1/mono.m3u8
  
-#EXTINF:-1 tvg-id="01" tvg-name="010 Golden Edge" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",Golden Edge 
+#EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Golden Edge 
 http://138.186.23.7:8082/GOLDENEDGE/tracks-v1a1/mono.ts.m3u8
  
-#EXTINF:-1 tvg-id="01" tvg-name="011 TVE Internacional" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TVE Internacional
+#EXTINF:-1 tvg-id="01" tvg-name="TVE Internacional" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TVE Internacional
 https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/tvei_ame_main_1080.m3u8
  
-#EXTINF:-1 tvg-id="01" tvg-name="012 TVE Star HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TVE Star HD
+#EXTINF:-1 tvg-id="01" tvg-name="TVE Star HD" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TVE Star HD
 https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/star_main_dvr_1080.m3u8
  
-#EXTINF:-1 tvg-id="01" tvg-name="013 TNT NOVELAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",TNT NOVELAS
+#EXTINF:-1 tvg-id="01" tvg-name="TNT NOVELAS" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TNT NOVELAS
 http://15.204.246.24:8080/TNTNovelasHD/index.m3u8
  
-#EXTINF:-1 tvg-id="01" tvg-name="014 C1NEMAX" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES TEMPORALES",C1NEMAX
+#EXTINF:-1 tvg-id="01" tvg-name="CINEMAX" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",CINEMAX
 http://redworld.pro:8880/9XaHB7CcwLEp/yYDKRpkZ5TwW/414457
  
  
@@ -104,7 +95,7 @@ http://45.181.122.46:8090/play/a015
 #EXTINF:-1 tvg-id="47" tvg-name="14 ESPN Preemium" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",ESPN Preemium 
 http://45.181.122.46:8090/play/a01m
  
-#EXTINF:-1 tvg-id="47" tvg-name="15 TyC Sports " tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TyC Sports 2
+#EXTINF:-1 tvg-id="47" tvg-name="15 TyC Sports 2" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",TyC Sports
 http://45.181.87.106/TYCSPORTSHD/index.m3u8
  
 #EXTINF:-1 tvg-id="47" tvg-name="16 Fox Sports" tvg-logo="https://pastebin.com/cache/img/13/14/16/10669722.jpg" group-title="CANALES STREAM ONE",Fox Sports
@@ -451,6 +442,68 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # SECCIÓN: PELÍCULAS (VOD)
 # ==========================================
  
+#EXTINF:-1 tvg-logo="https://es.web.img3.acsta.net/pictures/20/11/17/18/54/4616136.jpg" group-title="Películas:",La última gran estafa (2020)
+https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisene%2F%E2%96%B7%20Ver%20La%20%C3%9Altima%20Estafa%20(2020)%20Pel%C3%ADcula%20Completa%20Online%20Latino.mp4
+ 
+#EXTINF:-1 tvg-logo="https://lumiere-a.akamaihd.net/v1/images/image_b97b56f3.jpeg" group-title="Películas:",Black Widow (2021)
+https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grrfff66me7t/b/Cubojoselyn/o/pelicujulio%2FVer%20Viuda%20negra%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BZGU3OGY4YjktMGFkNy00YzAxLWIzNWMtZDliYmM2Y2YzOTE5XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",La guerra del mañana (2021)
+https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grrfff66me7t/b/Cubojoselyn/o/pelicujulio%2FVer%20La%20guerra%20del%20ma%C3%B1ana%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://pics.filmaffinity.com/Un_jefe_en_paanales_2_Negocios_de_familia-674084720-large.jpg" group-title="Películas:",Un jefe en pañales 2 (2021)
+https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/grrfff66me7t/b/Cubojoselyn/o/pelicujulio%2FVer%20El%20bebe%20jefazo-%20Negocios%20de%20familia%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMTg5N2U4ZTItMjc2NC00NDg2LWIzODYtOWZmNzY5Yzc5MzUxXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_.jpg" group-title="Películas:",365 Dias 1 (2020)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisarregladas%2Fparte2%2FVer%20pel%C3%ADcula%20365%20d%C3%ADas%20online%20gratis%20en%20HD%20%E2%80%A2%20Gnula.mp4
+ 
+#EXTINF:-1 tvg-logo="https://pics.filmaffinity.com/La_Purga_Infinita-594164206-large.jpg" group-title="Películas:",La purga por siempre (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelisjul%2FVer%20La%20Purga-%20Infinita%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/S/pv-target-images/dfd59666ac852c49e8e810afa5ce1e9e1c9bb359ef09ad0254bf3a096e37c27b.jpg" group-title="Películas:",El conjuro 3 (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelisjun%2F%E2%96%B7%20Ver%20El%20Conjuro%203-%20El%20Diablo%20me%20Oblig%C3%B3%20a%20Hacerlo%20(2021)%20Online%20Latino.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/en/3/33/Luca_%282021_film%29.png" group-title="Películas:",Luca (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelisjun%2Fluca.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMjZlYjUwZjItZmQ1ZS00NDU2LWFhNWMtMGRmMmZiMzliY2NhXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Godzilla vs. Kong (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismarz%2FMixDrop%20-%20Watch%20Godzilla.vs.Kong.2021.1080P.Latino.mp4
+ 
+#EXTINF:-1 tvg-logo="https://lumiere-a.akamaihd.net/v1/images/p_rayaandthelastdragon_es_06f8daf0.jpeg" group-title="Películas:",Raya y el último dragón (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismarz%2Fraya%20dragon.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://www.aceprensa.com/wp-content/uploads/2021/03/791373-0-683x1024.jpg" group-title="Películas:",La Liga de la Justicia de Zack Snyder (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismarz%2FZack%20Snyders%20Justice%20League%20(2021)%20LAT_2.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNmJkOGVlZWUtMTBiMC00MjkyLTg4YmYtMDAyZDg1YjhhZWI3XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",After. Almas perdidas (2021
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelisnovi%2F%E2%96%B7%20Ver%20After-%20Almas%20Perdidas%20(2021)%20Pel%C3%ADcula%20Completa%20Online%20Latino.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMjlhMDMyY2ItYjdmZS00NjljLTkwODItZjA4Njc3YjMwZjg3XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Culpable (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelisoctur%2F%E2%96%B7%20Ver%20Culpable%20(2021)%20Pel%C3%ADcula%20Completa%20Online%20Espa%C3%B1ol%20Latino.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BYzYyZTE1YzAtZjJkZS00N2E2LWE5Y2QtYTBkM2JkZDI2OTYxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Free Guy (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelissept%2F%E2%96%B7%20Ver%20Free%20Guy-%20Tomando%20el%20Control%20(2021)%20Pel%C3%ADcula%20Online%20Latino.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BODlhNmZmMjEtNDk0MS00ZjRhLWI0N2QtNjQyZjlhOGRkMzg4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",No respires 2 (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelissept%2F%E2%96%B7%20Ver%20No%20Respires%202%20(2021)%20Pel%C3%ADcula%20Completa%20Online%20Espa%C3%B1ol%20Latino.mp4
+ 
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BYjZhMzg1N2UtNjA5NC00MGZiLTkwMzktYjA5ZDg4ZDlhY2NiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",Escape Room 2 (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelissept%2Fescape%20room%202.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/S/pv-target-images/09372ad220e6d315b6a1779348a486e0ea78f92e602354600dbf981e73203a27.jpg" group-title="Películas:",Maligno (2021)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelissept%2Fmaligno.mp4
+ 
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNmJiODNlYjYtZjRiNy00Nzk0LWE1MjgtZmU2M2JhMTA2OGY4XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",La bala perdida 2 (2022)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2022pelicu%2Fnoviembr%2FVer%20Bala%20perdida%202%20(2022)%20Online%20%E2%80%93%20CineHDPlus.mp4
+ 
+#EXTINF:-1 tvg-logo="https://images.justwatch.com/poster/300921845/s718/the-woman-king.jpg" group-title="Películas:",La mujer rey (2022)
+https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2022pelicu%2Fnoviembr%2FVer%20La%20Mujer%20Rey%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
  
  
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BM2IyOTY3MTYtMmZiZS00MmU0LWFlZjctYTM4ZDdkNmUxNjA2XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Todopoderoso 1
@@ -512,6 +565,9 @@ https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201
 #EXTINF:-1 tvg-logo="https://www.sonypictures.com.co/sites/colombia/files/2022-04/UNHOLYTHE2021_Spanish%28LatinAm%29%20%282%29.jpg" group-title="Películas:",Ruega por nosotros (2021)
 https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelis%2Fpelismay%2FVer%20Ruega%20por%20nosotros%20Online%20Castellano%20Latino%20Subtitulada%20HD%20-%20HDFull.mp4
  
+#EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNWM3NjY2ZDctMGZiYy00OGFlLThkMTktOTY2MDM2YjE2OTliXkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Creed I (2015)
+https://objectstorage.us-ashburn-1.oraclecloud.com/n/idvrlfgimket/b/cubostudio/o/peliculas%2Fpelisfeb23%2FVer%20Creed-%20Coraz%C3%B3n%20de%20campe%C3%B3n%20(2015)%20Online%20Gratis%20en%20HD%20-%20InkaPelis.mp4
+ 
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BNzk3NDk5MTItMTJkYS00YmNhLThhOGYtOGM3ZTdjY2E3Nzc3XkEyXkFqcGc@._V1_.jpg" group-title="Películas:",Creed II (2018)
 https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/pelisarregladas%2Fparte5%2FVer%20Creed%202-%20La%20leyenda%20de%20Rocky%20(Defendiendo%20el%20legado)%20Online%20(2018)%20-%20REPELIS.mp4
  
@@ -570,4 +626,5 @@ https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201
  
 #EXTINF:-1 tvg-logo="https://m.media-amazon.com/images/M/MV5BMmFlNWJiYjYtODJlNS00ZjNlLWI5NjAtOTEwZjQ3OGVhYjBlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" group-title="Películas:",El exorcista del papa (2023) (2023)
 https://objectstorage.us-phoenix-1.oraclecloud.com/n/axa4wow3dcia/b/bucket-20201001-1658/o/2023pelis%2Fabril%2FVer%20El%20exorcista%20del%20papa%20online%20HD%20-%20Cuevana%202%20Espa%C3%B1ol.mp4
+ 
  

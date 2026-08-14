@@ -1,4 +1,4 @@
 [
-  { "user": "admin", "pass": "123456", "type": "master", "status": "active" },
+  { "user": "Admin", "pass": "Admin31101", "type": "master", "status": "active" },
   { "user": "carlos", "pass": "2025", "type": "client", "status": "active" }
 ]

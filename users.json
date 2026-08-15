@@ -7,6 +7,16 @@
     "nombre": "Dueño / Principal", 
     "vence": "N/A" 
   },
+
+    { 
+    "user": "Tablet", 
+    "pass": "010119", 
+    "type": "Cliente", 
+    "status": "active", 
+    "nombre": "Tablet / Cliente", 
+    "vence": "N/A" 
+  },
+  
   { 
     "user": "202627", 
     "pass": "272026", 

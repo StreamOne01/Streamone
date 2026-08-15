@@ -1,53 +1,25 @@
 [
-  { 
-    "user": "admin", 
-    "pass": "010119", 
-    "type": "master", 
-    "status": "active", 
-    "nombre": "Dueño / Principal", 
-    "vence": "N/A" 
+  {
+    "username": "Maestro",
+    "password": "010119",
+    "expiry_date": "N/A"
   },
-
-    { 
-    "user": "Tablet", 
-    "pass": "010119", 
-    "type": "Cliente", 
-    "status": "active", 
-    "nombre": "Tablet / Cliente", 
-    "vence": "16-agosto-2026" 
-  },
-  
-  { 
-    "user": "202627", 
-    "pass": "272026", 
-    "type": "cliente", 
-    "status": "active", 
-    "nombre": "cortecia / cortecia", 
-    "vence": "16-agosto-2026" 
-  },
-  { 
-    "user": "789456", 
-    "pass": "654987", 
-    "type": "cliente", 
-    "status": "active", 
-    "nombre": "cortecia / cortecia", 
-    "vence": "N/A" 
-  },
-
-  { 
-    "user": "Fercho", 
-    "pass": "202526", 
-    "type": "client", 
-    "status": "active", 
-    "nombre": "Fercho (Cuenta Especial)", 
-    "vence": "N/A" 
-  },
-  { 
-    "user": "Jared", 
-    "pass": "889920", 
-    "type": "client", 
-    "status": "inactive", 
-    "nombre": "Jared Garcia (Cuenta Especial)", 
-    "vence": "N/A" 
+  {
+    "username": "Fercho",
+    "password": "202526",
+    "expiry_date": "N/A"
   }
+
+   {
+    "username": "Jared",
+    "password": "202526",
+    "expiry_date": "N/A"
+  }
+
+ {
+    "username": "Table",
+    "password": "202526",
+    "expiry_date": "16-08-2026"
+  }
+  
 ]

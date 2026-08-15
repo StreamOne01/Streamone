@@ -8,12 +8,29 @@
     "vence": "N/A" 
   },
   { 
+    "user": "202627", 
+    "pass": "272026", 
+    "type": "cliente", 
+    "status": "active", 
+    "nombre": "cortecia / cortecia", 
+    "vence": "16-agosto-2026" 
+  },
+  { 
+    "user": "789456", 
+    "pass": "654987", 
+    "type": "cliente", 
+    "status": "active", 
+    "nombre": "cortecia / cortecia", 
+    "vence": "N/A" 
+  },
+
+  { 
     "user": "Fercho", 
     "pass": "202526", 
     "type": "client", 
     "status": "active", 
     "nombre": "Fercho (Cuenta Especial)", 
-    "vence": "30-Agosto-2026" 
+    "vence": "N/A" 
   },
   { 
     "user": "Jared", 
@@ -21,6 +38,6 @@
     "type": "client", 
     "status": "inactive", 
     "nombre": "Jared Garcia (Cuenta Especial)", 
-    "vence": "01-Agosto-2026" 
+    "vence": "N/A" 
   }
 ]

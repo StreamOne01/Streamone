@@ -1,6 +1,6 @@
 [
   { 
-    "user": "Admin", 
+    "user": "admin", 
     "pass": "010119", 
     "type": "master", 
     "status": "active", 

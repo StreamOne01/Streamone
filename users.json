@@ -1,14 +1,5 @@
 [
-  {
-    "username": "carlos",
-    "password": "123"
-  },
-  {
-    "username": "cliente1",
-    "password": "abc"
-  },
-  {
-    "username": "admin",
-    "password": "password123"
-  }
-]]
+  { "username": "Admin", "password": "010119", "expires": "2030-12-31" },
+  { "username": "Fercho", "password": "202526", "expires": "2026-12-31" },
+  { "username": "Jared", "password": "202526", "expires": "2026-09-01" }
+]

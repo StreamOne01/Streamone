@@ -1,25 +1,14 @@
 [
   {
-    "username": "Maestro",
-    "password": "010119",
-    "expiry_date": "N/A"
+    "username": "carlos",
+    "password": "123"
   },
   {
-    "username": "Fercho",
-    "password": "202526",
-    "expiry_date": "N/A"
+    "username": "cliente1",
+    "password": "abc"
+  },
+  {
+    "username": "admin",
+    "password": "password123"
   }
-
-   {
-    "username": "Jared",
-    "password": "202526",
-    "expiry_date": "N/A"
-  }
-
- {
-    "username": "Table",
-    "password": "202526",
-    "expiry_date": "16-08-2026"
-  }
-  
-]
+]]

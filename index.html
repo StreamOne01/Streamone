@@ -332,28 +332,38 @@
             if(!user || !pass) {
                 alert("Por favor ingresa usuario y contraseña.");
                 return;
-            }
+            function parsearM3U(data) {
+            const lines = data.split('\n');
+            let categorias = {};
+            let lastInfo = null;
 
-            try {
-                const response = await fetch(USERS_URL);
-                const users = await response.json();
-                listaUsuariosGlobal = users;
-                const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line || line.startsWith('#') && !line.startsWith('#EXTINF:')) return;
 
-                if (found) {
-                    forzarLandscape();
-                    document.getElementById('logged-username').innerText = found.usuario;
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-container').style.display = 'flex';
+                if (line.startsWith('#EXTINF:')) {
+                    // Extraer grupo
+                    const groupMatch = line.match(/group-title="([^"]+)"/);
+                    let cat = groupMatch ? groupMatch[1].trim() : "General";
+                    // Normalizar: Primera letra mayúscula, resto minúsculas para agrupar bien
+                    cat = cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
+
+                    // Extraer título (lo que va después de la última coma)
+                    const titleParts = line.split(',');
+                    const name = titleParts.length > 1 ? titleParts.slice(1).join(',') : "Sin título";
                     
-                    construirBotonera(found.usuario);
-                    cargarContenidoDirecto();
-                } else {
-                    alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
+                    lastInfo = { title: name.trim(), category: cat, url: '' };
+                    
+                    if (!categorias[cat]) categorias[cat] = [];
+                    categorias[cat].push(lastInfo);
+                } else if (lastInfo && !line.startsWith('#')) {
+                    // Asignar URL al último ítem encontrado
+                    lastInfo.url = line;
+                    lastInfo = null; // Reset para el próximo
                 }
-            } catch (e) {
-                alert("Error de conexión con la base de datos.");
-            }
+            });
+            return categorias;
+        }
         }
 
         function construirBotonera(username) {

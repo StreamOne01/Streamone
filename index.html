@@ -283,20 +283,17 @@
     </div>
 
     <script>
-        // Tu nueva URL de Google Apps Script (Segura y Optimizada)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
 
-        // Reloj en tiempo real
         setInterval(() => {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
 
-        // Rotación automática del fondo cada 6 segundos
         let currentSlide = 0;
         setInterval(() => {
             const slides = document.querySelectorAll('.bg-slide');
@@ -328,7 +325,7 @@
                     document.getElementById('app-container').style.display = 'flex';
                     
                     construirBotonera(found.usuario);
-                    cargarTodoDeGolpe(); // Carga eficiente optimizada en una sola petición
+                    cargarTodoDeGolpe();
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
                 }
@@ -383,7 +380,6 @@
             document.getElementById('videoSeries').pause();
         }
 
-        // Carga eficiente: Descarga canales, películas y series en una sola petición
         async function cargarTodoDeGolpe() {
             try {
                 const res = await fetch(`${SCRIPT_URL}?action=init`);

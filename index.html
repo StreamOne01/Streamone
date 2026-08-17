@@ -3,57 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One</title>
+    <title>Stream One - Home</title>
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js"></script>
     <style>
         :root {
-            --purple-bg: #1a0b2e;
-            --purple-panel: #2d1b4e;
-            --purple-card: #452b75;
+            --bg-dark: #12091f;
+            --card-bg: rgba(45, 27, 78, 0.85);
+            --card-hover: rgba(69, 43, 117, 0.95);
             --accent-orange: #ff6600;
             --text-main: #ffffff;
             --text-dim: #b3a5c9;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            background: linear-gradient(135deg, #1a0b2e 0%, var(--purple-panel) 100%);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             height: 100vh;
-            display: flex;
             overflow: hidden;
         }
 
-        /* Login */
+        /* PANTALLA DE LOGIN */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(26, 11, 46, 0.95);
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
         }
         .login-box {
-            background: var(--purple-card); padding: 40px; border-radius: 20px; text-align: center; width: 320px;
+            background: #452b75; padding: 40px; border-radius: 20px; text-align: center; width: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-        .login-box h2 { color: var(--accent-orange); margin-bottom: 20px; }
-        .login-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #2d1b4e; color: white; }
-        .login-box button { width: 100%; background: var(--accent-orange); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .login-box h2 { color: var(--accent-orange); margin-bottom: 25px; letter-spacing: 1px; }
+        .login-box input {
+            width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: none;
+            background: #2d1b4e; color: white; font-size: 1rem; outline: none;
+        }
+        .login-box button {
+            width: 100%; background: var(--accent-orange); color: white; border: none;
+            padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 15px;
+            transition: opacity 0.2s;
+        }
+        .login-box button:hover { opacity: 0.9; }
 
-        /* App */
-        #app-container { width: 100%; height: 100vh; display: none; }
-        #sidebar { width: 300px; background: rgba(0,0,0,0.3); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); overflow-y: auto; }
-        .menu-logo { font-size: 1.3rem; font-weight: bold; margin-bottom: 30px; color: var(--accent-orange); }
-        .nav-item { background: var(--purple-card); padding: 15px 20px; margin-bottom: 10px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; display: flex; justify-content: space-between; align-items: center; }
-        .nav-item:hover, .nav-item.active { border-color: var(--accent-orange); background: #5a3a96; }
-        #main-content { flex: 1; padding: 30px; overflow-y: auto; }
-        .channel-card { background: var(--purple-card); padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; cursor: pointer; }
-        .channel-card:hover { background: #5a3a96; border: 1px solid var(--accent-orange); }
-        #player-side { width: 420px; background: rgba(0,0,0,0.4); padding: 25px; border-left: 1px solid rgba(255,255,255,0.1); }
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        /* INTERFAZ PRINCIPAL TIPO SMART TV (HOME) */
+        #app-container {
+            display: none;
+            width: 100%; height: 100vh;
+            flex-direction: column;
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+        }
+
+        /* Capa oscura semitransparente sobre el fondo para legibilidad */
+        #app-container::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(18, 9, 31, 0.75);
+            z-index: 1;
+        }
+
+        /* Header Superior */
+        .top-header {
+            position: relative; z-index: 2;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 30px 50px;
+        }
+        .brand-logo { font-size: 1.5rem; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .brand-logo span { color: var(--accent-orange); }
+        .header-right { display: flex; align-items: center; gap: 20px; font-size: 1.1px; color: var(--text-dim); }
+        #clock { font-size: 1.2rem; font-weight: 600; color: var(--text-main); }
+
+        /* Banner Central / Información */
+        .hero-banner {
+            position: relative; z-index: 2;
+            padding: 20px 50px;
+            max-width: 700px;
+            margin-top: 20px;
+        }
+        .hero-banner h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
+        .hero-banner .meta { color: var(--accent-orange); font-size: 1rem; font-weight: bold; margin-bottom: 15px; }
+        .hero-banner p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+
+        /* Botonera Inferior (Grid de Tarjetas) */
+        .bottom-nav {
+            position: absolute; bottom: 40px; left: 50px; right: 50px;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+        .menu-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
+        }
+        .menu-card:hover, .menu-card.active {
+            background: var(--card-hover);
+            border-color: var(--accent-orange);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 102, 0, 0.3);
+        }
+        .menu-card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+        .menu-card span { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+
+        /* VISTAS INTERNAS (Live TV / Cotizador) */
+        .sub-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            z-index: 10;
+            display: none;
+            padding: 40px;
+            flex-direction: column;
+        }
+        .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        /* Contenedor de Canales */
+        .channels-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; }
+        .channels-list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .channel-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .channel-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
+        .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Cotizador Panel */
+        .cotizador-box { background: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 600px; margin: 0 auto; width: 100%; }
+        .cotizador-box input, .cotizador-box select { width: 100%; padding: 12px; margin: 10px 0 20px 0; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; }
     </style>
 </head>
 <body>
 
+    <!-- PANTALLA DE LOGIN -->
     <div id="login-screen">
         <div class="login-box">
             <h2>STREAM ONE</h2>
@@ -63,22 +149,89 @@
         </div>
     </div>
 
+    <!-- HOME PRINCIPAL (ESTILO SMART TV / PURPLE LITE) -->
     <div id="app-container">
-        <div id="sidebar">
-            <div class="menu-logo">STREAM ONE</div>
-            <div class="nav-item active" onclick="location.reload()">🏠 Menú Principal</div>
-            <div id="categories-container"></div>
+        <!-- Header -->
+        <div class="top-header">
+            <div class="brand-logo">📺 STREAM <span>ONE</span></div>
+            <div class="header-right">
+                <span id="date-display">Sat 10/12</span>
+                <span id="clock">15:24</span>
+            </div>
         </div>
-        <div id="main-content">
-            <h1 id="title-display" style="color:var(--accent-orange); margin-bottom:20px;">Selecciona una categoría</h1>
-            <div id="channels-container"></div>
+
+        <!-- Banner Central Informativo -->
+        <div class="hero-banner">
+            <h1 id="hero-title">Stream One Pro</h1>
+            <div class="meta">Plataforma Multimedia & Herramientas</div>
+            <p>Selecciona una opción en el menú inferior para acceder a la televisión en vivo, gestionar tus cotizaciones o explorar el contenido disponible.</p>
         </div>
-        <div id="player-side">
-            <h3>Reproductor Integrado</h3>
-            <div class="video-box">
+
+        <!-- Botonera Inferior Estilo Smart TV -->
+        <div class="bottom-nav">
+            <div class="menu-card" onclick="alert('Función de Búsqueda')">
+                <i class="icon">🔍</i>
+                <span>Search</span>
+            </div>
+            <div class="menu-card" onclick="abrirLiveTV()">
+                <i class="icon">📺</i>
+                <span>Live TV</span>
+            </div>
+            <div class="menu-card" onclick="alert('Guía EPG Próximamente')">
+                <i class="icon">📅</i>
+                <span>EPG</span>
+            </div>
+            <div class="menu-card" onclick="abrirCotizador()">
+                <i class="icon">📊</i>
+                <span>Cotizador</span>
+            </div>
+            <div class="menu-card" onclick="alert('Sección de Series')">
+                <i class="icon">🎬</i>
+                <span>Series</span>
+            </div>
+            <div class="menu-card" onclick="location.reload()">
+                <i class="icon">🚪</i>
+                <span>Salir</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA DE LIVE TV (REPRODUCTOR DE CANALES) -->
+    <div id="livetv-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Televisión en Vivo</h2>
+            <div></div>
+        </div>
+        <div class="channels-layout">
+            <div class="channels-list-box" id="channels-container">
+                <!-- Se llena con JS -->
+            </div>
+            <div class="video-panel">
                 <video id="videoElement" controls autoplay></video>
             </div>
-            <h4 id="playing-title">Ningún canal seleccionado</h4>
+        </div>
+    </div>
+
+    <!-- VISTA DE COTIZADOR -->
+    <div id="cotizador-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Cotizador de Servicios</h2>
+            <div></div>
+        </div>
+        <div class="cotizador-box">
+            <h3>Calculadora de Costos</h3>
+            <label>Descripción del trabajo / Cliente:</label>
+            <input type="text" id="clientName" placeholder="Nombre del cliente">
+            <label>Tipo de servicio:</label>
+            <select id="serviceType">
+                <option value="instalacion">Instalación de Fibra / Cable</option>
+                <option value="soporte">Soporte Técnico Residencial</option>
+            </select>
+            <label>Costo Base ($):</label>
+            <input type="number" id="basePrice" placeholder="0.00">
+            <button class="login-box button" style="width:100%; margin-top:10px;" onclick="alert('Cotización generada con éxito')">Generar y Calcular</button>
         </div>
     </div>
 
@@ -87,9 +240,21 @@
         let channelsData = [];
         let mpegtsPlayer = null;
 
+        // Reloj en tiempo real estilo TV
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, 1000);
+
+        // Login conectado a Google Sheet
         async function realizarLogin() {
             const user = document.getElementById('userInput').value;
             const pass = document.getElementById('passInput').value;
+
+            if(!user || !pass) {
+                alert("Por favor ingresa usuario y contraseña.");
+                return;
+            }
 
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -108,64 +273,83 @@
             }
         }
 
+        // Navegación de vistas
+        function abrirLiveTV() {
+            document.getElementById('livetv-view').style.display = 'flex';
+        }
+
+        function abrirCotizador() {
+            document.getElementById('cotizador-view').style.display = 'flex';
+        }
+
+        function cerrarSubViews() {
+            document.getElementById('livetv-view').style.display = 'none';
+            document.getElementById('cotizador-view').style.display = 'none';
+            if (mpegtsPlayer) {
+                mpegtsPlayer.destroy();
+                mpegtsPlayer = null;
+            }
+        }
+
+        // Carga de M3U
         async function loadPlaylist() {
-            const response = await fetch('StreamOne.m3u');
-            const data = await response.text();
-            parseM3U(data);
+            try {
+                const response = await fetch('StreamOne.m3u');
+                const data = await response.text();
+                parseM3U(data);
+            } catch (error) {
+                console.error("Error al cargar la lista M3U", error);
+            }
         }
 
         function parseM3U(data) {
             const lines = data.split('\n');
             let cat = "General";
+            channelsData = [];
             lines.forEach(line => {
                 if (line.startsWith('#EXTINF:')) {
                     const match = line.match(/group-title="([^"]+)"/);
                     if (match) cat = match[1];
                     const name = line.split(',')[1];
-                    channelsData.push({ title: name, category: cat, url: '' });
+                    channelsData.push({ title: name ? name.trim() : "Canal", category: cat, url: '' });
                 } else if (line.trim() && !line.startsWith('#')) {
-                    channelsData[channelsData.length - 1].url = line.trim();
+                    if (channelsData.length > 0) {
+                        channelsData[channelsData.length - 1].url = line.trim();
+                    }
                 }
             });
-            render();
+            renderChannels();
         }
 
-        function render() {
-            const container = document.getElementById('categories-container');
-            const cats = [...new Set(channelsData.map(c => c.category))];
-            cats.forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'nav-item';
-                div.innerHTML = `<span>${c}</span>`;
-                div.onclick = () => filter(c);
-                container.appendChild(div);
-            });
-        }
-
-        function filter(cat) {
-            document.getElementById('title-display').innerText = cat;
+        function renderChannels() {
             const container = document.getElementById('channels-container');
             container.innerHTML = '';
-            channelsData.filter(c => c.category === cat).forEach(ch => {
+            channelsData.forEach(ch => {
                 const div = document.createElement('div');
-                div.className = 'channel-card';
-                div.innerHTML = `<span>${ch.title}</span>`;
-                div.onclick = () => play(ch);
+                div.className = 'channel-row';
+                div.innerHTML = `<strong>${ch.title}</strong><br><small style="color:var(--text-dim);">${ch.category}</small>`;
+                div.onclick = () => playChannel(ch);
                 container.appendChild(div);
             });
         }
 
-        function play(ch) {
-            document.getElementById('playing-title').innerText = ch.title;
+        function playChannel(ch) {
             const videoElement = document.getElementById('videoElement');
-            if (mpegtsPlayer) mpegtsPlayer.destroy();
-            if (ch.url.includes('.ts')) {
-                mpegtsPlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: ch.url });
-                mpegtsPlayer.attachMediaElement(videoElement);
-                mpegtsPlayer.load();
-                mpegtsPlayer.play();
+            if (mpegtsPlayer) {
+                mpegtsPlayer.destroy();
+                mpegtsPlayer = null;
+            }
+            if (ch.url.includes('.ts') || ch.url.includes(':8080')) {
+                if (mpegts.getFeatureList().mseLivePlayback) {
+                    mpegtsPlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: ch.url });
+                    mpegtsPlayer.attachMediaElement(videoElement);
+                    mpegtsPlayer.load();
+                    mpegtsPlayer.play().catch(e => console.log(e));
+                }
             } else {
                 videoElement.src = ch.url;
+                videoElement.load();
+                videoElement.play().catch(e => console.log(e));
             }
         }
     </script>

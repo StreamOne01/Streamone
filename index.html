@@ -55,7 +55,6 @@
             overflow: hidden;
         }
 
-        /* Capas del carrusel de fondo */
         .bg-slide {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center;
@@ -63,9 +62,7 @@
             transition: opacity 1.5s ease-in-out;
             z-index: 0;
         }
-        .bg-slide.active {
-            opacity: 1;
-        }
+        .bg-slide.active { opacity: 1; }
 
         #app-container::before {
             content: '';
@@ -188,7 +185,7 @@
                 <div class="user-greeting">👤 <span id="logged-username">Usuario</span></div>
                 <div class="search-container">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar..." oninput="filtrarGlobal(this.value)">
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar canal..." oninput="filtrarGlobal(this.value)">
                 </div>
                 <span id="clock">15:24</span>
                 <button class="logout-btn" onclick="location.reload()">Salir</button>
@@ -198,7 +195,7 @@
         <div class="hero-banner">
             <h1 id="hero-title">Stream One Pro</h1>
             <div class="meta">Panel Multimedia Inteligente</div>
-            <p>Disfruta de la mejor experiencia de entretenimiento con cambio dinámico de fondos en tiempo real.</p>
+            <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido independiente.</p>
         </div>
 
         <div class="bottom-nav" id="bottom-nav-grid"></div>
@@ -286,18 +283,17 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgZNMZUmhU0_LDZ3KlR70he0gjY0fvVyh7AkCxZO_CkWxJ52OYf41CLyjquRu2hc2jJA/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
+        
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
 
-        // Reloj en tiempo real
         setInterval(() => {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
 
-        // Rotación automática del fondo cada 6 segundos
         let currentSlide = 0;
         setInterval(() => {
             const slides = document.querySelectorAll('.bg-slide');
@@ -329,7 +325,7 @@
                     document.getElementById('app-container').style.display = 'flex';
                     
                     construirBotonera(found.usuario);
-                    cargarContenidosIndependientes();
+                    cargarTodoDeGolpe();
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
                 }
@@ -384,30 +380,25 @@
             document.getElementById('videoSeries').pause();
         }
 
-        async function cargarContenidosIndependientes() {
+        async function cargarTodoDeGolpe() {
             try {
-                const res = await fetch('StreamOne.m3u');
-                const text = await res.text();
-                channelsData = parsearM3U(text);
-                renderizarLista('channels-container', channelsData, 'videoLive');
-            } catch(e) { console.error("Error cargando TV", e); }
+                const res = await fetch(`${SCRIPT_URL}?action=init`);
+                const json = await res.json();
 
-            try {
-                const res = await fetch('movies.m3u');
-                const text = await res.text();
-                moviesData = parsearM3U(text);
-                renderizarLista('movies-container', moviesData, 'videoMovie');
-            } catch(e) { 
-                document.getElementById('movies-container').innerHTML = '<div style="color:var(--text-dim); padding:20px;">Sube tu archivo movies.m3u al repositorio</div>';
-            }
-
-            try {
-                const res = await fetch('series.m3u');
-                const text = await res.text();
-                seriesData = parsearM3U(text);
-                renderizarLista('series-container', seriesData, 'videoSeries');
-            } catch(e) { 
-                document.getElementById('series-container').innerHTML = '<div style="color:var(--text-dim); padding:20px;">Sube tu archivo series.m3u al repositorio</div>';
+                if (json.canales) {
+                    channelsData = parsearM3U(json.canales);
+                    renderizarLista('channels-container', channelsData, 'videoLive');
+                }
+                if (json.peliculas) {
+                    moviesData = parsearM3U(json.peliculas);
+                    renderizarLista('movies-container', moviesData, 'videoMovie');
+                }
+                if (json.series) {
+                    seriesData = parsearM3U(json.series);
+                    renderizarLista('series-container', seriesData, 'videoSeries');
+                }
+            } catch(e) {
+                console.error("Error en la carga optimizada:", e);
             }
         }
 

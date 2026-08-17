@@ -46,7 +46,7 @@
         }
         .login-box button:hover { opacity: 0.9; }
 
-        /* INTERFAZ PRINCIPAL TIPO SMART TV (HOME) */
+        /* INTERFAZ PRINCIPAL (HOME) */
         #app-container {
             display: none;
             width: 100%; height: 100vh;
@@ -66,14 +66,23 @@
         .top-header {
             position: relative; z-index: 2;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 30px 50px;
+            padding: 25px 50px;
         }
         .brand-logo { font-size: 1.5rem; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
         .brand-logo span { color: var(--accent-orange); }
+        
         .header-right { display: flex; align-items: center; gap: 20px; color: var(--text-dim); }
-        #clock { font-size: 1.2rem; font-weight: 600; color: var(--text-main); }
+        .user-greeting { background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; color: var(--text-main); border: 1px solid rgba(255,255,255,0.05); }
+        .search-container { position: relative; display: flex; align-items: center; }
+        .search-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px 6px 32px; border-radius: 15px; color: white; font-size: 0.85rem; outline: none; width: 150px; transition: 0.3s; }
+        .search-input:focus { width: 220px; border-color: var(--accent-orange); }
+        .search-icon { position: absolute; left: 10px; font-size: 0.85rem; color: var(--text-dim); }
+        
+        #clock { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
+        .logout-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-dim); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .logout-btn:hover { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
 
-        /* Banner Central / Información */
+        /* Banner Central */
         .hero-banner {
             position: relative; z-index: 2;
             padding: 20px 50px;
@@ -84,12 +93,12 @@
         .hero-banner .meta { color: var(--accent-orange); font-size: 1rem; font-weight: bold; margin-bottom: 15px; }
         .hero-banner p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
 
-        /* Botonera Inferior (Grid de Tarjetas) */
+        /* Botonera Inferior (Ajustada a 5 opciones principales sin EPG ni Search grande) */
         .bottom-nav {
             position: absolute; bottom: 40px; left: 50px; right: 50px;
             z-index: 2;
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 20px;
         }
         .menu-card {
@@ -136,6 +145,7 @@
 </head>
 <body>
 
+    <!-- LOGIN -->
     <div id="login-screen">
         <div class="login-box">
             <h2>STREAM ONE</h2>
@@ -145,49 +155,33 @@
         </div>
     </div>
 
+    <!-- HOME PRINCIPAL -->
     <div id="app-container">
         <div class="top-header">
             <div class="brand-logo">📺 STREAM <span>ONE</span></div>
             <div class="header-right">
-                <span id="date-display">Sat 10/12</span>
+                <div class="user-greeting">👤 <span id="logged-username">Usuario</span></div>
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar canal..." oninput="filtrarGlobal(this.value)">
+                </div>
                 <span id="clock">15:24</span>
+                <button class="logout-btn" onclick="location.reload()">Salir</button>
             </div>
         </div>
 
         <div class="hero-banner">
             <h1 id="hero-title">Stream One Pro</h1>
-            <div class="meta">Plataforma Multimedia & Herramientas</div>
-            <p>Selecciona una opción en el menú inferior para acceder a la televisión en vivo, gestionar tus cotizaciones o explorar el contenido disponible.</p>
+            <div class="meta">Panel Multimedia Inteligente</div>
+            <p>Selecciona una opción en el menú inferior para acceder a la televisión en vivo, consultar películas, series o tu panel de control administrativo.</p>
         </div>
 
-        <div class="bottom-nav">
-            <div class="menu-card" onclick="alert('Función de Búsqueda')">
-                <i class="icon">🔍</i>
-                <span>Search</span>
-            </div>
-            <div class="menu-card" onclick="abrirLiveTV()">
-                <i class="icon">📺</i>
-                <span>Live TV</span>
-            </div>
-            <div class="menu-card" onclick="alert('Guía EPG Próximamente')">
-                <i class="icon">📅</i>
-                <span>EPG</span>
-            </div>
-            <div class="menu-card" onclick="abrirCotizador()">
-                <i class="icon">📊</i>
-                <span>Cotizador</span>
-            </div>
-            <div class="menu-card" onclick="alert('Sección de Series')">
-                <i class="icon">🎬</i>
-                <span>Series</span>
-            </div>
-            <div class="menu-card" onclick="location.reload()">
-                <i class="icon">🚪</i>
-                <span>Salir</span>
-            </div>
+        <div class="bottom-nav" id="bottom-nav-grid">
+            <!-- Se carga dinámicamente según sea admin o usuario normal -->
         </div>
     </div>
 
+    <!-- VISTA LIVE TV -->
     <div id="livetv-view" class="sub-view">
         <div class="sub-view-header">
             <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
@@ -202,10 +196,35 @@
         </div>
     </div>
 
+    <!-- VISTA PELÍCULAS -->
+    <div id="movies-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Películas</h2>
+            <div></div>
+        </div>
+        <div style="text-align: center; color: var(--text-dim); margin-top: 50px;">
+            <h3>Sección de Películas en desarrollo</h3>
+        </div>
+    </div>
+
+    <!-- VISTA SERIES -->
+    <div id="series-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Series</h2>
+            <div></div>
+        </div>
+        <div style="text-align: center; color: var(--text-dim); margin-top: 50px;">
+            <h3>Sección de Series en desarrollo</h3>
+        </div>
+    </div>
+
+    <!-- VISTA COTIZADOR (SOLO ADMIN) -->
     <div id="cotizador-view" class="sub-view">
         <div class="sub-view-header">
             <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Cotizador de Servicios</h2>
+            <h2 style="color: var(--accent-orange);">Cotizador & Panel Admin</h2>
             <div></div>
         </div>
         <div class="cotizador-box">
@@ -227,6 +246,7 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgZNMZUmhU0_LDZ3KlR70he0gjY0fvVyh7AkCxZO_CkWxJ52OYf41CLyjquRu2hc2jJA/exec';
         let channelsData = [];
         let mpegtsPlayer = null;
+        let currentUserObj = null;
 
         setInterval(() => {
             const now = new Date();
@@ -248,8 +268,12 @@
                 const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
 
                 if (found) {
+                    currentUserObj = found;
+                    document.getElementById('logged-username').innerText = found.usuario;
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-container').style.display = 'flex';
+                    
+                    construirBotonera(found.usuario);
                     loadPlaylist();
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
@@ -259,17 +283,45 @@
             }
         }
 
-        function abrirLiveTV() {
-            document.getElementById('livetv-view').style.display = 'flex';
+        // Construir menú inferior dinámico (oculta el cotizador si no es admin, ej: usuario 'admin')
+        function construirBotonera(username) {
+            const grid = document.getElementById('bottom-nav-grid');
+            grid.innerHTML = `
+                <div class="menu-card" onclick="abrirLiveTV()">
+                    <i class="icon">📺</i>
+                    <span>Live TV</span>
+                </div>
+                <div class="menu-card" onclick="abrirPeliculas()">
+                    <i class="icon">🎬</i>
+                    <span>Movies</span>
+                </div>
+                <div class="menu-card" onclick="abrirSeries()">
+                    <i class="icon">🍿</i>
+                    <span>Series</span>
+                </div>
+            `;
+
+            // Condición para mostrar el Cotizador solo al usuario administrador (puedes cambiar 'admin' por tu usuario exacto de Google Sheets)
+            if (username.toLowerCase() === 'admin') {
+                grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+                grid.innerHTML += `
+                    <div class="menu-card" onclick="abrirCotizador()">
+                        <i class="icon">📊</i>
+                        <span>Cotizador</span>
+                    </div>
+                `;
+            } else {
+                grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            }
         }
 
-        function abrirCotizador() {
-            document.getElementById('cotizador-view').style.display = 'flex';
-        }
+        function abrirLiveTV() { document.getElementById('livetv-view').style.display = 'flex'; }
+        function abrirPeliculas() { document.getElementById('movies-view').style.display = 'flex'; }
+        function abrirSeries() { document.getElementById('series-view').style.display = 'flex'; }
+        function abrirCotizador() { document.getElementById('cotizador-view').style.display = 'flex'; }
 
         function cerrarSubViews() {
-            document.getElementById('livetv-view').style.display = 'none';
-            document.getElementById('cotizador-view').style.display = 'none';
+            document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
             if (mpegtsPlayer) {
                 mpegtsPlayer.destroy();
                 mpegtsPlayer = null;
@@ -302,19 +354,27 @@
                     }
                 }
             });
-            renderChannels();
+            renderChannels(channelsData);
         }
 
-        function renderChannels() {
+        function renderChannels(lista) {
             const container = document.getElementById('channels-container');
             container.innerHTML = '';
-            channelsData.forEach(ch => {
+            lista.forEach(ch => {
                 const div = document.createElement('div');
                 div.className = 'channel-row';
                 div.innerHTML = `<strong>${ch.title}</strong><br><small style="color:var(--text-dim);">${ch.category}</small>`;
                 div.onclick = () => playChannel(ch);
                 container.appendChild(div);
             });
+        }
+
+        function filtrarGlobal(query) {
+            const filtrados = channelsData.filter(ch => ch.title.toLowerCase().includes(query.toLowerCase()));
+            renderChannels(filtrados);
+            if(query.length > 0 && document.getElementById('livetv-view').style.display !== 'flex') {
+                abrirLiveTV();
+            }
         }
 
         function playChannel(ch) {

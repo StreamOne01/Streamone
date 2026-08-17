@@ -40,14 +40,36 @@
             flex-direction: column;
             padding: 20px;
             overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         #sidebar h2 {
             font-size: 1.1rem;
-            margin-bottom: 15px;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .menu-toggle-btn {
+            background-color: var(--border-color);
+            border: none;
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .menu-toggle-btn:hover {
+            background-color: var(--accent-color);
         }
 
         .category-btn {
@@ -84,9 +106,15 @@
             flex-direction: column;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         #main-content h2 {
             font-size: 1.3rem;
-            margin-bottom: 20px;
             color: var(--accent-color);
         }
 
@@ -175,13 +203,30 @@
             color: var(--text-secondary);
             font-size: 0.85rem;
         }
+
+        /* Estilo responsivo para ocultar menú en pantallas chicas si se desea */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+            #sidebar {
+                width: 100%;
+                max-height: 250px;
+            }
+            #player-panel {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- SIDEBAR DE CATEGORÍAS -->
     <div id="sidebar">
-        <h2>Categorías</h2>
+        <div class="sidebar-header">
+            <h2>Categorías</h2>
+        </div>
         <div id="categories-container">
             <!-- Se llenará con JavaScript -->
         </div>
@@ -189,7 +234,10 @@
 
     <!-- LISTA DE CANALES -->
     <div id="main-content">
-        <h2 id="current-category-title">Selecciona una categoría</h2>
+        <div class="top-bar">
+            <h2 id="current-category-title">Selecciona una categoría</h2>
+            <button class="menu-toggle-btn" onclick="resetToHome()">Menú Principal</button>
+        </div>
         <div class="channel-list" id="channels-container">
             <!-- Se llenará con JavaScript -->
         </div>
@@ -211,7 +259,6 @@
         let channelsData = [];
         let mpegtsPlayer = null;
 
-        // Cargar el archivo M3U automáticamente
         async function loadPlaylist() {
             try {
                 const response = await fetch('StreamOne.m3u');
@@ -219,16 +266,14 @@
                 parseM3U(text);
             } catch (error) {
                 console.error("Error al cargar la lista M3U:", error);
-                document.getElementById('channels-container').innerHTML = '<p style="color:red;">Error al cargar la lista de canales. Asegúrate de que StreamOne.m3u esté en el repositorio.</p>';
+                document.getElementById('channels-container').innerHTML = '<p style="color:red;">Error al cargar la lista de canales.</p>';
             }
         }
 
-        // Procesador de formato M3U
         function parseM3U(data) {
             const lines = data.split('\n');
             let currentCategory = "GENERAL";
             let currentTitle = "";
-            let currentLogo = "";
 
             channelsData = [];
 
@@ -236,17 +281,14 @@
                 let line = lines[i].trim();
                 
                 if (line.startsWith('#EXTINF:')) {
-                    // Extraer categoría si existe
                     const catMatch = line.match(/group-title="([^"]+)"/);
                     if (catMatch) currentCategory = catMatch[1];
 
-                    // Extraer título del canal (después de la última coma)
                     const commaIndex = line.lastIndexOf(',');
                     if (commaIndex !== -1) {
                         currentTitle = line.substring(commaIndex + 1).trim();
                     }
                 } else if (line && !line.startsWith('#')) {
-                    // Es la URL del canal
                     if (currentTitle) {
                         let type = "M3U8";
                         if (line.includes('.ts') || line.includes(':8080/live/') || line.includes('/live/')) {
@@ -267,7 +309,6 @@
             renderCategories();
         }
 
-        // Mostrar categorías en el menú lateral
         function renderCategories() {
             const categoriesContainer = document.getElementById('categories-container');
             categoriesContainer.innerHTML = '';
@@ -278,14 +319,12 @@
                 categories[ch.category]++;
             });
 
-            // Opción "Todos"
             const allBtn = document.createElement('button');
             allBtn.className = 'category-btn active';
             allBtn.innerHTML = `<span>Todos (${channelsData.length})</span>`;
             allBtn.onclick = () => filterCategory('TODOS', allBtn);
             categoriesContainer.appendChild(allBtn);
 
-            // Resto de categorías
             for (let cat in categories) {
                 const btn = document.createElement('button');
                 btn.className = 'category-btn';
@@ -297,10 +336,9 @@
             filterCategory('TODOS', allBtn);
         }
 
-        // Filtrar canales por categoría
         function filterCategory(category, btnElement) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
+            if (btnElement) btnElement.classList.add('active');
 
             document.getElementById('current-category-title').innerText = category === 'TODOS' ? 'Todos los Canales Disponibles' : category;
 
@@ -321,20 +359,25 @@
             });
         }
 
-        // Reproducir canal usando mpegts.js para .TS o reproductor nativo para .m3u8
+        // Función para el botón Menú (regresa a la vista principal de todos los canales)
+        function resetToHome() {
+            const allBtn = document.querySelector('.category-btn');
+            if (allBtn) {
+                filterCategory('TODOS', allBtn);
+            }
+        }
+
         function playChannel(channel) {
             const videoElement = document.getElementById('videoElement');
             document.getElementById('playing-title').innerText = channel.title;
             document.getElementById('playing-category').innerText = `Categoría: ${channel.category} • Reproduciendo...`;
 
-            // Destruir reproductor anterior si existía
             if (mpegtsPlayer) {
                 mpegtsPlayer.destroy();
                 mpegtsPlayer = null;
             }
 
             if (channel.type === 'TS' && mpegts.getFeatureList().mseLivePlayback) {
-                // Usar mpegts.js para transmisiones .TS
                 mpegtsPlayer = mpegts.createPlayer({
                     type: 'mpegts',
                     isLive: true,
@@ -342,16 +385,14 @@
                 });
                 mpegtsPlayer.attachMediaElement(videoElement);
                 mpegtsPlayer.load();
-                mpegtsPlayer.play().catch(e => console.log("Autoplay bloqueado o error de reproducción:", e));
+                mpegtsPlayer.play().catch(e => console.log("Error de reproducción:", e));
             } else {
-                // Reproducción estándar (HLS / MP4 / etc.)
                 videoElement.src = channel.url;
                 videoElement.load();
-                videoElement.play().catch(e => console.log("Autoplay bloqueado:", e));
+                videoElement.play().catch(e => console.log("Error de reproducción:", e));
             }
         }
 
-        // Iniciar carga al abrir la página
         loadPlaylist();
     </script>
 </body>

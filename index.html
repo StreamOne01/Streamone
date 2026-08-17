@@ -24,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* PANTALLA DE LOGIN */
+        /* LOGIN */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
@@ -46,7 +46,7 @@
         }
         .login-box button:hover { opacity: 0.9; }
 
-        /* INTERFAZ PRINCIPAL (HOME) */
+        /* HOME */
         #app-container {
             display: none;
             width: 100%; height: 100vh;
@@ -62,7 +62,6 @@
             z-index: 1;
         }
 
-        /* Header Superior */
         .top-header {
             position: relative; z-index: 2;
             display: flex; justify-content: space-between; align-items: center;
@@ -82,7 +81,6 @@
         .logout-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-dim); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
         .logout-btn:hover { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
 
-        /* Banner Central */
         .hero-banner {
             position: relative; z-index: 2;
             padding: 20px 50px;
@@ -93,12 +91,11 @@
         .hero-banner .meta { color: var(--accent-orange); font-size: 1rem; font-weight: bold; margin-bottom: 15px; }
         .hero-banner p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
 
-        /* Botonera Inferior (Ajustada a 5 opciones principales sin EPG ni Search grande) */
         .bottom-nav {
             position: absolute; bottom: 40px; left: 50px; right: 50px;
             z-index: 2;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
         .menu-card {
@@ -120,7 +117,7 @@
         .menu-card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
         .menu-card span { font-size: 1rem; font-weight: 600; color: var(--text-main); }
 
-        /* VISTAS INTERNAS */
+        /* VISTAS INTERNAS GENERALES */
         .sub-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark);
@@ -128,19 +125,29 @@
             display: none;
             padding: 40px;
             flex-direction: column;
+            overflow-y: auto;
         }
         .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         
-        .channels-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; }
-        .channels-list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .channel-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .channel-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
+        .content-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; height: calc(100vh - 120px); }
+        .list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .item-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .item-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
         .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
 
-        .cotizador-box { background: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 600px; margin: 0 auto; width: 100%; }
-        .cotizador-box input, .cotizador-box select { width: 100%; padding: 12px; margin: 10px 0 20px 0; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; }
+        /* PANEL ADMIN */
+        .admin-panel-container { max-width: 900px; margin: 0 auto; width: 100%; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .admin-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 25px; align-items: end; }
+        .admin-form input { padding: 12px; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; outline: none; }
+        .admin-form button { background: var(--accent-orange); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        table.users-table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
+        table.users-table th, table.users-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        table.users-table th { color: var(--accent-orange); font-size: 0.9rem; }
+        .btn-status { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        .btn-on { background: #28a745; color: white; }
+        .btn-off { background: #dc3545; color: white; }
     </style>
 </head>
 <body>
@@ -163,7 +170,7 @@
                 <div class="user-greeting">👤 <span id="logged-username">Usuario</span></div>
                 <div class="search-container">
                     <span class="search-icon">🔍</span>
-                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar canal..." oninput="filtrarGlobal(this.value)">
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar..." oninput="filtrarGlobal(this.value)">
                 </div>
                 <span id="clock">15:24</span>
                 <button class="logout-btn" onclick="location.reload()">Salir</button>
@@ -173,12 +180,10 @@
         <div class="hero-banner">
             <h1 id="hero-title">Stream One Pro</h1>
             <div class="meta">Panel Multimedia Inteligente</div>
-            <p>Selecciona una opción en el menú inferior para acceder a la televisión en vivo, consultar películas, series o tu panel de control administrativo.</p>
+            <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido independiente de TV, Películas o Series.</p>
         </div>
 
-        <div class="bottom-nav" id="bottom-nav-grid">
-            <!-- Se carga dinámicamente según sea admin o usuario normal -->
-        </div>
+        <div class="bottom-nav" id="bottom-nav-grid"></div>
     </div>
 
     <!-- VISTA LIVE TV -->
@@ -188,10 +193,10 @@
             <h2 style="color: var(--accent-orange);">Televisión en Vivo</h2>
             <div></div>
         </div>
-        <div class="channels-layout">
-            <div class="channels-list-box" id="channels-container"></div>
+        <div class="content-layout">
+            <div class="list-box" id="channels-container"></div>
             <div class="video-panel">
-                <video id="videoElement" controls autoplay></video>
+                <video id="videoLive" controls autoplay></video>
             </div>
         </div>
     </div>
@@ -200,11 +205,14 @@
     <div id="movies-view" class="sub-view">
         <div class="sub-view-header">
             <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Películas</h2>
+            <h2 style="color: var(--accent-orange);">Películas (Movies)</h2>
             <div></div>
         </div>
-        <div style="text-align: center; color: var(--text-dim); margin-top: 50px;">
-            <h3>Sección de Películas en desarrollo</h3>
+        <div class="content-layout">
+            <div class="list-box" id="movies-container"></div>
+            <div class="video-panel">
+                <video id="videoMovie" controls autoplay></video>
+            </div>
         </div>
     </div>
 
@@ -215,38 +223,55 @@
             <h2 style="color: var(--accent-orange);">Series</h2>
             <div></div>
         </div>
-        <div style="text-align: center; color: var(--text-dim); margin-top: 50px;">
-            <h3>Sección de Series en desarrollo</h3>
+        <div class="content-layout">
+            <div class="list-box" id="series-container"></div>
+            <div class="video-panel">
+                <video id="videoSeries" controls autoplay></video>
+            </div>
         </div>
     </div>
 
-    <!-- VISTA COTIZADOR (SOLO ADMIN) -->
-    <div id="cotizador-view" class="sub-view">
+    <!-- VISTA PANEL ADMIN -->
+    <div id="admin-view" class="sub-view">
         <div class="sub-view-header">
             <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Cotizador & Panel Admin</h2>
+            <h2 style="color: var(--accent-orange);">Gestión de Usuarios (Panel Admin)</h2>
             <div></div>
         </div>
-        <div class="cotizador-box">
-            <h3>Calculadora de Costos</h3>
-            <label>Descripción del trabajo / Cliente:</label>
-            <input type="text" id="clientName" placeholder="Nombre del cliente">
-            <label>Tipo de servicio:</label>
-            <select id="serviceType">
-                <option value="instalacion">Instalación de Fibra / Cable</option>
-                <option value="soporte">Soporte Técnico Residencial</option>
-            </select>
-            <label>Costo Base ($):</label>
-            <input type="number" id="basePrice" placeholder="0.00">
-            <button style="width:100%; background:var(--accent-orange); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="alert('Cotización generada con éxito')">Generar y Calcular</button>
+        <div class="admin-panel-container">
+            <h3>Agregar Nuevo Usuario</h3>
+            <div class="admin-form">
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim);">Usuario:</label>
+                    <input type="text" id="newUsername" placeholder="Ej. cliente01" style="width:100%; margin-top:5px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim);">Contraseña:</label>
+                    <input type="text" id="newPassword" placeholder="Ej. clave123" style="width:100%; margin-top:5px;">
+                </div>
+                <button onclick="agregarUsuario()">Crear Usuario</button>
+            </div>
+
+            <h3 style="margin-top: 30px;">Usuarios Registrados</h3>
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Estado</th>
+                        <th>Acción / Cambiar Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-users-list"></tbody>
+            </table>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgZNMZUmhU0_LDZ3KlR70he0gjY0fvVyh7AkCxZO_CkWxJ52OYf41CLyjquRu2hc2jJA/exec';
-        let channelsData = [];
-        let mpegtsPlayer = null;
-        let currentUserObj = null;
+        let listaUsuariosGlobal = [];
+        let channelsData = [], moviesData = [], seriesData = [];
+        let activePlayer = null;
 
         setInterval(() => {
             const now = new Date();
@@ -265,16 +290,16 @@
             try {
                 const response = await fetch(SCRIPT_URL);
                 const users = await response.json();
+                listaUsuariosGlobal = users;
                 const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
 
                 if (found) {
-                    currentUserObj = found;
                     document.getElementById('logged-username').innerText = found.usuario;
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-container').style.display = 'flex';
                     
                     construirBotonera(found.usuario);
-                    loadPlaylist();
+                    cargarContenidosIndependientes();
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
                 }
@@ -283,7 +308,6 @@
             }
         }
 
-        // Construir menú inferior dinámico (oculta el cotizador si no es admin, ej: usuario 'admin')
         function construirBotonera(username) {
             const grid = document.getElementById('bottom-nav-grid');
             grid.innerHTML = `
@@ -301,13 +325,12 @@
                 </div>
             `;
 
-            // Condición para mostrar el Cotizador solo al usuario administrador (puedes cambiar 'admin' por tu usuario exacto de Google Sheets)
             if (username.toLowerCase() === 'admin') {
                 grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
                 grid.innerHTML += `
-                    <div class="menu-card" onclick="abrirCotizador()">
-                        <i class="icon">📊</i>
-                        <span>Cotizador</span>
+                    <div class="menu-card" onclick="abrirAdminPanel()">
+                        <i class="icon">⚙️</i>
+                        <span>Admin Users</span>
                     </div>
                 `;
             } else {
@@ -318,83 +341,152 @@
         function abrirLiveTV() { document.getElementById('livetv-view').style.display = 'flex'; }
         function abrirPeliculas() { document.getElementById('movies-view').style.display = 'flex'; }
         function abrirSeries() { document.getElementById('series-view').style.display = 'flex'; }
-        function abrirCotizador() { document.getElementById('cotizador-view').style.display = 'flex'; }
+        function abrirAdminPanel() { document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
 
         function cerrarSubViews() {
             document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
-            if (mpegtsPlayer) {
-                mpegtsPlayer.destroy();
-                mpegtsPlayer = null;
+            if (activePlayer) {
+                activePlayer.destroy();
+                activePlayer = null;
             }
+            document.getElementById('videoLive').pause();
+            document.getElementById('videoMovie').pause();
+            document.getElementById('videoSeries').pause();
         }
 
-        async function loadPlaylist() {
+        // Carga independiente de listas (puedes apuntar a tus archivos respectivos o M3U filtrados)
+        async function cargarContenidosIndependientes() {
+            // 1. Cargar Live TV (ej. StreamOne.m3u o tu archivo de canales)
             try {
-                const response = await fetch('StreamOne.m3u');
-                const data = await response.text();
-                parseM3U(data);
-            } catch (error) {
-                console.error("Error al cargar la lista M3U", error);
+                const res = await fetch('StreamOne.m3u');
+                const text = await res.text();
+                channelsData = parsearM3U(text);
+                renderizarLista('channels-container', channelsData, 'videoLive');
+            } catch(e) { console.error("Error cargando TV", e); }
+
+            // 2. Cargar Películas (puedes crear un movies.m3u o filtrar)
+            try {
+                const res = await fetch('movies.m3u'); // O ajusta el nombre de tu archivo de pelis en el repositorio
+                const text = await res.text();
+                moviesData = parsearM3U(text);
+                renderizarLista('movies-container', moviesData, 'videoMovie');
+            } catch(e) { 
+                // Si no existe el archivo aún, dejamos un respaldo visual
+                document.getElementById('movies-container').innerHTML = '<div style="color:var(--text-dim); padding:20px;">Sube tu archivo movies.m3u al repositorio</div>';
+            }
+
+            // 3. Cargar Series (puedes crear un series.m3u)
+            try {
+                const res = await fetch('series.m3u'); // O ajusta el nombre de tu archivo de series en el repositorio
+                const text = await res.text();
+                seriesData = parsearM3U(text);
+                renderizarLista('series-container', seriesData, 'videoSeries');
+            } catch(e) { 
+                document.getElementById('series-container').innerHTML = '<div style="color:var(--text-dim); padding:20px;">Sube tu archivo series.m3u al repositorio</div>';
             }
         }
 
-        function parseM3U(data) {
+        function parsearM3U(data) {
             const lines = data.split('\n');
             let cat = "General";
-            channelsData = [];
+            let lista = [];
             lines.forEach(line => {
                 if (line.startsWith('#EXTINF:')) {
                     const match = line.match(/group-title="([^"]+)"/);
                     if (match) cat = match[1];
                     const name = line.split(',')[1];
-                    channelsData.push({ title: name ? name.trim() : "Canal", category: cat, url: '' });
+                    lista.push({ title: name ? name.trim() : "Contenido", category: cat, url: '' });
                 } else if (line.trim() && !line.startsWith('#')) {
-                    if (channelsData.length > 0) {
-                        channelsData[channelsData.length - 1].url = line.trim();
+                    if (lista.length > 0) {
+                        lista[lista.length - 1].url = line.trim();
                     }
                 }
             });
-            renderChannels(channelsData);
+            return lista;
         }
 
-        function renderChannels(lista) {
-            const container = document.getElementById('channels-container');
+        function renderizarLista(containerId, lista, videoId) {
+            const container = document.getElementById(containerId);
             container.innerHTML = '';
-            lista.forEach(ch => {
+            lista.forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'channel-row';
-                div.innerHTML = `<strong>${ch.title}</strong><br><small style="color:var(--text-dim);">${ch.category}</small>`;
-                div.onclick = () => playChannel(ch);
+                div.className = 'item-row';
+                div.innerHTML = `<strong>${item.title}</strong><br><small style="color:var(--text-dim);">${item.category}</small>`;
+                div.onclick = () => reproducirMedia(item, videoId);
                 container.appendChild(div);
             });
         }
 
-        function filtrarGlobal(query) {
-            const filtrados = channelsData.filter(ch => ch.title.toLowerCase().includes(query.toLowerCase()));
-            renderChannels(filtrados);
-            if(query.length > 0 && document.getElementById('livetv-view').style.display !== 'flex') {
-                abrirLiveTV();
+        function reproducirMedia(item, videoId) {
+            const videoElement = document.getElementById(videoId);
+            if (activePlayer) {
+                activePlayer.destroy();
+                activePlayer = null;
             }
-        }
-
-        function playChannel(ch) {
-            const videoElement = document.getElementById('videoElement');
-            if (mpegtsPlayer) {
-                mpegtsPlayer.destroy();
-                mpegtsPlayer = null;
-            }
-            if (ch.url.includes('.ts') || ch.url.includes(':8080')) {
+            if (item.url.includes('.ts') || item.url.includes(':8080')) {
                 if (mpegts.getFeatureList().mseLivePlayback) {
-                    mpegtsPlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: ch.url });
-                    mpegtsPlayer.attachMediaElement(videoElement);
-                    mpegtsPlayer.load();
-                    mpegtsPlayer.play().catch(e => console.log(e));
+                    activePlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: item.url });
+                    activePlayer.attachMediaElement(videoElement);
+                    activePlayer.load();
+                    activePlayer.play().catch(e => console.log(e));
                 }
             } else {
-                videoElement.src = ch.url;
+                videoElement.src = item.url;
                 videoElement.load();
                 videoElement.play().catch(e => console.log(e));
             }
+        }
+
+        function renderizarTablaAdmin() {
+            const tbody = document.getElementById('admin-users-list');
+            tbody.innerHTML = '';
+            listaUsuariosGlobal.forEach((u, index) => {
+                const tr = document.createElement('tr');
+                const estadoBadge = u.estado === "ON" 
+                    ? `<span style="color:#28a745; font-weight:bold;">● ON</span>` 
+                    : `<span style="color:#dc3545; font-weight:bold;">● OFF</span>`;
+                
+                const botonAccion = u.estado === "ON"
+                    ? `<button class="btn-status btn-off" onclick="cambiarEstado(${index}, 'OFF')">Apagar</button>`
+                    : `<button class="btn-status btn-on" onclick="cambiarEstado(${index}, 'ON')">Encender</button>`;
+
+                tr.innerHTML = `
+                    <td>${u.usuario}</td>
+                    <td>${u.password}</td>
+                    <td>${estadoBadge}</td>
+                    <td>${botonAccion}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function cambiarEstado(index, nuevoEstado) {
+            listaUsuariosGlobal[index].estado = nuevoEstado;
+            renderizarTablaAdmin();
+            alert(`El usuario ha sido puesto en ${nuevoEstado}.`);
+        }
+
+        async function agregarUsuario() {
+            const nuevoUser = document.getElementById('newUsername').value;
+            const nuevoPass = document.getElementById('newPassword').value;
+
+            if(!nuevoUser || !nuevoPass) {
+                alert("Completa ambos campos para crear el usuario.");
+                return;
+            }
+
+            listaUsuariosGlobal.push({ usuario: nuevoUser, password: nuevoPass, estado: "ON" });
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            renderizarTablaAdmin();
+            alert("Usuario agregado con éxito.");
+        }
+
+        function filtrarGlobal(query) {
+            const q = query.toLowerCase();
+            const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
+            renderizarLista('channels-container', filtLive, 'videoLive');
+            if(q.length > 0) abrirLiveTV();
         }
     </script>
 </body>

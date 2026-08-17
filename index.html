@@ -46,13 +46,25 @@
         }
         .login-box button:hover { opacity: 0.9; }
 
-        /* HOME */
+        /* HOME CON FONDO DINÁMICO AUTOMÁTICO */
         #app-container {
             display: none;
             width: 100%; height: 100vh;
             flex-direction: column;
             position: relative;
-            background: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+            overflow: hidden;
+        }
+
+        /* Capas del carrusel de fondo */
+        .bg-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 0;
+        }
+        .bg-slide.active {
+            opacity: 1;
         }
 
         #app-container::before {
@@ -117,7 +129,7 @@
         .menu-card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
         .menu-card span { font-size: 1rem; font-weight: 600; color: var(--text-main); }
 
-        /* VISTAS INTERNAS GENERALES */
+        /* VISTAS INTERNAS */
         .sub-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark);
@@ -164,6 +176,12 @@
 
     <!-- HOME PRINCIPAL -->
     <div id="app-container">
+        <!-- Carrusel de fondos automáticos -->
+        <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1920&auto=format&fit=crop');"></div>
+
         <div class="top-header">
             <div class="brand-logo">📺 STREAM <span>ONE</span></div>
             <div class="header-right">
@@ -180,7 +198,7 @@
         <div class="hero-banner">
             <h1 id="hero-title">Stream One Pro</h1>
             <div class="meta">Panel Multimedia Inteligente</div>
-            <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido independiente de TV, Películas o Series.</p>
+            <p>Disfruta de la mejor experiencia de entretenimiento con cambio dinámico de fondos en tiempo real.</p>
         </div>
 
         <div class="bottom-nav" id="bottom-nav-grid"></div>
@@ -273,10 +291,22 @@
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
 
+        // Reloj en tiempo real
         setInterval(() => {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
+
+        // Rotación automática del fondo cada 6 segundos
+        let currentSlide = 0;
+        setInterval(() => {
+            const slides = document.querySelectorAll('.bg-slide');
+            if(slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }, 6000);
 
         async function realizarLogin() {
             const user = document.getElementById('userInput').value;
@@ -354,9 +384,7 @@
             document.getElementById('videoSeries').pause();
         }
 
-        // Carga independiente de listas (puedes apuntar a tus archivos respectivos o M3U filtrados)
         async function cargarContenidosIndependientes() {
-            // 1. Cargar Live TV (ej. StreamOne.m3u o tu archivo de canales)
             try {
                 const res = await fetch('StreamOne.m3u');
                 const text = await res.text();
@@ -364,20 +392,17 @@
                 renderizarLista('channels-container', channelsData, 'videoLive');
             } catch(e) { console.error("Error cargando TV", e); }
 
-            // 2. Cargar Películas (puedes crear un movies.m3u o filtrar)
             try {
-                const res = await fetch('movies.m3u'); // O ajusta el nombre de tu archivo de pelis en el repositorio
+                const res = await fetch('movies.m3u');
                 const text = await res.text();
                 moviesData = parsearM3U(text);
                 renderizarLista('movies-container', moviesData, 'videoMovie');
             } catch(e) { 
-                // Si no existe el archivo aún, dejamos un respaldo visual
                 document.getElementById('movies-container').innerHTML = '<div style="color:var(--text-dim); padding:20px;">Sube tu archivo movies.m3u al repositorio</div>';
             }
 
-            // 3. Cargar Series (puedes crear un series.m3u)
             try {
-                const res = await fetch('series.m3u'); // O ajusta el nombre de tu archivo de series en el repositorio
+                const res = await fetch('series.m3u');
                 const text = await res.text();
                 seriesData = parsearM3U(text);
                 renderizarLista('series-container', seriesData, 'videoSeries');

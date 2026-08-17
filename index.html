@@ -283,7 +283,6 @@
     </div>
 
     <script>
-        // Nueva URL integrada con soporte completo de lectura y escritura (POST/GET)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwT8xFvDiV0h0_GcYVPR607smuk7cJYlFd3xIM9sp3UBwg46cn5cDlHP7h6ankjbxvwnA/exec';
         
         let listaUsuariosGlobal = [];
@@ -484,6 +483,7 @@
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'updateStatus',
                         usuario: usuarioObj.usuario,
@@ -510,6 +510,7 @@
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'addUser',
                         usuario: nuevoUser,
@@ -525,6 +526,8 @@
                     document.getElementById('newPassword').value = '';
                     renderizarTablaAdmin();
                     alert("Usuario agregado y guardado en la hoja de cálculo con éxito.");
+                } else {
+                    alert("El servidor no pudo guardar el usuario.");
                 }
             } catch (e) {
                 alert("Error al conectar con la base de datos para guardar el usuario.");

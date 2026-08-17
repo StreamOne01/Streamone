@@ -334,27 +334,40 @@
                 return;
             function parsearM3U(data) {
             const lines = data.split('\n');
+            function parsearM3U(data) {
+            const lines = data.split('\n');
             let categorias = {};
             let lastInfo = null;
 
             lines.forEach(line => {
                 line = line.trim();
-                if (!line || line.startsWith('#') && !line.startsWith('#EXTINF:')) return;
+                // Ignorar líneas vacías o comentarios que no sean #EXTINF
+                if (!line || (line.startsWith('#') && !line.startsWith('#EXTINF:'))) return;
 
                 if (line.startsWith('#EXTINF:')) {
                     // Extraer grupo
                     const groupMatch = line.match(/group-title="([^"]+)"/);
                     let cat = groupMatch ? groupMatch[1].trim() : "General";
-                    // Normalizar: Primera letra mayúscula, resto minúsculas para agrupar bien
+                    
+                    // Normalizar: Capitalizar primera letra para agrupar "familiar" con "Familiar"
                     cat = cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
 
-                    // Extraer título (lo que va después de la última coma)
+                    // Extraer título (todo lo que está después de la última coma)
                     const titleParts = line.split(',');
                     const name = titleParts.length > 1 ? titleParts.slice(1).join(',') : "Sin título";
                     
                     lastInfo = { title: name.trim(), category: cat, url: '' };
                     
                     if (!categorias[cat]) categorias[cat] = [];
+                    categorias[cat].push(lastInfo);
+                } else if (lastInfo && !line.startsWith('#')) {
+                    // Asignar URL al último ítem creado
+                    lastInfo.url = line;
+                    lastInfo = null; 
+                }
+            });
+            return categorias;
+        }
                     categorias[cat].push(lastInfo);
                 } else if (lastInfo && !line.startsWith('#')) {
                     // Asignar URL al último ítem encontrado

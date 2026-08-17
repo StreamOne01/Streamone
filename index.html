@@ -283,12 +283,17 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
+        const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
+        // URLs integradas directamente para Canales, Películas y Series
+        const URL_CANALES = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales';
+        const URL_PELICULAS = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas';
+        const URL_SERIES = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series';
+
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
-        let activeSection = 'live'; // Controla en qué sección nos encontramos
+        let activeSection = 'live';
 
         setInterval(() => {
             const now = new Date();
@@ -315,7 +320,7 @@
             }
 
             try {
-                const response = await fetch(SCRIPT_URL);
+                const response = await fetch(USERS_URL);
                 const users = await response.json();
                 listaUsuariosGlobal = users;
                 const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
@@ -326,7 +331,7 @@
                     document.getElementById('app-container').style.display = 'flex';
                     
                     construirBotonera(found.usuario);
-                    cargarTodoDeGolpe();
+                    cargarContenidoDirecto();
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
                 }
@@ -365,23 +370,10 @@
             }
         }
 
-        function abrirLiveTV() { 
-            activeSection = 'live';
-            document.getElementById('livetv-view').style.display = 'flex'; 
-        }
-        function abrirPeliculas() { 
-            activeSection = 'movies';
-            document.getElementById('movies-view').style.display = 'flex'; 
-        }
-        function abrirSeries() { 
-            activeSection = 'series';
-            document.getElementById('series-view').style.display = 'flex'; 
-        }
-        function abrirAdminPanel() { 
-            activeSection = 'admin';
-            document.getElementById('admin-view').style.display = 'flex'; 
-            renderizarTablaAdmin(); 
-        }
+        function abrirLiveTV() { activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
+        function abrirPeliculas() { activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
+        function abrirSeries() { activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
+        function abrirAdminPanel() { activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
 
         function cerrarSubViews() {
             document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
@@ -395,25 +387,33 @@
             activeSection = 'home';
         }
 
-        async function cargarTodoDeGolpe() {
+        async function cargarContenidoDirecto() {
             try {
-                const res = await fetch(`${SCRIPT_URL}?action=init`);
-                const json = await res.json();
-
-                if (json.canales) {
-                    channelsData = parsearM3U(json.canales);
+                // Cargar Canales Directos
+                if (URL_CANALES && !URL_CANALES.includes('AQUÍ_PEGA')) {
+                    const resChan = await fetch(URL_CANALES);
+                    const textChan = await resChan.text();
+                    channelsData = parsearM3U(textChan);
                     renderizarLista('channels-container', channelsData, 'videoLive');
                 }
-                if (json.peliculas) {
-                    moviesData = parsearM3U(json.peliculas);
+
+                // Cargar Películas Directas
+                if (URL_PELICULAS && !URL_PELICULAS.includes('AQUÍ_PEGA')) {
+                    const resMov = await fetch(URL_PELICULAS);
+                    const textMov = await resMov.text();
+                    moviesData = parsearM3U(textMov);
                     renderizarLista('movies-container', moviesData, 'videoMovie');
                 }
-                if (json.series) {
-                    seriesData = parsearM3U(json.series);
+
+                // Cargar Series Directas
+                if (URL_SERIES && !URL_SERIES.includes('AQUÍ_PEGA')) {
+                    const resSer = await fetch(URL_SERIES);
+                    const textSer = await resSer.text();
+                    seriesData = parsearM3U(textSer);
                     renderizarLista('series-container', seriesData, 'videoSeries');
                 }
             } catch(e) {
-                console.error("Error en la carga optimizada:", e);
+                console.error("Error al cargar las URLs directas:", e);
             }
         }
 
@@ -515,8 +515,6 @@
 
         function filtrarGlobal(query) {
             const q = query.toLowerCase();
-
-            // Filtra y renderiza únicamente según la sección activa en la que esté el usuario
             if (activeSection === 'live') {
                 const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
                 renderizarLista('channels-container', filtLive, 'videoLive');

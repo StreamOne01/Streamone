@@ -283,13 +283,9 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgZNMZUmhU0_LDZ3KlR70he0gjY0fvVyh7AkCxZO_CkWxJ52OYf41CLyjquRu2hc2jJA/exec';
+        // Tu nueva URL de Google Apps Script (Segura y Optimizada)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
-        // Enlaces RAW configurados de tu repositorio
-        const URL_CANALES = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales';
-        const URL_PELICULAS = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas';
-        const URL_SERIES = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series';
-
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
@@ -332,7 +328,7 @@
                     document.getElementById('app-container').style.display = 'flex';
                     
                     construirBotonera(found.usuario);
-                    cargarContenidosIndependientes();
+                    cargarTodoDeGolpe(); // Carga eficiente optimizada en una sola petición
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
                 }
@@ -387,30 +383,27 @@
             document.getElementById('videoSeries').pause();
         }
 
-        async function cargarContenidosIndependientes() {
-            // 1. Canales
+        // Carga eficiente: Descarga canales, películas y series en una sola petición
+        async function cargarTodoDeGolpe() {
             try {
-                const res = await fetch(URL_CANALES);
-                const text = await res.text();
-                channelsData = parsearM3U(text);
-                renderizarLista('channels-container', channelsData, 'videoLive');
-            } catch(e) { console.error("Error cargando Canales", e); }
+                const res = await fetch(`${SCRIPT_URL}?action=init`);
+                const json = await res.json();
 
-            // 2. Películas
-            try {
-                const res = await fetch(URL_PELICULAS);
-                const text = await res.text();
-                moviesData = parsearM3U(text);
-                renderizarLista('movies-container', moviesData, 'videoMovie');
-            } catch(e) { console.error("Error cargando Películas", e); }
-
-            // 3. Series
-            try {
-                const res = await fetch(URL_SERIES);
-                const text = await res.text();
-                seriesData = parsearM3U(text);
-                renderizarLista('series-container', seriesData, 'videoSeries');
-            } catch(e) { console.error("Error cargando Series", e); }
+                if (json.canales) {
+                    channelsData = parsearM3U(json.canales);
+                    renderizarLista('channels-container', channelsData, 'videoLive');
+                }
+                if (json.peliculas) {
+                    moviesData = parsearM3U(json.peliculas);
+                    renderizarLista('movies-container', moviesData, 'videoMovie');
+                }
+                if (json.series) {
+                    seriesData = parsearM3U(json.series);
+                    renderizarLista('series-container', seriesData, 'videoSeries');
+                }
+            } catch(e) {
+                console.error("Error en la carga optimizada:", e);
+            }
         }
 
         function parsearM3U(data) {

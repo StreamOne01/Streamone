@@ -20,8 +20,8 @@
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* PANTALLA DE BIENVENIDA */
@@ -29,13 +29,14 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
             display: flex; justify-content: center; align-items: center; z-index: 2000;
+            padding: 20px;
         }
         .welcome-box {
-            background: #452b75; padding: 40px; border-radius: 20px; text-align: center; width: 420px;
+            background: #452b75; padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 400px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-        .welcome-box h2 { color: var(--accent-orange); margin-bottom: 15px; letter-spacing: 1px; }
-        .welcome-box p { color: var(--text-dim); font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
+        .welcome-box h2 { color: var(--accent-orange); margin-bottom: 15px; letter-spacing: 1px; font-size: 1.5rem; }
+        .welcome-box p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5; }
         .welcome-box button {
             width: 100%; background: var(--accent-orange); color: white; border: none;
             padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
@@ -43,17 +44,16 @@
         }
         .welcome-box button:hover { opacity: 0.9; }
 
-        /* HOME CON FONDO DINÁMICO AUTOMÁTICO */
+        /* HOME RESPONSIVO */
         #app-container {
             display: none;
-            width: 100%; height: 100vh;
+            width: 100%; min-height: 100vh;
             flex-direction: column;
             position: relative;
-            overflow: hidden;
         }
 
         .bg-slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center;
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
@@ -63,52 +63,55 @@
 
         #app-container::before {
             content: '';
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(18, 9, 31, 0.75);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(18, 9, 31, 0.85);
             z-index: 1;
         }
 
         .top-header {
             position: relative; z-index: 2;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 25px 50px;
+            padding: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .brand-logo { font-size: 1.5rem; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .brand-logo { font-size: 1.3rem; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .brand-logo span { color: var(--accent-orange); }
         
-        .header-right { display: flex; align-items: center; gap: 20px; color: var(--text-dim); }
-        .user-greeting { background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; color: var(--text-main); border: 1px solid rgba(255,255,255,0.05); }
+        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .user-greeting { background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; color: var(--text-main); border: 1px solid rgba(255,255,255,0.05); }
         .search-container { position: relative; display: flex; align-items: center; }
-        .search-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px 6px 32px; border-radius: 15px; color: white; font-size: 0.85rem; outline: none; width: 150px; transition: 0.3s; }
-        .search-input:focus { width: 220px; border-color: var(--accent-orange); }
-        .search-icon { position: absolute; left: 10px; font-size: 0.85rem; color: var(--text-dim); }
+        .search-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px 6px 30px; border-radius: 15px; color: white; font-size: 0.85rem; outline: none; width: 130px; transition: 0.3s; }
+        .search-input:focus { width: 180px; border-color: var(--accent-orange); }
+        .search-icon { position: absolute; left: 10px; font-size: 0.8rem; color: var(--text-dim); }
         
-        #clock { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
-        .logout-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-dim); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        #clock { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
+        .logout-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-dim); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
         .logout-btn:hover { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
 
         .hero-banner {
             position: relative; z-index: 2;
-            padding: 20px 50px;
+            padding: 20px;
             max-width: 700px;
-            margin-top: 20px;
+            margin: 10px 0;
         }
-        .hero-banner h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
-        .hero-banner .meta { color: var(--accent-orange); font-size: 1rem; font-weight: bold; margin-bottom: 15px; }
-        .hero-banner p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+        .hero-banner h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+        .hero-banner .meta { color: var(--accent-orange); font-size: 0.9rem; font-weight: bold; margin-bottom: 10px; }
+        .hero-banner p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.4; }
 
         .bottom-nav {
-            position: absolute; bottom: 40px; left: 50px; right: 50px;
-            z-index: 2;
+            position: relative; z-index: 2;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 12px;
+            padding: 20px;
+            margin-top: auto;
         }
         .menu-card {
             background: var(--card-bg);
             border: 2px solid transparent;
-            border-radius: 16px;
-            padding: 25px 15px;
+            border-radius: 14px;
+            padding: 20px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s ease;
@@ -117,31 +120,86 @@
         .menu-card:hover, .menu-card.active {
             background: var(--card-hover);
             border-color: var(--accent-orange);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 102, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 102, 0, 0.3);
         }
-        .menu-card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
-        .menu-card span { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+        .menu-card .icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+        .menu-card span { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
 
-        /* VISTAS INTERNAS */
+        /* VISTAS INTERNAS RESPONSIVAS */
         .sub-view {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark);
             z-index: 10;
             display: none;
-            padding: 40px;
+            padding: 20px;
             flex-direction: column;
             overflow-y: auto;
         }
-        .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
+        .sub-view-header h2 { font-size: 1.2rem; color: var(--accent-orange); }
+        .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
         
-        .content-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; height: calc(100vh - 120px); }
-        .list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .item-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .content-layout { 
+            display: flex; 
+            flex-direction: column;
+            flex: 1; 
+            gap: 15px; 
+            min-height: calc(100vh - 100px);
+        }
+        
+        .list-box { 
+            width: 100%; 
+            max-height: 220px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .item-row { background: var(--card-bg); padding: 12px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
         .item-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
-        .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
+        .item-row strong { font-size: 0.9rem; }
+
+        .video-panel { 
+            width: 100%; 
+            flex: 1; 
+            min-height: 250px;
+            display: flex; 
+            flex-direction: column; 
+            background: #000; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            justify-content: center; 
+            align-items: center; 
+        }
         video { width: 100%; height: 100%; object-fit: contain; }
+
+        /* ADAPTACIÓN PARA TABLETS Y COMPUTADORAS (Pantallas más grandes) */
+        @media (min-width: 768px) {
+            .top-header { padding: 25px 50px; }
+            .brand-logo { font-size: 1.5rem; }
+            .search-input { width: 150px; }
+            .search-input:focus { width: 220px; }
+            .hero-banner { padding: 20px 50px; margin-top: 20px; }
+            .hero-banner h1 { font-size: 3rem; }
+            .bottom-nav { 
+                position: absolute; bottom: 40px; left: 50px; right: 50px; 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 20px; 
+                padding: 0;
+                margin-top: 0;
+            }
+            .menu-card { padding: 25px 15px; }
+            .menu-card .icon { font-size: 1.8rem; }
+            .menu-card span { font-size: 1rem; }
+            
+            .sub-view { padding: 40px; }
+            .content-layout { flex-direction: row; height: calc(100vh - 120px); min-height: auto; }
+            .list-box { width: 350px; max-height: none; background: transparent; padding: 0; }
+        }
     </style>
 </head>
 <body>
@@ -200,8 +258,8 @@
     <!-- VISTA LIVE TV -->
     <div id="livetv-view" class="sub-view">
         <div class="sub-view-header">
-            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Televisión en Vivo</h2>
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver</button>
+            <h2>Televisión en Vivo</h2>
             <div></div>
         </div>
         <div class="content-layout">
@@ -215,8 +273,8 @@
     <!-- VISTA PELÍCULAS -->
     <div id="movies-view" class="sub-view">
         <div class="sub-view-header">
-            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Películas (Movies)</h2>
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver</button>
+            <h2>Películas (Movies)</h2>
             <div></div>
         </div>
         <div class="content-layout">
@@ -230,8 +288,8 @@
     <!-- VISTA SERIES -->
     <div id="series-view" class="sub-view">
         <div class="sub-view-header">
-            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Series</h2>
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver</button>
+            <h2>Series</h2>
             <div></div>
         </div>
         <div class="content-layout">

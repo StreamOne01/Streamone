@@ -3,99 +3,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One - Completo</title>
+    <title>Stream One - Home</title>
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js"></script>
     <style>
-        :root { --bg-dark: #12091f; --card-bg: rgba(45, 27, 78, 0.85); --card-hover: rgba(69, 43, 117, 0.95); --accent-orange: #ff6600; --text-main: #ffffff; --text-dim: #b3a5c9; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
+        :root {
+            --bg-dark: #12091f;
+            --card-bg: rgba(45, 27, 78, 0.85);
+            --card-hover: rgba(69, 43, 117, 0.95);
+            --accent-orange: #ff6600;
+            --text-main: #ffffff;
+            --text-dim: #b3a5c9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* LOGIN */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .login-box {
+            background: #452b75; padding: 40px; border-radius: 20px; text-align: center; width: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .login-box h2 { color: var(--accent-orange); margin-bottom: 25px; letter-spacing: 1px; }
+        .login-box input {
+            width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: none;
+            background: #2d1b4e; color: white; font-size: 1rem; outline: none;
+        }
+        .login-box button {
+            width: 100%; background: var(--accent-orange); color: white; border: none;
+            padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 15px;
+            transition: opacity 0.2s;
+        }
+        .login-box button:hover { opacity: 0.9; }
+
+        /* HOME CON FONDO DINÁMICO AUTOMÁTICO */
+        #app-container {
+            display: none;
+            width: 100%; height: 100vh;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 0;
+        }
+        .bg-slide.active { opacity: 1; }
+
+        #app-container::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(18, 9, 31, 0.75);
+            z-index: 1;
+        }
+
+        .top-header {
+            position: relative; z-index: 2;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 50px;
+        }
+        .brand-logo { font-size: 1.5rem; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .brand-logo span { color: var(--accent-orange); }
         
-        /* Estructura de 3 columnas */
-        .sub-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 100; display: none; padding: 20px; flex-direction: column; }
-        .content-layout { display: flex; flex: 1; gap: 15px; height: 90%; }
-        .categories-box { width: 25%; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; }
-        .list-box { width: 30%; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; }
-        .video-panel { flex: 1; background: #000; border-radius: 10px; overflow: hidden; }
+        .header-right { display: flex; align-items: center; gap: 20px; color: var(--text-dim); }
+        .user-greeting { background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; color: var(--text-main); border: 1px solid rgba(255,255,255,0.05); }
+        .search-container { position: relative; display: flex; align-items: center; }
+        .search-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px 6px 32px; border-radius: 15px; color: white; font-size: 0.85rem; outline: none; width: 150px; transition: 0.3s; }
+        .search-input:focus { width: 220px; border-color: var(--accent-orange); }
+        .search-icon { position: absolute; left: 10px; font-size: 0.85rem; color: var(--text-dim); }
         
-        .item-row { background: var(--card-bg); padding: 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
-        .item-row:hover, .item-row.active { border-color: var(--accent-orange); background: var(--card-hover); }
+        #clock { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
+        .logout-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-dim); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .logout-btn:hover { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
+
+        .hero-banner {
+            position: relative; z-index: 2;
+            padding: 20px 50px;
+            max-width: 700px;
+            margin-top: 20px;
+        }
+        .hero-banner h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
+        .hero-banner .meta { color: var(--accent-orange); font-size: 1rem; font-weight: bold; margin-bottom: 15px; }
+        .hero-banner p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+
+        .bottom-nav {
+            position: absolute; bottom: 40px; left: 50px; right: 50px;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .menu-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
+        }
+        .menu-card:hover, .menu-card.active {
+            background: var(--card-hover);
+            border-color: var(--accent-orange);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 102, 0, 0.3);
+        }
+        .menu-card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+        .menu-card span { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+
+        /* VISTAS INTERNAS */
+        .sub-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            z-index: 10;
+            display: none;
+            padding: 40px;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         
-        #bottom-nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 50px; }
-        .menu-card { background: var(--card-bg); padding: 30px; text-align: center; border-radius: 15px; cursor: pointer; }
+        .content-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; height: calc(100vh - 120px); }
+        .list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .item-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .item-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
+        .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
+        video { width: 100%; height: 100%; object-fit: contain; }
+
+        /* PANEL ADMIN */
+        .admin-panel-container { max-width: 900px; margin: 0 auto; width: 100%; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .admin-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 25px; align-items: end; }
+        .admin-form input { padding: 12px; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; outline: none; }
+        .admin-form button { background: var(--accent-orange); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        table.users-table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
+        table.users-table th, table.users-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        table.users-table th { color: var(--accent-orange); font-size: 0.9rem; }
+        .btn-status { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        .btn-on { background: #28a745; color: white; }
+        .btn-off { background: #dc3545; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="app-container" style="display:flex; flex-direction:column; height:100vh;">
-        <div id="bottom-nav-grid">
-            <div class="menu-card" onclick="document.getElementById('livetv-view').style.display='flex'">📺 Live TV</div>
-            <div class="menu-card" onclick="document.getElementById('movies-view').style.display='flex'">🎬 Movies</div>
-            <div class="menu-card" onclick="document.getElementById('series-view').style.display='flex'">🍿 Series</div>
+    <!-- LOGIN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>STREAM ONE</h2>
+            <input type="text" id="userInput" placeholder="Usuario">
+            <input type="password" id="passInput" placeholder="Contraseña">
+            <button onclick="realizarLogin()">Ingresar</button>
+        </div>
+    </div>
+
+    <!-- HOME PRINCIPAL -->
+    <div id="app-container">
+        <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1920&auto=format&fit=crop');"></div>
+
+        <div class="top-header">
+            <div class="brand-logo">📺 STREAM <span>ONE</span></div>
+            <div class="header-right">
+                <div class="user-greeting">👤 <span id="logged-username">Usuario</span></div>
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Buscar..." oninput="filtrarGlobal(this.value)">
+                </div>
+                <span id="clock">15:24</span>
+                <button class="logout-btn" onclick="location.reload()">Salir</button>
+            </div>
+        </div>
+
+        <div class="hero-banner">
+            <h1 id="hero-title">Stream One Pro</h1>
+            <div class="meta">Panel Multimedia Inteligente</div>
+            <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido independiente.</p>
+        </div>
+
+        <div class="bottom-nav" id="bottom-nav-grid"></div>
+    </div>
+
+    <!-- VISTA LIVE TV -->
+    <div id="livetv-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Televisión en Vivo</h2>
+            <div></div>
+        </div>
+        <div class="content-layout">
+            <div class="list-box" id="channels-container"></div>
+            <div class="video-panel">
+                <video id="videoLive" controls autoplay></video>
+            </div>
         </div>
     </div>
 
     <!-- VISTA PELÍCULAS -->
     <div id="movies-view" class="sub-view">
-        <button onclick="this.parentElement.style.display='none'">⬅ Volver</button>
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Películas (Movies)</h2>
+            <div></div>
+        </div>
         <div class="content-layout">
-            <div class="categories-box" id="movies-categories"></div>
-            <div class="list-box" id="movies-channels"></div>
-            <div class="video-panel"><video id="videoMovie" controls autoplay style="width:100%; height:100%"></video></div>
+            <div class="list-box" id="movies-container"></div>
+            <div class="video-panel">
+                <video id="videoMovie" controls autoplay></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA SERIES -->
+    <div id="series-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Series</h2>
+            <div></div>
+        </div>
+        <div class="content-layout">
+            <div class="list-box" id="series-container"></div>
+            <div class="video-panel">
+                <video id="videoSeries" controls autoplay></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA PANEL ADMIN -->
+    <div id="admin-view" class="sub-view">
+        <div class="sub-view-header">
+            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
+            <h2 style="color: var(--accent-orange);">Gestión de Usuarios (Panel Admin)</h2>
+            <div></div>
+        </div>
+        <div class="admin-panel-container">
+            <h3>Agregar Nuevo Usuario</h3>
+            <div class="admin-form">
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim);">Usuario:</label>
+                    <input type="text" id="newUsername" placeholder="Ej. cliente01" style="width:100%; margin-top:5px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim);">Contraseña:</label>
+                    <input type="text" id="newPassword" placeholder="Ej. clave123" style="width:100%; margin-top:5px;">
+                </div>
+                <button onclick="agregarUsuario()">Crear Usuario</button>
+            </div>
+
+            <h3 style="margin-top: 30px;">Usuarios Registrados</h3>
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Estado</th>
+                        <th>Acción / Cambiar Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-users-list"></tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // FUNCIÓN DE LECTURA ROBUSTA (Para tus películas)
+        const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
+        
+        const URL_CANALES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales');
+        const URL_PELICULAS = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
+        const URL_SERIES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series');
+
+        let listaUsuariosGlobal = [];
+        let channelsData = [], moviesData = [], seriesData = [];
+        let activePlayer = null;
+        let activeSection = 'live';
+
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, 1000);
+
+        let currentSlide = 0;
+        setInterval(() => {
+            const slides = document.querySelectorAll('.bg-slide');
+            if(slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }, 6000);
+
+        async function realizarLogin() {
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+
+            if(!user || !pass) {
+                alert("Por favor ingresa usuario y contraseña.");
+                return;
+            }
+
+            try {
+                const response = await fetch(USERS_URL);
+                const users = await response.json();
+                listaUsuariosGlobal = users;
+                const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
+
+                if (found) {
+                    document.getElementById('logged-username').innerText = found.usuario;
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'flex';
+                    
+                    construirBotonera(found.usuario);
+                    cargarContenidoDirecto();
+                } else {
+                    alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
+                }
+            } catch (e) {
+                alert("Error de conexión con la base de datos.");
+            }
+        }
+
+        function construirBotonera(username) {
+            const grid = document.getElementById('bottom-nav-grid');
+            grid.innerHTML = `
+                <div class="menu-card" onclick="abrirLiveTV()">
+                    <i class="icon">📺</i>
+                    <span>Live TV</span>
+                </div>
+                <div class="menu-card" onclick="abrirPeliculas()">
+                    <i class="icon">🎬</i>
+                    <span>Movies</span>
+                </div>
+                <div class="menu-card" onclick="abrirSeries()">
+                    <i class="icon">🍿</i>
+                    <span>Series</span>
+                </div>
+            `;
+
+            if (username.toLowerCase() === 'admin') {
+                grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+                grid.innerHTML += `
+                    <div class="menu-card" onclick="abrirAdminPanel()">
+                        <i class="icon">⚙️</i>
+                        <span>Admin Users</span>
+                    </div>
+                `;
+            } else {
+                grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            }
+        }
+
+        function abrirLiveTV() { activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
+        function abrirPeliculas() { activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
+        function abrirSeries() { activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
+        function abrirAdminPanel() { activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
+
+        function cerrarSubViews() {
+            document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
+            if (activePlayer) {
+                activePlayer.destroy();
+                activePlayer = null;
+            }
+            document.getElementById('videoLive').pause();
+            document.getElementById('videoMovie').pause();
+            document.getElementById('videoSeries').pause();
+            activeSection = 'home';
+        }
+
+        async function cargarContenidoDirecto() {
+            try {
+                if (URL_CANALES) {
+                    const resChan = await fetch(URL_CANALES);
+                    const textChan = await resChan.text();
+                    channelsData = parsearM3U(textChan);
+                    renderizarLista('channels-container', channelsData, 'videoLive');
+                }
+
+                if (URL_PELICULAS) {
+                    const resMov = await fetch(URL_PELICULAS);
+                    const textMov = await resMov.text();
+                    moviesData = parsearM3U(textMov);
+                    renderizarLista('movies-container', moviesData, 'videoMovie');
+                }
+
+                if (URL_SERIES) {
+                    const resSer = await fetch(URL_SERIES);
+                    const textSer = await resSer.text();
+                    seriesData = parsearM3U(textSer);
+                    renderizarLista('series-container', seriesData, 'videoSeries');
+                }
+            } catch(e) {
+                console.error("Error al cargar las listas M3U:", e);
+            }
+        }
+
+        /* FUNCIÓN M3U ROBUSTA (Adaptada para ignorar comentarios y normalizar categorías) */
         function parsearM3U(data) {
             const lines = data.split('\n');
-            let categorias = {};
+            let lista = [];
             let lastInfo = null;
+            let currentCat = "General";
+
             lines.forEach(line => {
                 line = line.trim();
                 if (!line || (line.startsWith('#') && !line.startsWith('#EXTINF:'))) return;
+
                 if (line.startsWith('#EXTINF:')) {
-                    const groupMatch = line.match(/group-title="([^"]+)"/);
-                    let cat = groupMatch ? groupMatch[1].trim() : "General";
-                    cat = cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
-                    const titleParts = line.split(',');
-                    const name = titleParts.length > 1 ? titleParts.slice(1).join(',') : "Sin título";
-                    lastInfo = { title: name.trim(), category: cat, url: '' };
-                    if (!categorias[cat]) categorias[cat] = [];
-                    categorias[cat].push(lastInfo);
+                    const match = line.match(/group-title="([^"]+)"/);
+                    if (match) {
+                        currentCat = match[1].trim();
+                        currentCat = currentCat.charAt(0).toUpperCase() + currentCat.slice(1).toLowerCase();
+                    }
+                    const nameParts = line.split(',');
+                    const name = nameParts.length > 1 ? nameParts.slice(1).join(',') : "Contenido";
+                    
+                    lastInfo = { title: name.trim(), category: currentCat, url: '' };
+                    lista.push(lastInfo);
                 } else if (lastInfo && !line.startsWith('#')) {
                     lastInfo.url = line;
-                    lastInfo = null; 
+                    lastInfo = null;
                 }
             });
-            return categorias;
+            return lista;
         }
 
-        async function cargarPeliculas() {
-            const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
-            const res = await fetch(url);
-            const data = parsearM3U(await res.text());
-            
-            const catBox = document.getElementById('movies-categories');
-            Object.keys(data).forEach(cat => {
+        function renderizarLista(containerId, lista, videoId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            lista.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'item-row';
-                div.innerText = cat;
-                div.onclick = () => {
-                    const listBox = document.getElementById('movies-channels');
-                    listBox.innerHTML = '';
-                    data[cat].forEach(item => {
-                        const row = document.createElement('div');
-                        row.className = 'item-row';
-                        row.innerText = item.title;
-                        row.onclick = () => document.getElementById('videoMovie').src = item.url;
-                        listBox.appendChild(row);
-                    });
-                };
-                catBox.appendChild(div);
+                div.innerHTML = `<strong>${item.title}</strong><br><small style="color:var(--text-dim);">${item.category}</small>`;
+                div.onclick = () => reproducirMedia(item, videoId);
+                container.appendChild(div);
             });
         }
-        
-        cargarPeliculas();
+
+        function reproducirMedia(item, videoId) {
+            const videoElement = document.getElementById(videoId);
+            if (activePlayer) {
+                activePlayer.destroy();
+                activePlayer = null;
+            }
+            if (item.url.includes('.ts') || item.url.includes(':8080')) {
+                if (mpegts.getFeatureList().mseLivePlayback) {
+                    activePlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: item.url });
+                    activePlayer.attachMediaElement(videoElement);
+                    activePlayer.load();
+                    activePlayer.play().catch(e => console.log(e));
+                }
+            } else {
+                videoElement.src = item.url;
+                videoElement.load();
+                videoElement.play().catch(e => console.log(e));
+            }
+        }
+
+        function renderizarTablaAdmin() {
+            const tbody = document.getElementById('admin-users-list');
+            tbody.innerHTML = '';
+            listaUsuariosGlobal.forEach((u, index) => {
+                const tr = document.createElement('tr');
+                const estadoBadge = u.estado === "ON" 
+                    ? `<span style="color:#28a745; font-weight:bold;">● ON</span>` 
+                    : `<span style="color:#dc3545; font-weight:bold;">● OFF</span>`;
+                
+                const botonAccion = u.estado === "ON"
+                    ? `<button class="btn-status btn-off" onclick="cambiarEstado(${index}, 'OFF')">Apagar</button>`
+                    : `<button class="btn-status btn-on" onclick="cambiarEstado(${index}, 'ON')">Encender</button>`;
+
+                tr.innerHTML = `
+                    <td>${u.usuario}</td>
+                    <td>${u.password}</td>
+                    <td>${estadoBadge}</td>
+                    <td>${botonAccion}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function cambiarEstado(index, nuevoEstado) {
+            listaUsuariosGlobal[index].estado = nuevoEstado;
+            renderizarTablaAdmin();
+            alert(`El usuario ha sido puesto en ${nuevoEstado}.`);
+        }
+
+        async function agregarUsuario() {
+            const nuevoUser = document.getElementById('newUsername').value;
+            const nuevoPass = document.getElementById('newPassword').value;
+
+            if(!nuevoUser || !nuevoPass) {
+                alert("Completa ambos campos para crear el usuario.");
+                return;
+            }
+
+            listaUsuariosGlobal.push({ usuario: nuevoUser, password: nuevoPass, estado: "ON" });
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            renderizarTablaAdmin();
+            alert("Usuario agregado con éxito.");
+        }
+
+        function filtrarGlobal(query) {
+            const q = query.toLowerCase();
+            if (activeSection === 'live') {
+                const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
+                renderizarLista('channels-container', filtLive, 'videoLive');
+            } else if (activeSection === 'movies') {
+                const filtMovies = moviesData.filter(m => m.title.toLowerCase().includes(q));
+                renderizarLista('movies-container', filtMovies, 'videoMovie');
+            } else if (activeSection === 'series') {
+                const filtSeries = seriesData.filter(s => s.title.toLowerCase().includes(q));
+                renderizarLista('series-container', filtSeries, 'videoSeries');
+            }
+        }
     </script>
 </body>
 </html>

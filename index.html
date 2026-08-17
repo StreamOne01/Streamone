@@ -104,7 +104,6 @@
             position: absolute; bottom: 40px; left: 50px; right: 50px;
             z-index: 2;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
         .menu-card {
@@ -359,24 +358,22 @@
 
         function construirBotonera(username) {
             const grid = document.getElementById('bottom-nav-grid');
-            grid.innerHTML = `
-                <div class="menu-card" onclick="abrirLiveTV()">
-                    <i class="icon">📺</i>
-                    <span>Live TV</span>
-                </div>
-                <div class="menu-card" onclick="abrirPeliculas()">
-                    <i class="icon">🎬</i>
-                    <span>Movies</span>
-                </div>
-                <div class="menu-card" onclick="abrirSeries()">
-                    <i class="icon">🍿</i>
-                    <span>Series</span>
-                </div>
-            `;
-
+            
             if (username.toLowerCase() === 'admin') {
                 grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
-                grid.innerHTML += `
+                grid.innerHTML = `
+                    <div class="menu-card" onclick="abrirLiveTV()">
+                        <i class="icon">📺</i>
+                        <span>Live TV</span>
+                    </div>
+                    <div class="menu-card" onclick="abrirPeliculas()">
+                        <i class="icon">🎬</i>
+                        <span>Movies</span>
+                    </div>
+                    <div class="menu-card" onclick="abrirSeries()">
+                        <i class="icon">🍿</i>
+                        <span>Series</span>
+                    </div>
                     <div class="menu-card" onclick="abrirAdminPanel()">
                         <i class="icon">⚙️</i>
                         <span>Admin Users</span>
@@ -384,6 +381,20 @@
                 `;
             } else {
                 grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                grid.innerHTML = `
+                    <div class="menu-card" onclick="abrirLiveTV()">
+                        <i class="icon">📺</i>
+                        <span>Live TV</span>
+                    </div>
+                    <div class="menu-card" onclick="abrirPeliculas()">
+                        <i class="icon">🎬</i>
+                        <span>Movies</span>
+                    </div>
+                    <div class="menu-card" onclick="abrirSeries()">
+                        <i class="icon">🍿</i>
+                        <span>Series</span>
+                    </div>
+                `;
             }
         }
 

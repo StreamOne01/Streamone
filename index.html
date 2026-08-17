@@ -3,45 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One - Interface</title>
+    <title>Stream One</title>
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js"></script>
     <style>
         :root {
-            --purple-bg: #2d1b4e;
+            --purple-bg: #1a0b2e;
+            --purple-panel: #2d1b4e;
             --purple-card: #452b75;
             --accent-orange: #ff6600;
             --text-main: #ffffff;
             --text-dim: #b3a5c9;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
         body {
-            background: linear-gradient(135deg, #1a0b2e 0%, var(--purple-bg) 100%);
+            background: linear-gradient(135deg, #1a0b2e 0%, var(--purple-panel) 100%);
             color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
             height: 100vh;
             display: flex;
             overflow: hidden;
         }
 
-        /* Sidebar estilo menú principal */
-        #sidebar {
-            width: 300px;
-            background: rgba(0,0,0,0.2);
-            padding: 30px;
-            border-right: 1px solid rgba(255,255,255,0.1);
+        /* Pantalla de Login */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 11, 46, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background: var(--purple-card);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 320px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .login-box h2 { color: var(--accent-orange); margin-bottom: 20px; }
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border-radius: 8px; border: none;
+            background: #2d1b4e; color: white;
+        }
+        .login-box button {
+            width: 100%; background: var(--accent-orange); color: white;
+            border: none; padding: 12px; border-radius: 8px;
+            cursor: pointer; font-weight: bold; margin-top: 10px;
         }
 
-        .menu-logo { font-size: 1.5rem; font-weight: bold; margin-bottom: 40px; color: var(--accent-orange); }
+        /* Aplicación Principal (Oculta hasta iniciar sesión) */
+        #app-container {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            display: none; /* Se cambia a flex mediante JS */
+        }
+
+        /* Sidebar de Categorías */
+        #sidebar {
+            width: 300px;
+            background: rgba(0,0,0,0.3);
+            padding: 25px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            overflow-y: auto;
+        }
+
+        .menu-logo { font-size: 1.3rem; font-weight: bold; margin-bottom: 30px; color: var(--accent-orange); }
 
         .nav-item {
             background: var(--purple-card);
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 10px;
             cursor: pointer;
             transition: 0.3s;
             border: 2px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -49,132 +93,256 @@
             background: #5a3a96;
         }
 
-        /* Área de Contenido */
+        /* Panel Central de Canales */
         #main-content {
             flex: 1;
-            padding: 40px;
+            padding: 30px;
             overflow-y: auto;
         }
 
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .header-bar h1 { color: var(--accent-orange); font-size: 1.4rem; }
 
         .channel-card {
             background: var(--purple-card);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px 20px;
+            border-radius: 10px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.2s;
         }
 
-        .channel-card:hover { background: #5a3a96; }
+        .channel-card:hover { background: #5a3a96; border-color: var(--accent-orange); }
 
-        /* Reproductor */
+        .channel-badge {
+            background: #2d1b4e;
+            color: var(--text-dim);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        /* Panel Derecho del Reproductor */
         #player-side {
-            width: 450px;
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
+            width: 420px;
+            background: rgba(0,0,0,0.4);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(255,255,255,0.1);
         }
 
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; }
+        #player-side h3 { font-size: 1.1rem; margin-bottom: 15px; color: var(--accent-orange); }
 
-        video { width: 100%; height: 100%; border-radius: 10px; }
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        video { width: 100%; height: 100%; object-fit: contain; }
 
-        .info-box { margin-top: 20px; color: var(--text-dim); }
+        .info-box { background: var(--purple-card); padding: 15px; border-radius: 8px; }
+        .info-box h4 { font-size: 1rem; margin-bottom: 5px; }
+        .info-box p { color: var(--text-dim); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <div id="sidebar">
-        <div class="menu-logo">STREAM ONE</div>
-        <div class="nav-item active" onclick="location.reload()">🏠 Menú Principal</div>
-        <div id="categories-container"></div>
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>STREAM ONE</h2>
+            <input type="text" id="userInput" placeholder="Usuario">
+            <input type="password" id="passInput" placeholder="Contraseña">
+            <button onclick="realizarLogin()">Ingresar</button>
+        </div>
     </div>
 
-    <div id="main-content">
-        <div class="header-bar">
-            <h1 id="title-display">Canales</h1>
+    <!-- APLICACIÓN PRINCIPAL (3 Columnas) -->
+    <div id="app-container" style="display: none;">
+        
+        <!-- Columna 1: Menú y Categorías -->
+        <div id="sidebar">
+            <div class="menu-logo">STREAM ONE</div>
+            <div class="nav-item active" onclick="resetToHome()">
+                <span>🏠 Menú Principal</span>
+            </div>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+            <div id="categories-container"></div>
         </div>
-        <div id="channels-container"></div>
-    </div>
 
-    <div id="player-side">
-        <div class="video-box">
-            <video id="videoElement" controls autoplay></video>
+        <!-- Columna 2: Lista de Canales -->
+        <div id="main-content">
+            <div class="header-bar">
+                <h1 id="title-display">Selecciona una categoría</h1>
+            </div>
+            <div id="channels-container"></div>
         </div>
-        <div class="info-box">
-            <h3 id="playing-title">Selecciona un canal</h3>
+
+        <!-- Columna 3: Reproductor -->
+        <div id="player-side">
+            <h3>Reproductor Integrado</h3>
+            <div class="video-box">
+                <video id="videoElement" controls autoplay></video>
+            </div>
+            <div class="info-box">
+                <h4 id="playing-title">Ningún canal seleccionado</h4>
+                <p id="playing-category">Haz clic en un canal</p>
+            </div>
         </div>
     </div>
 
     <script>
+        const SCRIPT_URL = 'TU_URL_DE_APPS_SCRIPT_AQUI'; // Reemplaza con tu URL de Google Apps Script o usa validación local
         let channelsData = [];
         let mpegtsPlayer = null;
 
+        // Función de Login
+        async function realizarLogin() {
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+
+            if(!user || !pass) {
+                alert("Por favor llena los campos");
+                return;
+            }
+
+            try {
+                // Si ya tienes configurado tu Google Apps Script, descomenta estas líneas:
+                /*
+                const response = await fetch(SCRIPT_URL);
+                const users = await response.json();
+                const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
+                */
+
+                // Validación provisional (o de prueba mientras configuras la hoja):
+                const loginOk = (user === "admin" && pass === "1234") || user.length > 0; 
+
+                if (loginOk) {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'flex';
+                    loadPlaylist();
+                } else {
+                    alert("Usuario incorrecto o inactivo");
+                }
+            } catch (e) {
+                alert("Error al conectar con la base de datos de usuarios.");
+            }
+        }
+
+        // Cargar lista M3U
         async function loadPlaylist() {
-            const response = await fetch('StreamOne.m3u');
-            const data = await response.text();
-            parseM3U(data);
+            try {
+                const response = await fetch('StreamOne.m3u');
+                const text = await response.text();
+                parseM3U(text);
+            } catch (error) {
+                console.error("Error al cargar la lista:", error);
+            }
         }
 
         function parseM3U(data) {
             const lines = data.split('\n');
-            let currentCategory = "General";
-            lines.forEach(line => {
+            let currentCategory = "GENERAL";
+            let currentTitle = "";
+
+            channelsData = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
                 if (line.startsWith('#EXTINF:')) {
-                    const match = line.match(/group-title="([^"]+)"/);
-                    if (match) currentCategory = match[1];
-                    const name = line.split(',')[1];
-                    channelsData.push({ title: name, category: currentCategory, url: '' });
-                } else if (line.trim() && !line.startsWith('#')) {
-                    channelsData[channelsData.length - 1].url = line.trim();
+                    const catMatch = line.match(/group-title="([^"]+)"/);
+                    if (catMatch) currentCategory = catMatch[1];
+                    const commaIndex = line.lastIndexOf(',');
+                    if (commaIndex !== -1) currentTitle = line.substring(commaIndex + 1).trim();
+                } else if (line && !line.startsWith('#')) {
+                    if (currentTitle) {
+                        let type = "M3U8";
+                        if (line.includes('.ts') || line.includes(':8080/live/') || line.includes('/live/')) {
+                            type = "TS";
+                        }
+                        channelsData.push({ title: currentTitle, url: line, category: currentCategory, type: type });
+                    }
+                    currentTitle = "";
                 }
-            });
-            render();
+            }
+            renderCategories();
         }
 
-        function render() {
+        function renderCategories() {
             const container = document.getElementById('categories-container');
-            const cats = [...new Set(channelsData.map(c => c.category))];
-            cats.forEach(cat => {
-                const div = document.createElement('div');
-                div.className = 'nav-item';
-                div.innerText = cat;
-                div.onclick = () => filter(cat);
-                container.appendChild(div);
+            container.innerHTML = '';
+
+            const categories = {};
+            channelsData.forEach(ch => {
+                if (!categories[ch.category]) categories[ch.category] = 0;
+                categories[ch.category]++;
             });
+
+            // Botón Todos
+            const allBtn = document.createElement('div');
+            allBtn.className = 'nav-item active';
+            allBtn.innerHTML = `<span>Todos (${channelsData.length})</span>`;
+            allBtn.onclick = () => filterCategory('TODOS', allBtn);
+            container.appendChild(allBtn);
+
+            for (let cat in categories) {
+                const btn = document.createElement('div');
+                btn.className = 'nav-item';
+                btn.innerHTML = `<span>${cat}</span> <span class="channel-badge">${categories[cat]}</span>`;
+                btn.onclick = () => filterCategory(cat, btn);
+                container.appendChild(btn);
+            }
+
+            filterCategory('TODOS', allBtn);
         }
 
-        function filter(cat) {
-            document.getElementById('title-display').innerText = cat;
+        function filterCategory(category, element) {
+            document.querySelectorAll('#categories-container .nav-item').forEach(b => b.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            document.getElementById('title-display').innerText = category === 'TODOS' ? 'Todos los Canales' : category;
+
             const container = document.getElementById('channels-container');
             container.innerHTML = '';
-            channelsData.filter(c => c.category === cat).forEach(ch => {
-                const div = document.createElement('div');
-                div.className = 'channel-card';
-                div.innerHTML = `<span>${ch.title}</span> <span>▶</span>`;
-                div.onclick = () => play(ch);
-                container.appendChild(div);
+
+            const filtered = category === 'TODOS' ? channelsData : channelsData.filter(ch => ch.category === category);
+
+            filtered.forEach(ch => {
+                const item = document.createElement('div');
+                item.className = 'channel-card';
+                item.innerHTML = `<span>${ch.title}</span> <span class="channel-badge">${ch.type}</span>`;
+                item.onclick = () => playChannel(ch);
+                container.appendChild(item);
             });
         }
 
-        function play(ch) {
-            document.getElementById('playing-title').innerText = ch.title;
-            const videoElement = document.getElementById('videoElement');
-            if (mpegtsPlayer) mpegtsPlayer.destroy();
-            
-            if (ch.url.includes('.ts')) {
-                mpegtsPlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: ch.url });
-                mpegtsPlayer.attachMediaElement(videoElement);
-                mpegtsPlayer.load();
-                mpegtsPlayer.play();
-            } else {
-                videoElement.src = ch.url;
-            }
+        function resetToHome() {
+            const allBtn = document.querySelector('#categories-container .nav-item');
+            if(allBtn) allBtn.click();
         }
 
-        loadPlaylist();
+        function playChannel(channel) {
+            const videoElement = document.getElementById('videoElement');
+            document.getElementById('playing-title').innerText = channel.title;
+            document.getElementById('playing-category').innerText = `Categoría: ${channel.category}`;
+
+            if (mpegtsPlayer) {
+                mpegtsPlayer.destroy();
+                mpegtsPlayer = null;
+            }
+
+            if (channel.type === 'TS' && mpegts.getFeatureList().mseLivePlayback) {
+                mpegtsPlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: channel.url });
+                mpegtsPlayer.attachMediaElement(videoElement);
+                mpegtsPlayer.load();
+                mpegtsPlayer.play().catch(e => console.log(e));
+            } else {
+                videoElement.src = channel.url;
+                videoElement.load();
+                videoElement.play().catch(e => console.log(e));
+            }
+        }
     </script>
 </body>
 </html>

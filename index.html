@@ -24,24 +24,21 @@
             overflow: hidden;
         }
 
-        /* LOGIN */
+        /* PANTALLA DE BIENVENIDA */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
             display: flex; justify-content: center; align-items: center; z-index: 2000;
         }
         .login-box {
-            background: #452b75; padding: 40px; border-radius: 20px; text-align: center; width: 340px;
+            background: #452b75; padding: 40px; border-radius: 20px; text-align: center; width: 420px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-        .login-box h2 { color: var(--accent-orange); margin-bottom: 25px; letter-spacing: 1px; }
-        .login-box input {
-            width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: none;
-            background: #2d1b4e; color: white; font-size: 1rem; outline: none;
-        }
+        .login-box h2 { color: var(--accent-orange); margin-bottom: 15px; letter-spacing: 1px; }
+        .login-box p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4; }
         .login-box button {
             width: 100%; background: var(--accent-orange); color: white; border: none;
-            padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 15px;
+            padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
             transition: opacity 0.2s;
         }
         .login-box button:hover { opacity: 0.9; }
@@ -104,7 +101,7 @@
             position: absolute; bottom: 40px; left: 50px; right: 50px;
             z-index: 2;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
         .menu-card {
@@ -145,29 +142,16 @@
         .item-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
         .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
-
-        /* PANEL ADMIN */
-        .admin-panel-container { max-width: 900px; margin: 0 auto; width: 100%; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .admin-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 25px; align-items: end; }
-        .admin-form input { padding: 12px; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; outline: none; }
-        .admin-form button { background: var(--accent-orange); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        table.users-table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
-        table.users-table th, table.users-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        table.users-table th { color: var(--accent-orange); font-size: 0.9rem; }
-        .btn-status { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
-        .btn-on { background: #28a745; color: white; }
-        .btn-off { background: #dc3545; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN -->
+    <!-- PANTALLA DE BIENVENIDA -->
     <div id="login-screen">
         <div class="login-box">
             <h2>STREAM ONE</h2>
-            <input type="text" id="userInput" placeholder="Usuario">
-            <input type="password" id="passInput" placeholder="Contraseña">
-            <button onclick="realizarLogin()">Ingresar</button>
+            <p>Bienvenido a Stream One, proyecto de Carlos Muñoz.</p>
+            <button onclick="ingresarApp()">Entrar</button>
         </div>
     </div>
 
@@ -181,7 +165,7 @@
         <div class="top-header">
             <div class="brand-logo">📺 STREAM <span>ONE</span></div>
             <div class="header-right">
-                <div class="user-greeting">👤 <span id="logged-username">Usuario</span></div>
+                <div class="user-greeting">👤 Carlos Muñoz</div>
                 <div class="search-container">
                     <span class="search-icon">🔍</span>
                     <input type="text" class="search-input" id="globalSearch" placeholder="Buscar..." oninput="filtrarGlobal(this.value)">
@@ -197,7 +181,20 @@
             <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido independiente.</p>
         </div>
 
-        <div class="bottom-nav" id="bottom-nav-grid"></div>
+        <div class="bottom-nav" id="bottom-nav-grid">
+            <div class="menu-card" onclick="abrirLiveTV()">
+                <i class="icon">📺</i>
+                <span>Live TV</span>
+            </div>
+            <div class="menu-card" onclick="abrirPeliculas()">
+                <i class="icon">🎬</i>
+                <span>Movies</span>
+            </div>
+            <div class="menu-card" onclick="abrirSeries()">
+                <i class="icon">🍿</i>
+                <span>Series</span>
+            </div>
+        </div>
     </div>
 
     <!-- VISTA LIVE TV -->
@@ -245,51 +242,12 @@
         </div>
     </div>
 
-    <!-- VISTA PANEL ADMIN -->
-    <div id="admin-view" class="sub-view">
-        <div class="sub-view-header">
-            <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
-            <h2 style="color: var(--accent-orange);">Gestión de Usuarios (Panel Admin)</h2>
-            <div></div>
-        </div>
-        <div class="admin-panel-container">
-            <h3>Agregar Nuevo Usuario</h3>
-            <div class="admin-form">
-                <div>
-                    <label style="font-size: 0.8rem; color: var(--text-dim);">Usuario:</label>
-                    <input type="text" id="newUsername" placeholder="Ej. cliente01" style="width:100%; margin-top:5px;">
-                </div>
-                <div>
-                    <label style="font-size: 0.8rem; color: var(--text-dim);">Contraseña:</label>
-                    <input type="text" id="newPassword" placeholder="Ej. clave123" style="width:100%; margin-top:5px;">
-                </div>
-                <button onclick="agregarUsuario()">Crear Usuario</button>
-            </div>
-
-            <h3 style="margin-top: 30px;">Usuarios Registrados</h3>
-            <table class="users-table">
-                <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Contraseña</th>
-                        <th>Estado</th>
-                        <th>Acción / Cambiar Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-users-list"></tbody>
-            </table>
-        </div>
-    </div>
-
     <script>
-        const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
-        
         // URLs protegidas con proxy CORS integrado para evitar bloqueos en navegadores y apps móviles
         const URL_CANALES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales');
         const URL_PELICULAS = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
         const URL_SERIES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series');
 
-        let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
         let activeSection = 'live';
@@ -309,70 +267,15 @@
             }
         }, 6000);
 
-        async function realizarLogin() {
-            const user = document.getElementById('userInput').value;
-            const pass = document.getElementById('passInput').value;
-
-            if(!user || !pass) {
-                alert("Por favor ingresa usuario y contraseña.");
-                return;
-            }
-
-            try {
-                const response = await fetch(USERS_URL);
-                const users = await response.json();
-                listaUsuariosGlobal = users;
-                const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
-
-                if (found) {
-                    document.getElementById('logged-username').innerText = found.usuario;
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-container').style.display = 'flex';
-                    
-                    construirBotonera(found.usuario);
-                    cargarContenidoDirecto();
-                } else {
-                    alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
-                }
-            } catch (e) {
-                alert("Error de conexión con la base de datos.");
-            }
-        }
-
-        function construirBotonera(username) {
-            const grid = document.getElementById('bottom-nav-grid');
-            grid.innerHTML = `
-                <div class="menu-card" onclick="abrirLiveTV()">
-                    <i class="icon">📺</i>
-                    <span>Live TV</span>
-                </div>
-                <div class="menu-card" onclick="abrirPeliculas()">
-                    <i class="icon">🎬</i>
-                    <span>Movies</span>
-                </div>
-                <div class="menu-card" onclick="abrirSeries()">
-                    <i class="icon">🍿</i>
-                    <span>Series</span>
-                </div>
-            `;
-
-            if (username.toLowerCase() === 'admin') {
-                grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
-                grid.innerHTML += `
-                    <div class="menu-card" onclick="abrirAdminPanel()">
-                        <i class="icon">⚙️</i>
-                        <span>Admin Users</span>
-                    </div>
-                `;
-            } else {
-                grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-            }
+        function ingresarApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            cargarContenidoDirecto();
         }
 
         function abrirLiveTV() { activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
         function abrirPeliculas() { activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
         function abrirSeries() { activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
-        function abrirAdminPanel() { activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
 
         function cerrarSubViews() {
             document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
@@ -465,51 +368,6 @@
                 videoElement.load();
                 videoElement.play().catch(e => console.log(e));
             }
-        }
-
-        function renderizarTablaAdmin() {
-            const tbody = document.getElementById('admin-users-list');
-            tbody.innerHTML = '';
-            listaUsuariosGlobal.forEach((u, index) => {
-                const tr = document.createElement('tr');
-                const estadoBadge = u.estado === "ON" 
-                    ? `<span style="color:#28a745; font-weight:bold;">● ON</span>` 
-                    : `<span style="color:#dc3545; font-weight:bold;">● OFF</span>`;
-                
-                const botonAccion = u.estado === "ON"
-                    ? `<button class="btn-status btn-off" onclick="cambiarEstado(${index}, 'OFF')">Apagar</button>`
-                    : `<button class="btn-status btn-on" onclick="cambiarEstado(${index}, 'ON')">Encender</button>`;
-
-                tr.innerHTML = `
-                    <td>${u.usuario}</td>
-                    <td>${u.password}</td>
-                    <td>${estadoBadge}</td>
-                    <td>${botonAccion}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function cambiarEstado(index, nuevoEstado) {
-            listaUsuariosGlobal[index].estado = nuevoEstado;
-            renderizarTablaAdmin();
-            alert(`El usuario ha sido puesto en ${nuevoEstado}.`);
-        }
-
-        async function agregarUsuario() {
-            const nuevoUser = document.getElementById('newUsername').value;
-            const nuevoPass = document.getElementById('newPassword').value;
-
-            if(!nuevoUser || !nuevoPass) {
-                alert("Completa ambos campos para crear el usuario.");
-                return;
-            }
-
-            listaUsuariosGlobal.push({ usuario: nuevoUser, password: nuevoPass, estado: "ON" });
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newPassword').value = '';
-            renderizarTablaAdmin();
-            alert("Usuario agregado con éxito.");
         }
 
         function filtrarGlobal(query) {

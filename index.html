@@ -173,7 +173,6 @@
 
     <!-- HOME PRINCIPAL -->
     <div id="app-container">
-        <!-- Carrusel de fondos automáticos -->
         <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop');"></div>
         <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1920&auto=format&fit=crop');"></div>
         <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920&auto=format&fit=crop');"></div>
@@ -285,10 +284,10 @@
     <script>
         const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
-        // URLs integradas directamente para Canales, Películas y Series
-        const URL_CANALES = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales';
-        const URL_PELICULAS = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas';
-        const URL_SERIES = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series';
+        // URLs protegidas con proxy CORS integrado para evitar bloqueos en navegadores y apps móviles
+        const URL_CANALES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales');
+        const URL_PELICULAS = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
+        const URL_SERIES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series');
 
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
@@ -389,31 +388,31 @@
 
         async function cargarContenidoDirecto() {
             try {
-                // Cargar Canales Directos
-                if (URL_CANALES && !URL_CANALES.includes('AQUÍ_PEGA')) {
+                // Cargar Canales
+                if (URL_CANALES) {
                     const resChan = await fetch(URL_CANALES);
                     const textChan = await resChan.text();
                     channelsData = parsearM3U(textChan);
                     renderizarLista('channels-container', channelsData, 'videoLive');
                 }
 
-                // Cargar Películas Directas
-                if (URL_PELICULAS && !URL_PELICULAS.includes('AQUÍ_PEGA')) {
+                // Cargar Películas
+                if (URL_PELICULAS) {
                     const resMov = await fetch(URL_PELICULAS);
                     const textMov = await resMov.text();
                     moviesData = parsearM3U(textMov);
                     renderizarLista('movies-container', moviesData, 'videoMovie');
                 }
 
-                // Cargar Series Directas
-                if (URL_SERIES && !URL_SERIES.includes('AQUÍ_PEGA')) {
+                // Cargar Series
+                if (URL_SERIES) {
                     const resSer = await fetch(URL_SERIES);
                     const textSer = await resSer.text();
                     seriesData = parsearM3U(textSer);
                     renderizarLista('series-container', seriesData, 'videoSeries');
                 }
             } catch(e) {
-                console.error("Error al cargar las URLs directas:", e);
+                console.error("Error al cargar las listas M3U:", e);
             }
         }
 

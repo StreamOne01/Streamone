@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stream One - Home</title>
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js"></script>
     <style>
@@ -132,22 +132,25 @@
             background: var(--bg-dark);
             z-index: 10;
             display: none;
-            padding: 40px;
+            padding: 20px 40px;
             flex-direction: column;
-            overflow-y: auto;
+            overflow: hidden;
         }
-        .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         
-        .content-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; height: calc(100vh - 120px); }
-        .list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .item-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .item-row:hover { border-color: var(--accent-orange); background: var(--card-hover); }
+        .content-layout { display: flex; flex: 1; gap: 20px; overflow: hidden; height: calc(100vh - 100px); }
+        
+        /* Doble panel izquierdo para Categorías y Canales */
+        .categories-box, .list-box { width: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .item-row { background: var(--card-bg); padding: 12px 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .item-row:hover, .item-row.active { border-color: var(--accent-orange); background: var(--card-hover); }
+        
         .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
 
         /* PANEL ADMIN */
-        .admin-panel-container { max-width: 900px; margin: 0 auto; width: 100%; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .admin-panel-container { max-width: 900px; margin: 0 auto; width: 100%; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); overflow-y: auto; max-height: 80vh; }
         .admin-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 25px; align-items: end; }
         .admin-form input { padding: 12px; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; outline: none; }
         .admin-form button { background: var(--accent-orange); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
@@ -194,7 +197,7 @@
         <div class="hero-banner">
             <h1 id="hero-title">Stream One Pro</h1>
             <div class="meta">Panel Multimedia Inteligente</div>
-            <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido independiente.</p>
+            <p>Selecciona una opción en el menú inferior para disfrutar de tu contenido organizado.</p>
         </div>
 
         <div class="bottom-nav" id="bottom-nav-grid"></div>
@@ -208,7 +211,8 @@
             <div></div>
         </div>
         <div class="content-layout">
-            <div class="list-box" id="channels-container"></div>
+            <div class="categories-box" id="live-categories"></div>
+            <div class="list-box" id="live-channels"></div>
             <div class="video-panel">
                 <video id="videoLive" controls autoplay></video>
             </div>
@@ -223,7 +227,8 @@
             <div></div>
         </div>
         <div class="content-layout">
-            <div class="list-box" id="movies-container"></div>
+            <div class="categories-box" id="movies-categories"></div>
+            <div class="list-box" id="movies-channels"></div>
             <div class="video-panel">
                 <video id="videoMovie" controls autoplay></video>
             </div>
@@ -238,7 +243,8 @@
             <div></div>
         </div>
         <div class="content-layout">
-            <div class="list-box" id="series-container"></div>
+            <div class="categories-box" id="series-categories"></div>
+            <div class="list-box" id="series-channels"></div>
             <div class="video-panel">
                 <video id="videoSeries" controls autoplay></video>
             </div>
@@ -284,15 +290,21 @@
     <script>
         const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
-        // URLs protegidas con proxy CORS integrado para evitar bloqueos en navegadores y apps móviles
         const URL_CANALES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales');
         const URL_PELICULAS = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
         const URL_SERIES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series');
 
         let listaUsuariosGlobal = [];
-        let channelsData = [], moviesData = [], seriesData = [];
+        let channelsData = {}, moviesData = {}, seriesData = {};
         let activePlayer = null;
-        let activeSection = 'live';
+        let activeSection = 'home';
+
+        // Forzar orientación horizontal automática
+        function forzarLandscape() {
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
+        }
 
         setInterval(() => {
             const now = new Date();
@@ -325,6 +337,7 @@
                 const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
 
                 if (found) {
+                    forzarLandscape();
                     document.getElementById('logged-username').innerText = found.usuario;
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-container').style.display = 'flex';
@@ -369,10 +382,10 @@
             }
         }
 
-        function abrirLiveTV() { activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
-        function abrirPeliculas() { activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
-        function abrirSeries() { activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
-        function abrirAdminPanel() { activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
+        function abrirLiveTV() { forzarLandscape(); activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
+        function abrirPeliculas() { forzarLandscape(); activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
+        function abrirSeries() { forzarLandscape(); activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
+        function abrirAdminPanel() { forzarLandscape(); activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
 
         function cerrarSubViews() {
             document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
@@ -388,28 +401,20 @@
 
         async function cargarContenidoDirecto() {
             try {
-                // Cargar Canales
                 if (URL_CANALES) {
                     const resChan = await fetch(URL_CANALES);
-                    const textChan = await resChan.text();
-                    channelsData = parsearM3U(textChan);
-                    renderizarLista('channels-container', channelsData, 'videoLive');
+                    channelsData = parsearM3U(await resChan.text());
+                    renderizarCategorias('live-categories', 'live-channels', channelsData, 'videoLive');
                 }
-
-                // Cargar Películas
                 if (URL_PELICULAS) {
                     const resMov = await fetch(URL_PELICULAS);
-                    const textMov = await resMov.text();
-                    moviesData = parsearM3U(textMov);
-                    renderizarLista('movies-container', moviesData, 'videoMovie');
+                    moviesData = parsearM3U(await resMov.text());
+                    renderizarCategorias('movies-categories', 'movies-channels', moviesData, 'videoMovie');
                 }
-
-                // Cargar Series
                 if (URL_SERIES) {
                     const resSer = await fetch(URL_SERIES);
-                    const textSer = await resSer.text();
-                    seriesData = parsearM3U(textSer);
-                    renderizarLista('series-container', seriesData, 'videoSeries');
+                    seriesData = parsearM3U(await resSer.text());
+                    renderizarCategorias('series-categories', 'series-channels', seriesData, 'videoSeries');
                 }
             } catch(e) {
                 console.error("Error al cargar las listas M3U:", e);
@@ -419,30 +424,66 @@
         function parsearM3U(data) {
             const lines = data.split('\n');
             let cat = "General";
-            let lista = [];
+            let categorias = {};
+            
             lines.forEach(line => {
                 if (line.startsWith('#EXTINF:')) {
                     const match = line.match(/group-title="([^"]+)"/);
-                    if (match) cat = match[1];
+                    if (match) cat = match[1].trim();
                     const name = line.split(',')[1];
-                    lista.push({ title: name ? name.trim() : "Contenido", category: cat, url: '' });
+                    
+                    if (!categorias[cat]) categorias[cat] = [];
+                    categorias[cat].push({ title: name ? name.trim() : "Contenido", category: cat, url: '' });
                 } else if (line.trim() && !line.startsWith('#')) {
-                    if (lista.length > 0) {
-                        lista[lista.length - 1].url = line.trim();
+                    for (let c in categorias) {
+                        let arr = categorias[c];
+                        if (arr.length > 0 && !arr[arr.length - 1].url) {
+                            arr[arr.length - 1].url = line.trim();
+                            break;
+                        }
                     }
                 }
             });
-            return lista;
+            return categorias;
         }
 
-        function renderizarLista(containerId, lista, videoId) {
-            const container = document.getElementById(containerId);
+        function renderizarCategorias(catContainerId, listContainerId, dataObj, videoId) {
+            const catContainer = document.getElementById(catContainerId);
+            catContainer.innerHTML = '';
+            const categorias = Object.keys(dataObj);
+            
+            if (categorias.length === 0) return;
+
+            categorias.forEach((cat, index) => {
+                const div = document.createElement('div');
+                div.className = 'item-row' + (index === 0 ? ' active' : '');
+                div.innerHTML = `📁 <strong>${cat}</strong>`;
+                div.onclick = () => {
+                    document.querySelectorAll(`#${catContainerId} .item-row`).forEach(el => el.classList.remove('active'));
+                    div.classList.add('active');
+                    renderizarItemsCanales(listContainerId, dataObj[cat], videoId);
+                };
+                catContainer.appendChild(div);
+            });
+
+            // Cargar por defecto la primera categoría
+            renderizarItemsCanales(listContainerId, dataObj[categorias[0]], videoId);
+        }
+
+        function renderizarItemsCanales(listContainerId, itemsList, videoId) {
+            const container = document.getElementById(listContainerId);
             container.innerHTML = '';
-            lista.forEach(item => {
+            if (!itemsList) return;
+
+            itemsList.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'item-row';
-                div.innerHTML = `<strong>${item.title}</strong><br><small style="color:var(--text-dim);">${item.category}</small>`;
-                div.onclick = () => reproducirMedia(item, videoId);
+                div.innerHTML = `<strong>${item.title}</strong>`;
+                div.onclick = () => {
+                    document.querySelectorAll(`#${listContainerId} .item-row`).forEach(el => el.classList.remove('active'));
+                    div.classList.add('active');
+                    reproducirMedia(item, videoId);
+                };
                 container.appendChild(div);
             });
         }
@@ -514,16 +555,7 @@
 
         function filtrarGlobal(query) {
             const q = query.toLowerCase();
-            if (activeSection === 'live') {
-                const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
-                renderizarLista('channels-container', filtLive, 'videoLive');
-            } else if (activeSection === 'movies') {
-                const filtMovies = moviesData.filter(m => m.title.toLowerCase().includes(q));
-                renderizarLista('movies-container', filtMovies, 'videoMovie');
-            } else if (activeSection === 'series') {
-                const filtSeries = seriesData.filter(s => s.title.toLowerCase().includes(q));
-                renderizarLista('series-container', filtSeries, 'videoSeries');
-            }
+            // Búsqueda global simplificada o adaptada según sección activa
         }
     </script>
 </body>

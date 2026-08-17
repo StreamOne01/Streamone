@@ -288,7 +288,7 @@
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
-        let activeSection = 'live'; // Controla en qué sección nos encontramos
+        let activeSection = 'live';
 
         setInterval(() => {
             const now = new Date();
@@ -365,23 +365,10 @@
             }
         }
 
-        function abrirLiveTV() { 
-            activeSection = 'live';
-            document.getElementById('livetv-view').style.display = 'flex'; 
-        }
-        function abrirPeliculas() { 
-            activeSection = 'movies';
-            document.getElementById('movies-view').style.display = 'flex'; 
-        }
-        function abrirSeries() { 
-            activeSection = 'series';
-            document.getElementById('series-view').style.display = 'flex'; 
-        }
-        function abrirAdminPanel() { 
-            activeSection = 'admin';
-            document.getElementById('admin-view').style.display = 'flex'; 
-            renderizarTablaAdmin(); 
-        }
+        function abrirLiveTV() { activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
+        function abrirPeliculas() { activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
+        function abrirSeries() { activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
+        function abrirAdminPanel() { activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
 
         function cerrarSubViews() {
             document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
@@ -515,8 +502,6 @@
 
         function filtrarGlobal(query) {
             const q = query.toLowerCase();
-
-            // Filtra y renderiza únicamente según la sección activa en la que esté el usuario
             if (activeSection === 'live') {
                 const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
                 renderizarLista('channels-container', filtLive, 'videoLive');

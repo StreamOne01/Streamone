@@ -173,6 +173,7 @@
 
     <!-- HOME PRINCIPAL -->
     <div id="app-container">
+        <!-- Carrusel de fondos automáticos -->
         <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop');"></div>
         <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1920&auto=format&fit=crop');"></div>
         <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920&auto=format&fit=crop');"></div>
@@ -282,17 +283,12 @@
     </div>
 
     <script>
-        const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
-        // URLs protegidas con proxy CORS integrado para evitar bloqueos en navegadores y apps móviles
-        const URL_CANALES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales');
-        const URL_PELICULAS = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
-        const URL_SERIES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series');
-
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
-        let activeSection = 'live';
+        let activeSection = 'live'; // Controla en qué sección nos encontramos
 
         setInterval(() => {
             const now = new Date();
@@ -319,7 +315,7 @@
             }
 
             try {
-                const response = await fetch(USERS_URL);
+                const response = await fetch(SCRIPT_URL);
                 const users = await response.json();
                 listaUsuariosGlobal = users;
                 const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
@@ -330,7 +326,7 @@
                     document.getElementById('app-container').style.display = 'flex';
                     
                     construirBotonera(found.usuario);
-                    cargarContenidoDirecto();
+                    cargarTodoDeGolpe();
                 } else {
                     alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
                 }
@@ -369,10 +365,23 @@
             }
         }
 
-        function abrirLiveTV() { activeSection = 'live'; document.getElementById('livetv-view').style.display = 'flex'; }
-        function abrirPeliculas() { activeSection = 'movies'; document.getElementById('movies-view').style.display = 'flex'; }
-        function abrirSeries() { activeSection = 'series'; document.getElementById('series-view').style.display = 'flex'; }
-        function abrirAdminPanel() { activeSection = 'admin'; document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
+        function abrirLiveTV() { 
+            activeSection = 'live';
+            document.getElementById('livetv-view').style.display = 'flex'; 
+        }
+        function abrirPeliculas() { 
+            activeSection = 'movies';
+            document.getElementById('movies-view').style.display = 'flex'; 
+        }
+        function abrirSeries() { 
+            activeSection = 'series';
+            document.getElementById('series-view').style.display = 'flex'; 
+        }
+        function abrirAdminPanel() { 
+            activeSection = 'admin';
+            document.getElementById('admin-view').style.display = 'flex'; 
+            renderizarTablaAdmin(); 
+        }
 
         function cerrarSubViews() {
             document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
@@ -386,33 +395,25 @@
             activeSection = 'home';
         }
 
-        async function cargarContenidoDirecto() {
+        async function cargarTodoDeGolpe() {
             try {
-                // Cargar Canales
-                if (URL_CANALES) {
-                    const resChan = await fetch(URL_CANALES);
-                    const textChan = await resChan.text();
-                    channelsData = parsearM3U(textChan);
+                const res = await fetch(`${SCRIPT_URL}?action=init`);
+                const json = await res.json();
+
+                if (json.canales) {
+                    channelsData = parsearM3U(json.canales);
                     renderizarLista('channels-container', channelsData, 'videoLive');
                 }
-
-                // Cargar Películas
-                if (URL_PELICULAS) {
-                    const resMov = await fetch(URL_PELICULAS);
-                    const textMov = await resMov.text();
-                    moviesData = parsearM3U(textMov);
+                if (json.peliculas) {
+                    moviesData = parsearM3U(json.peliculas);
                     renderizarLista('movies-container', moviesData, 'videoMovie');
                 }
-
-                // Cargar Series
-                if (URL_SERIES) {
-                    const resSer = await fetch(URL_SERIES);
-                    const textSer = await resSer.text();
-                    seriesData = parsearM3U(textSer);
+                if (json.series) {
+                    seriesData = parsearM3U(json.series);
                     renderizarLista('series-container', seriesData, 'videoSeries');
                 }
             } catch(e) {
-                console.error("Error al cargar las listas M3U:", e);
+                console.error("Error en la carga optimizada:", e);
             }
         }
 
@@ -514,6 +515,8 @@
 
         function filtrarGlobal(query) {
             const q = query.toLowerCase();
+
+            // Filtra y renderiza únicamente según la sección activa en la que esté el usuario
             if (activeSection === 'live') {
                 const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
                 renderizarLista('channels-container', filtLive, 'videoLive');

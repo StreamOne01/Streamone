@@ -55,7 +55,6 @@
             background: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
         }
 
-        /* Capa oscura semitransparente sobre el fondo para legibilidad */
         #app-container::before {
             content: '';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -71,7 +70,7 @@
         }
         .brand-logo { font-size: 1.5rem; font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
         .brand-logo span { color: var(--accent-orange); }
-        .header-right { display: flex; align-items: center; gap: 20px; font-size: 1.1px; color: var(--text-dim); }
+        .header-right { display: flex; align-items: center; gap: 20px; color: var(--text-dim); }
         #clock { font-size: 1.2rem; font-weight: 600; color: var(--text-main); }
 
         /* Banner Central / Información */
@@ -112,7 +111,7 @@
         .menu-card .icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
         .menu-card span { font-size: 1rem; font-weight: 600; color: var(--text-main); }
 
-        /* VISTAS INTERNAS (Live TV / Cotizador) */
+        /* VISTAS INTERNAS */
         .sub-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark);
@@ -124,7 +123,6 @@
         .sub-view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .back-btn { background: var(--card-bg); border: 1px solid var(--accent-orange); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         
-        /* Contenedor de Canales */
         .channels-layout { display: flex; flex: 1; gap: 30px; overflow: hidden; }
         .channels-list-box { width: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .channel-row { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
@@ -132,14 +130,12 @@
         .video-panel { flex: 1; display: flex; flex-direction: column; background: #000; border-radius: 12px; overflow: hidden; justify-content: center; align-items: center; }
         video { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Cotizador Panel */
         .cotizador-box { background: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 600px; margin: 0 auto; width: 100%; }
         .cotizador-box input, .cotizador-box select { width: 100%; padding: 12px; margin: 10px 0 20px 0; background: #1a0b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE LOGIN -->
     <div id="login-screen">
         <div class="login-box">
             <h2>STREAM ONE</h2>
@@ -149,9 +145,7 @@
         </div>
     </div>
 
-    <!-- HOME PRINCIPAL (ESTILO SMART TV / PURPLE LITE) -->
     <div id="app-container">
-        <!-- Header -->
         <div class="top-header">
             <div class="brand-logo">📺 STREAM <span>ONE</span></div>
             <div class="header-right">
@@ -160,14 +154,12 @@
             </div>
         </div>
 
-        <!-- Banner Central Informativo -->
         <div class="hero-banner">
             <h1 id="hero-title">Stream One Pro</h1>
             <div class="meta">Plataforma Multimedia & Herramientas</div>
             <p>Selecciona una opción en el menú inferior para acceder a la televisión en vivo, gestionar tus cotizaciones o explorar el contenido disponible.</p>
         </div>
 
-        <!-- Botonera Inferior Estilo Smart TV -->
         <div class="bottom-nav">
             <div class="menu-card" onclick="alert('Función de Búsqueda')">
                 <i class="icon">🔍</i>
@@ -196,7 +188,6 @@
         </div>
     </div>
 
-    <!-- VISTA DE LIVE TV (REPRODUCTOR DE CANALES) -->
     <div id="livetv-view" class="sub-view">
         <div class="sub-view-header">
             <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
@@ -204,16 +195,13 @@
             <div></div>
         </div>
         <div class="channels-layout">
-            <div class="channels-list-box" id="channels-container">
-                <!-- Se llena con JS -->
-            </div>
+            <div class="channels-list-box" id="channels-container"></div>
             <div class="video-panel">
                 <video id="videoElement" controls autoplay></video>
             </div>
         </div>
     </div>
 
-    <!-- VISTA DE COTIZADOR -->
     <div id="cotizador-view" class="sub-view">
         <div class="sub-view-header">
             <button class="back-btn" onclick="cerrarSubViews()">⬅ Volver al Menú</button>
@@ -231,7 +219,7 @@
             </select>
             <label>Costo Base ($):</label>
             <input type="number" id="basePrice" placeholder="0.00">
-            <button class="login-box button" style="width:100%; margin-top:10px;" onclick="alert('Cotización generada con éxito')">Generar y Calcular</button>
+            <button style="width:100%; background:var(--accent-orange); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="alert('Cotización generada con éxito')">Generar y Calcular</button>
         </div>
     </div>
 
@@ -240,13 +228,11 @@
         let channelsData = [];
         let mpegtsPlayer = null;
 
-        // Reloj en tiempo real estilo TV
         setInterval(() => {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
 
-        // Login conectado a Google Sheet
         async function realizarLogin() {
             const user = document.getElementById('userInput').value;
             const pass = document.getElementById('passInput').value;
@@ -273,7 +259,6 @@
             }
         }
 
-        // Navegación de vistas
         function abrirLiveTV() {
             document.getElementById('livetv-view').style.display = 'flex';
         }
@@ -291,7 +276,6 @@
             }
         }
 
-        // Carga de M3U
         async function loadPlaylist() {
             try {
                 const response = await fetch('StreamOne.m3u');

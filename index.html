@@ -284,6 +284,7 @@
     <script>
         const USERS_URL = 'https://script.google.com/macros/s/AKfycbzWlqKh1sC_Qih4Q4DzSZ5S690ZhVQwp_MYGAnmieBIIzTWDF1hJEAILrdDysw4n4NOGw/exec';
         
+        // URLs protegidas con proxy CORS integrado para evitar bloqueos en navegadores y apps móviles
         const URL_CANALES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales');
         const URL_PELICULAS = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas');
         const URL_SERIES = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series');
@@ -387,6 +388,7 @@
 
         async function cargarContenidoDirecto() {
             try {
+                // Cargar Canales
                 if (URL_CANALES) {
                     const resChan = await fetch(URL_CANALES);
                     const textChan = await resChan.text();
@@ -394,6 +396,7 @@
                     renderizarLista('channels-container', channelsData, 'videoLive');
                 }
 
+                // Cargar Películas
                 if (URL_PELICULAS) {
                     const resMov = await fetch(URL_PELICULAS);
                     const textMov = await resMov.text();
@@ -401,6 +404,7 @@
                     renderizarLista('movies-container', moviesData, 'videoMovie');
                 }
 
+                // Cargar Series
                 if (URL_SERIES) {
                     const resSer = await fetch(URL_SERIES);
                     const textSer = await resSer.text();
@@ -412,31 +416,20 @@
             }
         }
 
-        /* FUNCIÓN M3U ROBUSTA (Adaptada para ignorar comentarios y normalizar categorías) */
         function parsearM3U(data) {
             const lines = data.split('\n');
+            let cat = "General";
             let lista = [];
-            let lastInfo = null;
-            let currentCat = "General";
-
             lines.forEach(line => {
-                line = line.trim();
-                if (!line || (line.startsWith('#') && !line.startsWith('#EXTINF:'))) return;
-
                 if (line.startsWith('#EXTINF:')) {
                     const match = line.match(/group-title="([^"]+)"/);
-                    if (match) {
-                        currentCat = match[1].trim();
-                        currentCat = currentCat.charAt(0).toUpperCase() + currentCat.slice(1).toLowerCase();
+                    if (match) cat = match[1];
+                    const name = line.split(',')[1];
+                    lista.push({ title: name ? name.trim() : "Contenido", category: cat, url: '' });
+                } else if (line.trim() && !line.startsWith('#')) {
+                    if (lista.length > 0) {
+                        lista[lista.length - 1].url = line.trim();
                     }
-                    const nameParts = line.split(',');
-                    const name = nameParts.length > 1 ? nameParts.slice(1).join(',') : "Contenido";
-                    
-                    lastInfo = { title: name.trim(), category: currentCat, url: '' };
-                    lista.push(lastInfo);
-                } else if (lastInfo && !line.startsWith('#')) {
-                    lastInfo.url = line;
-                    lastInfo = null;
                 }
             });
             return lista;

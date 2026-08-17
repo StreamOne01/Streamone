@@ -119,12 +119,97 @@
     <div id="admin-view" class="sub-view"><div class="sub-view-header"><button class="back-btn" onclick="cerrarSubViews()">⬅ Volver</button><h2>Admin</h2></div><div class="admin-panel-container"><div class="admin-form"><div><label>User:</label><input type="text" id="newUsername"></div><div><label>Pass:</label><input type="text" id="newPassword"></div><button onclick="agregarUsuario()">Crear</button></div><table class="users-table"><tbody id="admin-users-list"></tbody></table></div></div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwT8xFvDiV0h0_GcYVPR607smuk7cJYlFd3xIM9sp3UBwg46cn5cDlHP7h6ankjbxvwnA/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2bElfqnPuLh1qW-APJ9FdpSdbw4hSpDwg8BDwSyLdFSltJWhxBmxoXvoiqP4_1ND6NQ/exec';
+        
         let listaUsuariosGlobal = [];
         let channelsData = [], moviesData = [], seriesData = [];
         let activePlayer = null;
 
-        // Carga robusta de contenido
+        setInterval(() => {
+            const now = new Date();
+            const clockEl = document.getElementById('clock');
+            if(clockEl) clockEl.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, 1000);
+
+        async function realizarLogin() {
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+
+            if(!user || !pass) {
+                alert("Por favor ingresa usuario y contraseña.");
+                return;
+            }
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const users = await response.json();
+                listaUsuariosGlobal = users;
+                const found = users.find(u => u.usuario == user && u.password == pass && u.estado == "ON");
+
+                if (found) {
+                    document.getElementById('logged-username').innerText = found.usuario;
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'flex';
+                    
+                    construirBotonera(found.usuario);
+                    cargarTodoDeGolpe();
+                } else {
+                    alert("Acceso denegado: Usuario incorrecto o cuenta inactiva.");
+                }
+            } catch (e) {
+                alert("Error de conexión con la base de datos.");
+            }
+        }
+
+        function construirBotonera(username) {
+            const grid = document.getElementById('bottom-nav-grid');
+            grid.innerHTML = `
+                <div class="menu-card" onclick="abrirLiveTV()">
+                    <i class="icon">📺</i>
+                    <span>Live TV</span>
+                </div>
+                <div class="menu-card" onclick="abrirPeliculas()">
+                    <i class="icon">🎬</i>
+                    <span>Movies</span>
+                </div>
+                <div class="menu-card" onclick="abrirSeries()">
+                    <i class="icon">🍿</i>
+                    <span>Series</span>
+                </div>
+            `;
+
+            if (username.toLowerCase() === 'admin') {
+                grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+                grid.innerHTML += `
+                    <div class="menu-card" onclick="abrirAdminPanel()">
+                        <i class="icon">⚙️</i>
+                        <span>Admin Users</span>
+                    </div>
+                `;
+            } else {
+                grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            }
+        }
+
+        function abrirLiveTV() { document.getElementById('livetv-view').style.display = 'flex'; }
+        function abrirPeliculas() { document.getElementById('movies-view').style.display = 'flex'; }
+        function abrirSeries() { document.getElementById('series-view').style.display = 'flex'; }
+        function abrirAdminPanel() { document.getElementById('admin-view').style.display = 'flex'; renderizarTablaAdmin(); }
+
+        function cerrarSubViews() {
+            document.querySelectorAll('.sub-view').forEach(v => v.style.display = 'none');
+            if (activePlayer) {
+                activePlayer.destroy();
+                activePlayer = null;
+            }
+            const v1 = document.getElementById('videoLive');
+            const v2 = document.getElementById('videoMovie');
+            const v3 = document.getElementById('videoSeries');
+            if(v1) v1.pause();
+            if(v2) v2.pause();
+            if(v3) v3.pause();
+        }
+
         async function cargarTodoDeGolpe() {
             try {
                 const res = await fetch(`${SCRIPT_URL}?action=init`);
@@ -135,7 +220,6 @@
             } catch(e) { console.error("Error carga:", e); }
         }
 
-        // Parser robusto
         function parsearM3U(data) {
             if (!data) return [];
             const lines = data.split('\n');
@@ -155,14 +239,127 @@
             return lista.filter(item => item.url !== '');
         }
 
-        // --- Funciones auxiliares (Login, Admin, Reproducción) se mantienen igual ---
-        async function realizarLogin() { /* ... login logic ... */ }
-        function construirBotonera(username) { /* ... grid setup ... */ }
-        function reproducirMedia(item, videoId) { /* ... mpegts/video setup ... */ }
-        async function cambiarEstado(index, nuevoEstado) { /* ... POST updateStatus ... */ }
-        async function agregarUsuario() { /* ... POST addUser ... */ }
-        function cerrarSubViews() { /* ... pause and hide ... */ }
-        function filtrarGlobal(q) { /* ... filter list ... */ }
+        function renderizarLista(containerId, lista, videoId) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            container.innerHTML = '';
+            lista.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item-row';
+                div.innerHTML = `<strong>${item.title}</strong><br><small style="color:var(--text-dim);">${item.category}</small>`;
+                div.onclick = () => reproducirMedia(item, videoId);
+                container.appendChild(div);
+            });
+        }
+
+        function reproducirMedia(item, videoId) {
+            const videoElement = document.getElementById(videoId);
+            if (activePlayer) {
+                activePlayer.destroy();
+                activePlayer = null;
+            }
+            if (item.url.includes('.ts') || item.url.includes(':8080')) {
+                if (mpegts.getFeatureList().mseLivePlayback) {
+                    activePlayer = mpegts.createPlayer({ type: 'mpegts', isLive: true, url: item.url });
+                    activePlayer.attachMediaElement(videoElement);
+                    activePlayer.load();
+                    activePlayer.play().catch(e => console.log(e));
+                }
+            } else {
+                videoElement.src = item.url;
+                videoElement.load();
+                videoElement.play().catch(e => console.log(e));
+            }
+        }
+
+        function renderizarTablaAdmin() {
+            const tbody = document.getElementById('admin-users-list');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            listaUsuariosGlobal.forEach((u, index) => {
+                const tr = document.createElement('tr');
+                const estadoBadge = u.estado === "ON" 
+                    ? `<span style="color:#28a745; font-weight:bold;">● ON</span>` 
+                    : `<span style="color:#dc3545; font-weight:bold;">● OFF</span>`;
+                
+                const botonAccion = u.estado === "ON"
+                    ? `<button class="btn-status btn-off" onclick="cambiarEstado(${index}, 'OFF')">Apagar</button>`
+                    : `<button class="btn-status btn-on" onclick="cambiarEstado(${index}, 'ON')">Encender</button>`;
+
+                tr.innerHTML = `
+                    <td>${u.usuario}</td>
+                    <td>${u.password}</td>
+                    <td>${estadoBadge}</td>
+                    <td>${botonAccion}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function cambiarEstado(index, nuevoEstado) {
+            const usuarioObj = listaUsuariosGlobal[index];
+            usuarioObj.estado = nuevoEstado;
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'updateStatus',
+                        usuario: usuarioObj.usuario,
+                        estado: nuevoEstado
+                    })
+                });
+                renderizarTablaAdmin();
+            } catch (e) {
+                alert("Error al actualizar el estado en la base de datos.");
+            }
+        }
+
+        async function agregarUsuario() {
+            const nuevoUser = document.getElementById('newUsername').value.trim();
+            const nuevoPass = document.getElementById('newPassword').value.trim();
+
+            if(!nuevoUser || !nuevoPass) {
+                alert("Completa ambos campos para crear el usuario.");
+                return;
+            }
+
+            const nuevoRegistro = { usuario: nuevoUser, password: nuevoPass, estado: "ON" };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'addUser',
+                        usuario: nuevoUser,
+                        password: nuevoPass,
+                        estado: 'ON'
+                    })
+                });
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    listaUsuariosGlobal.push(nuevoRegistro);
+                    document.getElementById('newUsername').value = '';
+                    document.getElementById('newPassword').value = '';
+                    renderizarTablaAdmin();
+                    alert("Usuario agregado con éxito.");
+                } else {
+                    alert("El servidor no pudo guardar el usuario.");
+                }
+            } catch (e) {
+                alert("Error al conectar con la base de datos.");
+            }
+        }
+
+        function filtrarGlobal(query) {
+            const q = query.toLowerCase();
+            const filtLive = channelsData.filter(ch => ch.title.toLowerCase().includes(q));
+            renderizarLista('channels-container', filtLive, 'videoLive');
+            if(q.length > 0) abrirLiveTV();
+        }
     </script>
 </body>
 </html>

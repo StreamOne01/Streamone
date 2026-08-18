@@ -540,8 +540,6 @@
             video.load();
 
             const url = item.url;
-
-            // Detección mejorada y tolerancia a fallos para enlaces .ts
             const isTsStream = url.endsWith('.ts') || url.includes('.ts?') || url.includes(':8080/live/') || url.includes('/live/');
 
             if (isTsStream) {
@@ -560,21 +558,20 @@
                         mpegtsInstance.attachMediaElement(video);
                         mpegtsInstance.load();
                         mpegtsInstance.play().catch(err => {
-                            console.warn("Fallo en reproducción MSE directa, intentando respaldo HTML5 nativo...", err);
-                            fallbackToNative(video, url);
+                            console.warn("Fallo MSE directo, intentando puente CORS alternativo...", err);
+                            playWithCorsProxy(video, url);
                         });
 
-                        // Manejo robusto de errores de mpegts para reintentar o pasar a nativo
                         mpegtsInstance.on(mpegts.Events.ERROR, (eventType, details) => {
                             console.error("Error en mpegts.js:", eventType, details);
-                            document.getElementById('currentChannelDesc').innerText = "Reintentando conexión al flujo TS...";
+                            playWithCorsProxy(video, url);
                         });
                     } catch (e) {
-                        console.error("Excepción al crear mpegts player:", e);
-                        fallbackToNative(video, url);
+                        console.error("Excepción mpegts:", e);
+                        playWithCorsProxy(video, url);
                     }
                 } else {
-                    fallbackToNative(video, url);
+                    playWithCorsProxy(video, url);
                 }
             } else if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('m3u8'))) {
                 currentHls = new Hls({ maxBufferLength: 30, liveSyncDurationCount: 3, lowLatencyMode: true });
@@ -593,13 +590,38 @@
             }
         }
 
+        function playWithCorsProxy(video, originalUrl) {
+            document.getElementById('currentChannelDesc').innerText = "Aplicando puente CORS para el flujo TS...";
+            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(originalUrl);
+            
+            if (mpegts.getFeatureList().mseLivePlayback) {
+                try {
+                    mpegtsInstance = mpegts.createPlayer({
+                        type: 'mse',
+                        isLive: true,
+                        url: proxyUrl,
+                        cors: true
+                    });
+                    mpegtsInstance.attachMediaElement(video);
+                    mpegtsInstance.load();
+                    mpegtsInstance.play().catch(() => {
+                        fallbackToNative(video, originalUrl);
+                    });
+                } catch(e) {
+                    fallbackToNative(video, originalUrl);
+                }
+            } else {
+                fallbackToNative(video, originalUrl);
+            }
+        }
+
         function fallbackToNative(video, url) {
-            document.getElementById('currentChannelDesc').innerText = "Reproduciendo mediante motor alternativo...";
+            document.getElementById('currentChannelDesc').innerText = "Reproduciendo mediante motor alternativo directo...";
             video.src = url;
             video.load();
             video.play().catch(err => {
                 console.error("Error en reproductor nativo:", err);
-                document.getElementById('currentChannelDesc').innerText = "Error: El flujo TS no está disponible o requiere CORS";
+                document.getElementById('currentChannelDesc').innerText = "Canal no disponible (Restricción de Red o CORS del servidor)";
             });
         }
 

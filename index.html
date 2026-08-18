@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -372,7 +371,6 @@
         let currentHls = null;
         let mpegtsInstance = null;
 
-        // Rotación automática de imágenes en las tarjetas del Lobby
         function setupCardSliders() {
             ['sliderLive', 'sliderMovies', 'sliderSeries'].forEach(sliderId => {
                 const slider = document.getElementById(sliderId);
@@ -543,17 +541,40 @@
 
             const url = item.url;
 
-            if (url.endsWith('.ts') || url.includes('.ts?')) {
+            // Detección mejorada y tolerancia a fallos para enlaces .ts
+            const isTsStream = url.endsWith('.ts') || url.includes('.ts?') || url.includes(':8080/live/') || url.includes('/live/');
+
+            if (isTsStream) {
                 if (mpegts.getFeatureList().mseLivePlayback) {
-                    mpegtsInstance = mpegts.createPlayer({ type: 'mse', isLive: true, url: url });
-                    mpegtsInstance.attachMediaElement(video);
-                    mpegtsInstance.load();
-                    mpegtsInstance.play().catch(err => {
-                        console.error("Error reproduciendo flujo TS:", err);
-                        document.getElementById('currentChannelDesc').innerText = "Error al reproducir el flujo TS";
-                    });
+                    try {
+                        mpegtsInstance = mpegts.createPlayer({
+                            type: 'mse',
+                            isLive: true,
+                            url: url,
+                            cors: true,
+                            stashInitialSize: 128,
+                            enableWorker: true,
+                            lazyLoadMaxDuration: 3 * 60,
+                            seekType: 'range'
+                        });
+                        mpegtsInstance.attachMediaElement(video);
+                        mpegtsInstance.load();
+                        mpegtsInstance.play().catch(err => {
+                            console.warn("Fallo en reproducción MSE directa, intentando respaldo HTML5 nativo...", err);
+                            fallbackToNative(video, url);
+                        });
+
+                        // Manejo robusto de errores de mpegts para reintentar o pasar a nativo
+                        mpegtsInstance.on(mpegts.Events.ERROR, (eventType, details) => {
+                            console.error("Error en mpegts.js:", eventType, details);
+                            document.getElementById('currentChannelDesc').innerText = "Reintentando conexión al flujo TS...";
+                        });
+                    } catch (e) {
+                        console.error("Excepción al crear mpegts player:", e);
+                        fallbackToNative(video, url);
+                    }
                 } else {
-                    document.getElementById('currentChannelDesc').innerText = "Tu navegador no soporta MPEG-TS nativo";
+                    fallbackToNative(video, url);
                 }
             } else if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('m3u8'))) {
                 currentHls = new Hls({ maxBufferLength: 30, liveSyncDurationCount: 3, lowLatencyMode: true });
@@ -567,17 +588,19 @@
                         document.getElementById('currentChannelDesc').innerText = "Error en el flujo HLS";
                     }
                 });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.load();
-                video.play().catch(() => {});
             } else {
-                video.src = url;
-                video.load();
-                video.play().catch(err => {
-                    console.error("Error reproductor directo:", err);
-                });
+                fallbackToNative(video, url);
             }
+        }
+
+        function fallbackToNative(video, url) {
+            document.getElementById('currentChannelDesc').innerText = "Reproduciendo mediante motor alternativo...";
+            video.src = url;
+            video.load();
+            video.play().catch(err => {
+                console.error("Error en reproductor nativo:", err);
+                document.getElementById('currentChannelDesc').innerText = "Error: El flujo TS no está disponible o requiere CORS";
+            });
         }
 
         function goBackToLobby() {

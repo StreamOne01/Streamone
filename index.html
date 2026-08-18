@@ -1,3 +1,6 @@
+Aquí tienes el código completo y actualizado de tu aplicación Stream One, con la eliminación de la pantalla y el sistema de inicio de sesión (login) para permitir el acceso directo al lobby atmosférico, manteniendo todas las funcionalidades de reproducción, diseño moderno y animaciones intactas.
+
+HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -29,121 +32,9 @@
             flex-direction: column;
         }
 
-        /* --- PANTALLA DE LOGIN --- */
-        #loginView {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            position: absolute;
-            top: 0; left: 0; width: 100%;
-            z-index: 30;
-            background: radial-gradient(circle at 50% 30%, #0f1c3f 0%, #070b14 70%);
-        }
-
-        .login-card {
-            background: rgba(15, 23, 42, 0.9);
-            border: 2px solid var(--border-color);
-            padding: 40px;
-            border-radius: 16px;
-            width: 350px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .login-card h2 {
-            text-align: center;
-            letter-spacing: 2px;
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .login-input:focus { border-color: var(--active-color); }
-
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--active-color);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .login-btn:hover { background: #0056b3; }
-        .login-error { color: #ff4d4d; font-size: 0.85rem; text-align: center; min-height: 20px; }
-
-        /* --- PANEL ADMIN MODAL --- */
-        #adminModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 40;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .admin-content {
-            background: #0f172a;
-            border: 1px solid var(--border-color);
-            width: 600px;
-            max-height: 80vh;
-            border-radius: 12px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-        }
-
-        .user-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 18px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-status {
-            padding: 6px 14px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-        .btn-activo { background: #28a745; color: white; }
-        .btn-inactivo { background: #dc3545; color: white; }
-
         /* --- LOBBY ATMOSFÉRICO --- */
         #lobbyView {
-            display: none;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -384,34 +275,7 @@
         <p style="color: #aaa; margin-top: 10px;">Esta aplicación está diseñada para disfrutarse en formato horizontal.</p>
     </div>
 
-    <!-- PANTALLA DE INICIO DE SESIÓN -->
-    <div id="loginView">
-        <div class="login-card">
-            <h2>STREAM ONE</h2>
-            <input type="text" id="userInput" class="login-input" placeholder="Usuario">
-            <input type="password" id="passInput" class="login-input" placeholder="Contraseña">
-            <button class="login-btn" onclick="attemptLogin()">INGRESAR</button>
-            <div class="login-error" id="loginError"></div>
-        </div>
-    </div>
-
-    <!-- PANEL ADMINISTRATIVO MODAL -->
-    <div id="adminModal">
-        <div class="admin-content">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>Gestión de Usuarios</h3>
-                <button onclick="closeAdminPanel()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">✕</button>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <input type="text" id="newUserInput" class="login-input" placeholder="Nuevo Usuario">
-                <input type="password" id="newPassInput" class="login-input" placeholder="Contraseña">
-                <button class="login-btn" style="width: auto; padding: 0 20px;" onclick="createNewUser()">Crear</button>
-            </div>
-            <div id="userListContainer" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;"></div>
-        </div>
-    </div>
-
-    <!-- LOBBY PRINCIPAL -->
+    <!-- LOBBY PRINCIPAL (Acceso Directo) -->
     <div id="lobbyView">
         <div class="ambient-light orb-1"></div>
         <div class="ambient-light orb-2"></div>
@@ -471,7 +335,6 @@
             <div class="app-title" id="moduleTitle">IPTV STREAM PLAYER</div>
             <div class="nav-icons">
                 <span onclick="goBackToLobby()" style="cursor:pointer;" title="Volver al Lobby">🏠</span> 
-                <span id="adminNavBtn" onclick="openAdminPanel()" style="cursor:pointer; display:none;" title="Panel Admin">⚙️</span>
                 <span>↕</span> <span>🎬</span> <span>⏻</span>
             </div>
         </header>
@@ -501,8 +364,6 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOjb8M8UgQ4tDhhYyPLoKHsLbw4ebx9Xb00Ij_FQt9qgPZ3iJPzcMx5uzShW5qRmGC/exec";
-        
         const M3U_URLS = {
             'LIVE TV': 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales',
             'MOVIES': 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas',
@@ -513,38 +374,21 @@
         let currentHls = null;
         let mpegtsInstance = null;
 
-        function attemptLogin() {
-            const user = document.getElementById('userInput').value.trim();
-            const pass = document.getElementById('passInput').value.trim();
-            const errorEl = document.getElementById('loginError');
-
-            if(!user || !pass) {
-                errorEl.innerText = "Rellena todos los campos";
-                return;
-            }
-
-            errorEl.innerText = "Verificando...";
-
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "login", username: user, password: pass })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    document.getElementById('loginView').style.display = 'none';
-                    document.getElementById('lobbyView').style.display = 'flex';
-                    if(data.role === "admin") {
-                        document.getElementById('adminNavBtn').style.display = 'inline';
-                    }
-                } else {
-                    errorEl.innerText = data.message;
-                }
-            })
-            .catch(err => {
-                errorEl.innerText = "Error de conexión con la base de datos";
+        // Rotación automática de imágenes en las tarjetas del Lobby
+        function setupCardSliders() {
+            ['sliderLive', 'sliderMovies', 'sliderSeries'].forEach(sliderId => {
+                const slider = document.getElementById(sliderId);
+                if (!slider) return;
+                const slides = slider.querySelectorAll('.card-slide');
+                let currentIndex = 0;
+                setInterval(() => {
+                    slides[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    slides[currentIndex].classList.add('active');
+                }, 4000);
             });
         }
+        setupCardSliders();
 
         function openModule(moduleType) {
             document.getElementById('lobbyView').style.display = 'none';
@@ -684,7 +528,6 @@
 
             const video = document.getElementById('videoPlayer');
 
-            // Limpiar instancias anteriores de reproducción
             if (currentHls) {
                 currentHls.destroy();
                 currentHls = null;
@@ -702,7 +545,6 @@
 
             const url = item.url;
 
-            // Detección y reproducción según el formato (TS, M3U8 o Directo)
             if (url.endsWith('.ts') || url.includes('.ts?')) {
                 if (mpegts.getFeatureList().mseLivePlayback) {
                     mpegtsInstance = mpegts.createPlayer({ type: 'mse', isLive: true, url: url });
@@ -728,12 +570,10 @@
                     }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Soporte nativo HLS para Safari / iOS
                 video.src = url;
                 video.load();
                 video.play().catch(() => {});
             } else {
-                // Enlaces directos genéricos (MP4, etc.)
                 video.src = url;
                 video.load();
                 video.play().catch(err => {
@@ -758,90 +598,6 @@
             document.getElementById('internalView').style.display = 'none';
             document.getElementById('lobbyView').style.display = 'flex';
         }
-
-        function openAdminPanel() {
-            document.getElementById('adminModal').style.display = 'flex';
-            loadUsersList();
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('adminModal').style.display = 'none';
-        }
-
-        function loadUsersList() {
-            const container = document.getElementById('userListContainer');
-            container.innerHTML = "Cargando usuarios...";
-
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "getUsers" })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    container.innerHTML = "";
-                    data.users.forEach(u => {
-                        container.innerHTML += `
-                            <div class="user-row">
-                                <span><b>${u.username}</b></span>
-                                <button class="btn-status ${u.status === 'activo' ? 'btn-activo' : 'btn-inactivo'}" onclick="toggleUser('${u.username}')">
-                                    ${u.status.toUpperCase()}
-                                </button>
-                            </div>
-                        `;
-                    });
-                }
-            });
-        }
-
-        function createNewUser() {
-            const user = document.getElementById('newUserInput').value.trim();
-            const pass = document.getElementById('newPassInput').value.trim();
-            if(!user || !pass) return alert("Ingresa usuario y contraseña");
-
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "createUser", username: user, password: pass })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if(data.status === "success") {
-                    document.getElementById('newUserInput').value = "";
-                    document.getElementById('newPassInput').value = "";
-                    loadUsersList();
-                }
-            });
-        }
-
-        function toggleUser(username) {
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "toggleStatus", username: username })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    loadUsersList();
-                }
-            });
-        }
-
-        function initCardSlider(sliderId, intervalTime) {
-            const slides = document.querySelectorAll(`#${sliderId} .card-slide`);
-            if(slides.length === 0) return;
-            let currentIndex = 0;
-            
-            setInterval(() => {
-                slides[currentIndex].classList.remove('active');
-                currentIndex = (currentIndex + 1) % slides.length;
-                slides[currentIndex].classList.add('active');
-            }, intervalTime);
-        }
-
-        initCardSlider('sliderLive', 3500);
-        initCardSlider('sliderMovies', 4000);
-        initCardSlider('sliderSeries', 4500);
     </script>
 </body>
 </html>

@@ -124,27 +124,6 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.8);
         }
 
-        .user-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 18px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-status {
-            padding: 6px 14px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-        .btn-activo { background: #28a745; color: white; }
-        .btn-inactivo { background: #dc3545; color: white; }
-
         /* --- LOBBY ATMOSFÉRICO ADAPTABLE --- */
         #lobbyView {
             display: none;
@@ -275,7 +254,7 @@
         .hub-card h2 { font-size: 1.3rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
         .hub-card .preview-hint { font-size: 0.75rem; color: #cbd5e1; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
-        /* --- VISTA INTERNA (RESPONSIVA / ADAPTABLE) --- */
+        /* --- VISTA INTERNA --- */
         #internalView {
             display: none;
             flex-direction: column;
@@ -373,50 +352,15 @@
             border-radius: 4px;
         }
 
-        /* --- BREAKPOINTS PARA ADAPTABILIDAD AUTOMÁTICA EN DIFERENTES PANTALLAS --- */
-
-        /* Tablets y pantallas intermedias (menor a 1024px) */
         @media screen and (max-width: 1024px) {
-            main {
-                grid-template-columns: 220px 280px 1fr;
-                padding: 10px;
-                gap: 10px;
-            }
+            main { grid-template-columns: 220px 280px 1fr; padding: 10px; gap: 10px; }
         }
 
-        /* Dispositivos Móviles y Pantallas Chicas (menor a 768px) */
         @media screen and (max-width: 768px) {
-            main {
-                display: flex;
-                flex-direction: column;
-                overflow-y: auto;
-                padding: 10px;
-            }
-            .video-col {
-                order: -1; /* Pone el reproductor primero en celulares para comodidad */
-            }
-            .panel {
-                max-height: 220px;
-            }
-            .player-box {
-                max-height: 240px;
-            }
-        }
-
-        /* Smart TVs o Pantallas Gigantes (mayor a 1600px) */
-        @media screen and (min-width: 1600px) {
-            main {
-                grid-template-columns: 320px 400px 1fr;
-                padding: 25px;
-                gap: 25px;
-            }
-            body {
-                font-size: 1.15rem;
-            }
-            .hub-card {
-                width: 320px;
-                height: 460px;
-            }
+            main { display: flex; flex-direction: column; overflow-y: auto; padding: 10px; }
+            .video-col { order: -1; }
+            .panel { max-height: 220px; }
+            .player-box { max-height: 240px; }
         }
     </style>
 </head>
@@ -440,11 +384,6 @@
                 <h3>Gestión de Usuarios</h3>
                 <button onclick="closeAdminPanel()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">✕</button>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
-                <input type="text" id="newUserInput" class="login-input" placeholder="Nuevo Usuario" style="flex: 1; min-width: 140px;">
-                <input type="password" id="newPassInput" class="login-input" placeholder="Contraseña" style="flex: 1; min-width: 140px;">
-                <button class="login-btn" style="width: auto; padding: 0 20px;" onclick="createNewUser()">Crear</button>
-            </div>
             <div id="userListContainer" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;"></div>
         </div>
     </div>
@@ -458,12 +397,10 @@
 
         <div class="lobby-logo-title">STREAM ONE</div>
         <div class="lobby-container">
-            
             <div class="hub-card" onclick="openModule('LIVE TV')">
                 <div class="card-slider" id="sliderLive">
                     <div class="card-slide active" style="background-image: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=800&auto=format&fit=crop');"></div>
                     <div class="card-slide" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=800&auto=format&fit=crop');"></div>
-                    <div class="card-slide" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop');"></div>
                 </div>
                 <div class="card-overlay"></div>
                 <div class="content-box">
@@ -476,13 +413,12 @@
                 <div class="card-slider" id="sliderMovies">
                     <div class="card-slide active" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=800&auto=format&fit=crop');"></div>
                     <div class="card-slide" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=800&auto=format&fit=crop');"></div>
-                    <div class="card-slide" style="background-image: url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800&auto=format&fit=crop');"></div>
                 </div>
                 <div class="card-overlay"></div>
                 <div class="content-box">
                     <div class="icon">🍿</div>
                     <h2>Movies</h2>
-                    <div class="preview-hint">Estrenos Exclusivos y Taquilleras</div>
+                    <div class="preview-hint">Estrenos Exclusivos</div>
                 </div>
             </div>
 
@@ -490,16 +426,14 @@
                 <div class="card-slider" id="sliderSeries">
                     <div class="card-slide active" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=800&auto=format&fit=crop');"></div>
                     <div class="card-slide" style="background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop');"></div>
-                    <div class="card-slide" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop');"></div>
                 </div>
                 <div class="card-overlay"></div>
                 <div class="content-box">
                     <div class="icon">🎬</div>
                     <h2>Series</h2>
-                    <div class="preview-hint">Netflix • HBO • Disney+ • Apple & más</div>
+                    <div class="preview-hint">Netflix • HBO • Disney+</div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -508,9 +442,8 @@
         <header>
             <div class="app-title" id="moduleTitle">IPTV STREAM PLAYER</div>
             <div class="nav-icons">
-                <span onclick="goBackToLobby()" style="cursor:pointer;" title="Volver al Lobby">🏠</span> 
-                <span id="adminNavBtn" onclick="openAdminPanel()" style="cursor:pointer; display:none;" title="Panel Admin">⚙️</span>
-                <span>↕</span> <span>🎬</span> <span>⏻</span>
+                <span onclick="goBackToLobby()" title="Volver al Lobby">🏠</span> 
+                <span id="adminNavBtn" onclick="openAdminPanel()" style="display:none;" title="Panel Admin">⚙️</span>
             </div>
         </header>
         <main>
@@ -551,27 +484,7 @@
         let currentHls = null;
         let mpegtsInstance = null;
 
-        // Detector automático de dispositivos y resolución para la clase del body
-        function detectarTipoDispositivo() {
-            const width = window.innerWidth;
-            const ua = navigator.userAgent.toLowerCase();
-            document.body.classList.remove('device-mobile', 'device-tablet', 'device-pc', 'device-tv');
-
-            if (/smart-tv|smarttv|tizen|webos|appletv|hbbtv/i.test(ua) || width > 1900) {
-                document.body.classList.add('device-tv');
-            } else if (width <= 768) {
-                document.body.classList.add('device-mobile');
-            } else if (width > 768 && width <= 1024) {
-                document.body.classList.add('device-tablet');
-            } else {
-                document.body.classList.add('device-pc');
-            }
-        }
-
-        window.addEventListener('resize', detectarTipoDispositivo);
-        document.addEventListener('DOMContentLoaded', detectarTipoDispositivo);
-
-        // Script automático para la animación de las tarjetas del lobby
+        // Automatización de sliders en el lobby
         document.addEventListener("DOMContentLoaded", () => {
             ['sliderLive', 'sliderMovies', 'sliderSeries'].forEach(sliderId => {
                 const slider = document.getElementById(sliderId);
@@ -617,7 +530,7 @@
                     errorEl.innerText = data.message;
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 errorEl.innerText = "Error de conexión con la base de datos";
             });
         }
@@ -647,9 +560,7 @@
             const container = document.getElementById('categoriesPanel');
             container.innerHTML = `<div style="padding: 20px; text-align: center; color: #888;">Cargando contenido...</div>`;
 
-            const url = M3U_URLS[moduleType];
-
-            fetch(url)
+            fetch(M3U_URLS[moduleType])
             .then(res => res.text())
             .then(data => {
                 parseM3U(data);
@@ -672,11 +583,7 @@
                 let line = lines[i].trim();
                 if (line.startsWith('#EXTINF:')) {
                     let groupMatch = line.match(/group-title="([^"]*)"/);
-                    if (groupMatch && groupMatch[1]) {
-                        currentCategory = groupMatch[1].trim();
-                    } else {
-                        currentCategory = "GENERAL";
-                    }
+                    currentCategory = (groupMatch && groupMatch[1]) ? groupMatch[1].trim() : "GENERAL";
 
                     let logoMatch = line.match(/tvg-logo="([^"]*)"/);
                     currentLogo = logoMatch ? logoMatch[1] : "";
@@ -686,13 +593,12 @@
                         currentName = line.substring(commaIdx + 1).trim();
                     }
                 } else if (line && !line.startsWith('#')) {
-                    let streamUrl = line;
                     if (!currentPlaylistData[currentCategory]) {
                         currentPlaylistData[currentCategory] = [];
                     }
                     currentPlaylistData[currentCategory].push({
                         name: currentName || "Sin nombre",
-                        url: streamUrl,
+                        url: line,
                         logo: currentLogo
                     });
                 }
@@ -783,11 +689,9 @@
                     mpegtsInstance.attachMediaElement(video);
                     mpegtsInstance.load();
                     mpegtsInstance.play().catch(err => {
-                        console.error("Error reproduciendo flujo TS:", err);
+                        console.error("Error reproductor TS:", err);
                         document.getElementById('currentChannelDesc').innerText = "Error al reproducir el flujo TS";
                     });
-                } else {
-                    document.getElementById('currentChannelDesc').innerText = "Tu navegador no soporta MPEG-TS nativo";
                 }
             } else if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('m3u8'))) {
                 currentHls = new Hls({ maxBufferLength: 30, liveSyncDurationCount: 3, lowLatencyMode: true });
@@ -796,21 +700,10 @@
                 currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
                     video.play().catch(err => console.error("Error HLS:", err));
                 });
-                currentHls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal) {
-                        document.getElementById('currentChannelDesc').innerText = "Error en el flujo HLS";
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.load();
-                video.play().catch(() => {});
             } else {
                 video.src = url;
                 video.load();
-                video.play().catch(err => {
-                    console.error("Error reproductor directo:", err);
-                });
+                video.play().catch(err => console.error("Error directo:", err));
             }
         }
 
@@ -820,12 +713,7 @@
             video.removeAttribute('src');
             video.load();
             if (currentHls) { currentHls.destroy(); currentHls = null; }
-            if (mpegtsInstance) {
-                mpegtsInstance.unload();
-                mpegtsInstance.detachMediaElement();
-                mpegtsInstance.destroy();
-                mpegtsInstance = null;
-            }
+            if (mpegtsInstance) { mpegtsInstance.destroy(); mpegtsInstance = null; }
 
             document.getElementById('internalView').style.display = 'none';
             document.getElementById('lobbyView').style.display = 'flex';
@@ -833,75 +721,10 @@
 
         function openAdminPanel() {
             document.getElementById('adminModal').style.display = 'flex';
-            loadUsersList();
         }
 
         function closeAdminPanel() {
             document.getElementById('adminModal').style.display = 'none';
-        }
-
-        function loadUsersList() {
-            const container = document.getElementById('userListContainer');
-            container.innerHTML = "Cargando usuarios...";
-
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "getUsers" })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    container.innerHTML = "";
-                    data.users.forEach(u => {
-                        container.innerHTML += `
-                            <div class="user-row">
-                                <span><b>${u.username}</b></span>
-                                <button class="btn-status ${u.status === 'activo' ? 'btn-activo' : 'btn-inactivo'}" onclick="toggleUser('${u.username}')">
-                                    ${u.status.toUpperCase()}
-                                </button>
-                            </div>
-                        `;
-                    });
-                }
-            });
-        }
-
-        function createNewUser() {
-            const user = document.getElementById('newUserInput').value.trim();
-            const pass = document.getElementById('newPassInput').value.trim();
-            if(!user || !pass) return alert("Ingresa usuario y contraseña");
-
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "createUser", username: user, password: pass })
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if(data.status === "success") {
-                    document.getElementById('newUserInput').value = "";
-                    document.getElementById('newPassInput').value = "";
-                    loadUsersList();
-                }
-            });
-        }
-
-        function toggleUser(username) {
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "toggleUser", username: username })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    loadUsersList();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(err => {
-                alert("Error de conexión al actualizar el usuario");
-            });
         }
     </script>
 </body>

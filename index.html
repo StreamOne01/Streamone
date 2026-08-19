@@ -47,7 +47,7 @@
             position: relative; 
         }
 
-        .lobby-hero { max-width: 500px; margin-top: 2rem; }
+        .lobby-hero { max-width: 600px; margin-top: 2rem; }
 
         .lobby-hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff; }
 
@@ -78,9 +78,61 @@
         .player-wrapper { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .player-wrapper iframe { width: 100%; height: 100%; border: none; }
         .player-placeholder { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* AVISO PARA FORZAR MODO HORIZONTAL EN MÓVILES */
+        #orientation-warning {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-main);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        #orientation-warning svg {
+            width: 64px; height: 64px; fill: var(--accent); margin-bottom: 1rem;
+            animation: rotatePhone 1.5s infinite alternate ease-in-out;
+        }
+        #orientation-warning h2 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff; }
+        #orientation-warning p { color: var(--text-muted); font-size: 0.95rem; }
+
+        @keyframes rotatePhone {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(90deg); }
+        }
+
+        /* DETECCIÓN DE PANTALLAS GIGANTES / SMART TV (Ej. Pantallas desde 1920px en adelante) */
+        @media (min-width: 1920px) {
+            header { height: 90px; padding: 1rem 3rem; }
+            .logo { font-size: 2.2rem; }
+            .nav-btn { padding: 0.75rem 1.5rem; font-size: 1.2rem; }
+            .lobby-hero h1 { font-size: 4.5rem; }
+            .lobby-hero p { font-size: 1.4rem; max-width: 800px; }
+            .lobby-card { min-width: 320px; height: 250px; padding: 2.5rem; }
+            .lobby-card span { font-size: 1.8rem; }
+            .lobby-card svg { width: 72px; height: 72px; }
+            .panel-header { font-size: 1.1rem; padding: 1.2rem; }
+            .category-item { font-size: 1.2rem; padding: 1.2rem; }
+            .item-row { font-size: 1.1rem; padding: 1rem 1.2rem; }
+        }
+
+        /* FORZAR AVISO EN MÓVILES VERTICALES */
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            #orientation-warning { display: flex; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Pantalla de advertencia si el celular está en vertical -->
+    <div id="orientation-warning">
+        <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+        <h2>Gira tu dispositivo</h2>
+        <p>Para una experiencia óptima en Stream One, por favor coloca tu teléfono u ഹോടel en posición horizontal.</p>
+    </div>
 
     <header>
         <div class="logo">Stream One</div>
@@ -157,7 +209,6 @@
             { categoria: "General", nombre: "Win Sports", url: "https://stream-xhd.com/live2.php?stream=winsports" }
         ];
 
-        // Carrusel de fondos para el lobby
         const fondosLobby = [
             'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600&auto=format&fit=crop',
             'https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=1600&auto=format&fit=crop',
@@ -175,7 +226,6 @@
             indiceFondoActual = (indiceFondoActual + 1) % fondosLobby.length;
         }
 
-        // Inicializar y alternar cada 8 segundos
         actualizarFondoLobby();
         setInterval(actualizarFondoLobby, 8000);
 

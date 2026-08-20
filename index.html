@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One - Catálogo</title>
+    <title>Stream One - Reproductor Fijo</title>
     <style>
         :root {
             --bg: #0b1320;
@@ -13,140 +13,183 @@
             --border: #1e293b;
         }
 
-        body { background-color: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
         /* Barra de navegación */
-        nav { background: var(--card); padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
-        .logo { font-weight: bold; color: var(--accent); font-size: 1.2rem; }
-        .nav-links { display: flex; gap: 0.5rem; }
-        .nav-btn { background: none; border: 1px solid var(--border); color: #94a3b8; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: 0.2s; }
+        nav { background: var(--card); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .logo { font-weight: bold; color: var(--accent); font-size: 1.1rem; }
+        .nav-links { display: flex; gap: 0.4rem; }
+        .nav-btn { background: none; border: 1px solid var(--border); color: #94a3b8; padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
         .nav-btn:hover { background: #1e293b; color: var(--text); }
         .nav-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
 
-        /* Contenedor principal */
-        .container { padding: 1rem; max-width: 1200px; margin: auto; }
+        /* Reproductor Fijo Superior */
+        .player-sticky-container {
+            width: 100%;
+            background: #000;
+            border-bottom: 2px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 50;
+        }
+        .player-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            aspect-ratio: 16/9;
+            background: #0b1320;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .player-placeholder {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Contenedor Inferior con Scroll Independiente */
+        .content-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
 
         /* Filtros */
-        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem 0; scrollbar-width: none; }
+        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { background: var(--card); border: 1px solid var(--border); color: #94a3b8; padding: 0.5rem 1rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .filter-btn { background: var(--card); border: 1px solid var(--border); color: #94a3b8; padding: 0.4rem 0.9rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
         .filter-btn:hover { background: #1e293b; color: var(--text); }
         .filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
 
         /* Grilla de Contenido */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .card { background: var(--card); border-radius: 8px; padding: 1.2rem 1rem; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; min-height: 80px; }
-        .card:hover { transform: translateY(-3px); border-color: var(--accent); background: #1e293b; }
-        .card p { font-size: 0.9rem; font-weight: 500; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-top: 0.5rem; }
+        .card { background: var(--card); border-radius: 8px; padding: 1rem 0.75rem; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; min-height: 70px; }
+        .card:hover { transform: translateY(-2px); border-color: var(--accent); background: #1e293b; }
+        .card.active { border-color: var(--accent); background: #1e293b; }
+        .card p { font-size: 0.85rem; font-weight: 500; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Modal del Player */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-wrapper { width: 90%; max-width: 800px; aspect-ratio: 16/9; background: #000; position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-        .close-btn { position: absolute; top: 15px; right: 20px; color: white; font-size: 2rem; cursor: pointer; z-index: 1010; background: rgba(0,0,0,0.5); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        /* Adaptación para pantallas un poco más grandes (Tablets / PCs) */
+        @media (min-width: 768px) {
+            .player-wrapper {
+                max-width: 650px; /* Reproductor compacto y elegante arriba */
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
 
-<nav>
-    <div class="logo">Stream One</div>
-    <div class="nav-links">
-        <button class="nav-btn active" onclick="render('canales', this)">TV</button>
-        <button class="nav-btn" onclick="render('peliculas', this)">Cine</button>
-        <button class="nav-btn" onclick="render('series', this)">Series</button>
+    <!-- Barra de Navegación -->
+    <nav>
+        <div class="logo">Stream One</div>
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="render('canales', this)">TV</button>
+            <button class="nav-btn" onclick="render('peliculas', this)">Cine</button>
+            <button class="nav-btn" onclick="render('series', this)">Series</button>
+        </div>
+    </nav>
+
+    <!-- Reproductor Fijo Superior -->
+    <div class="player-sticky-container">
+        <div class="player-wrapper" id="player-container">
+            <div class="player-placeholder">Selecciona un elemento para reproducir</div>
+        </div>
     </div>
-</nav>
 
-<div class="container">
-    <div id="filter-container" class="filters"></div>
-    <div id="grid-container" class="grid"></div>
-</div>
-
-<div id="modal">
-    <div class="modal-wrapper">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div id="player-container" style="width:100%; height:100%;"></div>
+    <!-- Área de Contenido con Scroll -->
+    <div class="content-scroll-area">
+        <div id="filter-container" class="filters"></div>
+        <div id="grid-container" class="grid"></div>
     </div>
-</div>
 
-<script>
-    let currentData = [];
+    <script>
+        let currentData = [];
 
-    async function fetchData(tipo) {
-        let url = '';
-        if (tipo === 'canales') url = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales';
-        else if (tipo === 'peliculas') url = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas';
-        else if (tipo === 'series') url = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series';
+        async function fetchData(tipo) {
+            let url = '';
+            if (tipo === 'canales') url = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales';
+            else if (tipo === 'peliculas') url = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas';
+            else if (tipo === 'series') url = 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series';
 
-        try {
-            const resp = await fetch(url);
-            const text = await resp.text();
-            let data = [], cat = "General", nom = "";
-            text.split('\n').forEach(l => {
-                if (l.startsWith('#EXTINF:')) {
-                    let m = l.match(/group-title="([^"]+)"/);
-                    cat = m ? m[1] : "General";
-                    nom = l.split(',')[1] || "Sin nombre";
-                } else if (l.trim() && !l.startsWith('#')) {
-                    data.push({categoria: cat, nombre: nom, url: l.trim()});
-                }
+            try {
+                const resp = await fetch(url);
+                const text = await resp.text();
+                let data = [], cat = "General", nom = "";
+                text.split('\n').forEach(l => {
+                    if (l.startsWith('#EXTINF:')) {
+                        let m = l.match(/group-title="([^"]+)"/);
+                        cat = m ? m[1] : "General";
+                        nom = l.split(',')[1] || "Sin nombre";
+                    } else if (l.trim() && !l.startsWith('#')) {
+                        data.push({categoria: cat, nombre: nom, url: l.trim()});
+                    }
+                });
+                return data;
+            } catch (e) {
+                console.error("Error al cargar datos:", e);
+                return [];
+            }
+        }
+
+        async function render(tipo, btnElement) {
+            if (btnElement) {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            currentData = await fetchData(tipo);
+            const cats = [...new Set(currentData.map(i => i.categoria))];
+            
+            // Renderizar Filtros
+            const fCont = document.getElementById('filter-container');
+            fCont.innerHTML = `<button class="filter-btn active" onclick="filterData('All', this)">Todos</button>`;
+            cats.forEach(c => {
+                fCont.innerHTML += `<button class="filter-btn" onclick="filterData('${c.replace(/'/g, "\\'")}', this)">${c}</button>`;
             });
-            return data;
-        } catch (e) {
-            console.error("Error al cargar datos:", e);
-            return [];
-        }
-    }
-
-    async function render(tipo, btnElement) {
-        if (btnElement) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
+            
+            displayGrid(currentData);
         }
 
-        currentData = await fetchData(tipo);
-        const cats = [...new Set(currentData.map(i => i.categoria))];
-        
-        // Renderizar Filtros
-        const fCont = document.getElementById('filter-container');
-        fCont.innerHTML = `<button class="filter-btn active" onclick="filterData('All', this)">Todos</button>`;
-        cats.forEach(c => {
-            fCont.innerHTML += `<button class="filter-btn" onclick="filterData('${c.replace(/'/g, "\\'")}', this)">${c}</button>`;
-        });
-        
-        displayGrid(currentData);
-    }
-
-    function displayGrid(data) {
-        const grid = document.getElementById('grid-container');
-        if (data.length === 0) {
-            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 2rem;">No hay elementos disponibles.</p>`;
-            return;
+        function displayGrid(data) {
+            const grid = document.getElementById('grid-container');
+            if (data.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 2rem;">No hay elementos disponibles.</p>`;
+                return;
+            }
+            grid.innerHTML = data.map((item, index) => `
+                <div class="card" onclick="openPlayer('${item.url}', this)">
+                    <p>${item.nombre}</p>
+                </div>
+            `).join('');
         }
-        grid.innerHTML = data.map(item => `
-            <div class="card" onclick="openPlayer('${item.url}')">
-                <p>${item.nombre}</p>
-            </div>
-        `).join('');
-    }
 
-    function filterData(cat, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        displayGrid(cat === 'All' ? currentData : currentData.filter(i => i.categoria === cat));
-    }
+        function filterData(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            displayGrid(cat === 'All' ? currentData : currentData.filter(i => i.categoria === cat));
+        }
 
-    function openPlayer(url) {
-        document.getElementById('modal').style.display = 'flex';
-        document.getElementById('player-container').innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border:none;" allowfullscreen allow="autoplay"></iframe>`;
-    }
+        function openPlayer(url, cardElement) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            if (cardElement) cardElement.classList.add('active');
 
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('player-container').innerHTML = '';
-    }
+            document.getElementById('player-container').innerHTML = `
+                <iframe src="${url}" width="100%" height="100%" style="border:none;" allowfullscreen allow="autoplay"></iframe>
+            `;
+        }
 
-    // Carga inicial al abrir la página
-    render('canales', document.querySelector('.nav-btn'));
-</script>
+        // Carga inicial al abrir la página
+        render('canales', document.querySelector('.nav-btn'));
+    </script>
 </body>
 </html>

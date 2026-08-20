@@ -3,91 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One - M3U Player</title>
-    <!-- Librería HLS avanzada para decodificar streams M3U -->
+    <title>Stream One - Smart TV & Premium</title>
+    <!-- Librería HLS para decodificar streams M3U -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --bg: #0b1320;
             --card: #0f172a;
+            --card-hover: #1e293b;
             --accent: #38bdf8;
             --text: #ffffff;
+            --text-muted: #94a3b8;
             --border: #1e293b;
         }
 
-        body { background-color: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { background-color: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Barra de navegación */
-        nav { background: var(--card); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-        .logo { font-weight: bold; color: var(--accent); font-size: 1.1rem; }
-        .nav-links { display: flex; gap: 0.4rem; }
-        .nav-btn { background: none; border: 1px solid var(--border); color: #94a3b8; padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
-        .nav-btn:hover { background: #1e293b; color: var(--text); }
-        .nav-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
-
-        /* Reproductor Fijo Superior de Video Real */
-        .player-sticky-container {
-            width: 100%;
-            background: #000;
-            border-bottom: 2px solid var(--border);
-            flex-shrink: 0;
-            position: relative;
-            z-index: 50;
-        }
-        .player-wrapper {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            aspect-ratio: 16/9;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        /* Barra de Navegación apta para TV */
+        nav { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .logo { font-weight: 800; color: var(--accent); font-size: 1.8rem; letter-spacing: 1px; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 1rem; }
+        .nav-btn { background: transparent; border: 2px solid var(--border); color: var(--text-muted); padding: 0.75rem 1.75rem; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.2s; }
+        
+        /* Efecto de Enfoque por Control Remoto (Focus) */
+        .nav-btn:focus, .filter-btn:focus, .card:focus {
             outline: none;
+            border-color: var(--accent);
+            background: var(--card-hover);
+            color: var(--text);
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+            z-index: 10;
         }
-        .player-placeholder {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 1rem;
-            position: absolute;
-        }
+        .nav-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
-        /* Área de Contenido con Scroll */
-        .content-scroll-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            box-sizing: border-box;
-        }
+        /* Contenedor Principal Amplio para TV */
+        .container { max-width: 1600px; width: 100%; margin: 0 auto; padding: 2.5rem 3rem; box-sizing: border-box; flex: 1; }
 
-        /* Filtros */
-        .filters { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none; }
+        /* Filtros de Categoría */
+        .filters { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 2rem; scrollbar-width: none; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { background: var(--card); border: 1px solid var(--border); color: #94a3b8; padding: 0.4rem 0.9rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .filter-btn:hover { background: #1e293b; color: var(--text); }
-        .filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+        .filter-btn { background: var(--card); border: 2px solid var(--border); color: var(--text-muted); padding: 0.75rem 1.5rem; border-radius: 25px; white-space: nowrap; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+        .filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
 
-        /* Grilla de Contenido */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-top: 0.5rem; }
-        .card { background: var(--card); border-radius: 8px; padding: 1rem 0.75rem; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; min-height: 70px; }
-        .card:hover { transform: translateY(-2px); border-color: var(--accent); background: #1e293b; }
-        .card.active { border-color: var(--accent); background: #1e293b; }
-        .card p { font-size: 0.85rem; font-weight: 500; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        /* Grilla de Contenido Adaptada a Pantallas Grandes */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--card); border-radius: 16px; padding: 2rem 1.25rem; text-align: center; cursor: pointer; transition: all 0.2s ease; border: 2px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; box-shadow: 0 6px 12px -2px rgba(0,0,0,0.3); }
+        .card p { font-size: 1.1rem; font-weight: 600; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #f1f5f9; }
 
-        @media (min-width: 768px) {
-            .player-wrapper { max-width: 650px; }
-            .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-        }
+        /* Modal Reproductor Flotante Optimizando la Pantalla de la Sala */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 2rem; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { width: 100%; max-width: 1200px; background: #000; border-radius: 20px; overflow: hidden; position: relative; border: 2px solid var(--border); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8); aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(0, 0, 0, 0.7); border: 2px solid var(--border); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; z-index: 1010; transition: 0.2s; }
+        .modal-close:focus, .modal-close:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); transform: scale(1.1); outline: none; }
+        video { width: 100%; height: 100%; object-fit: contain; outline: none; background: #000; }
+        
+        .modal-title { position: absolute; bottom: 1.5rem; left: 2rem; color: #fff; font-weight: 700; font-size: 1.3rem; text-shadow: 0 2px 6px rgba(0,0,0,0.9); pointer-events: none; z-index: 1005; }
     </style>
 </head>
 <body>
@@ -95,23 +67,24 @@
     <nav>
         <div class="logo">Stream One</div>
         <div class="nav-links">
-            <button class="nav-btn active" onclick="render('canales', this)">TV</button>
-            <button class="nav-btn" onclick="render('peliculas', this)">Cine</button>
-            <button class="nav-btn" onclick="render('series', this)">Series</button>
+            <button class="nav-btn active" tabindex="0" onclick="render('canales', this)">TV</button>
+            <button class="nav-btn" tabindex="0" onclick="render('peliculas', this)">Cine</button>
+            <button class="nav-btn" tabindex="0" onclick="render('series', this)">Series</button>
         </div>
     </nav>
 
-    <!-- Reproductor Fijo con Video HTML5 Nativo -->
-    <div class="player-sticky-container">
-        <div class="player-wrapper">
-            <div class="player-placeholder" id="placeholder">Selecciona un canal para reproducir</div>
-            <video id="videoPlayer" controls autoplay playsinline></video>
-        </div>
-    </div>
-
-    <div class="content-scroll-area">
+    <div class="container">
         <div id="filter-container" class="filters"></div>
         <div id="grid-container" class="grid"></div>
+    </div>
+
+    <!-- Modal del Reproductor -->
+    <div class="modal-overlay" id="playerModal">
+        <div class="modal-content">
+            <div class="modal-close" tabindex="0" id="closeBtn" onclick="closePlayer()">✕</div>
+            <div class="modal-title" id="modalTitle">Reproduciendo...</div>
+            <video id="videoPlayer" controls autoplay playsinline></video>
+        </div>
     </div>
 
     <script>
@@ -156,9 +129,9 @@
             const cats = [...new Set(currentData.map(i => i.categoria))];
             
             const fCont = document.getElementById('filter-container');
-            fCont.innerHTML = `<button class="filter-btn active" onclick="filterData('All', this)">Todos</button>`;
+            fCont.innerHTML = `<button class="filter-btn active" tabindex="0" onclick="filterData('All', this)">Todos</button>`;
             cats.forEach(c => {
-                fCont.innerHTML += `<button class="filter-btn" onclick="filterData('${c.replace(/'/g, "\\'")}', this)">${c}</button>`;
+                fCont.innerHTML += `<button class="filter-btn" tabindex="0" onclick="filterData('${c.replace(/'/g, "\\'")}', this)">${c}</button>`;
             });
             
             displayGrid(currentData);
@@ -167,11 +140,11 @@
         function displayGrid(data) {
             const grid = document.getElementById('grid-container');
             if (data.length === 0) {
-                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 2rem;">No hay elementos disponibles.</p>`;
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;">No hay elementos disponibles.</p>`;
                 return;
             }
             grid.innerHTML = data.map((item) => `
-                <div class="card" onclick="openPlayer('${item.url}', this)">
+                <div class="card" tabindex="0" onclick="openPlayer('${item.url}', '${item.nombre.replace(/'/g, "\\'")}')">
                     <p>${item.nombre}</p>
                 </div>
             `).join('');
@@ -183,40 +156,50 @@
             displayGrid(cat === 'All' ? currentData : currentData.filter(i => i.categoria === cat));
         }
 
-        function openPlayer(url, cardElement) {
-            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-            if (cardElement) cardElement.classList.add('active');
-
+        function openPlayer(url, nombre) {
+            const modal = document.getElementById('playerModal');
             const video = document.getElementById('videoPlayer');
-            const placeholder = document.getElementById('placeholder');
+            const titleEl = document.getElementById('modalTitle');
+            const closeBtn = document.getElementById('closeBtn');
             
-            placeholder.style.display = 'none';
+            titleEl.textContent = nombre;
+            modal.classList.add('active');
+            closeBtn.focus(); // El control remoto se posiciona en el botón de cerrar al abrir
 
-            // Limpiar instancia previa de HLS para evitar conflictos de memoria
             if (hls) {
                 hls.destroy();
             }
 
             if (Hls.isSupported()) {
                 hls = new Hls({
+                    liveSyncDurationCount: 3,
+                    liveMaxLatencyDurationCount: 10,
+                    enableWorker: true,
+                    lowLatencyMode: false,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 60,
+                    fragLoadingMaxRetry: 6,
+                    fragLoadingRetryDelay: 1000,
+                    manifestLoadingMaxRetry: 4,
                     xhrSetup: function (xhr, url) {
-                        xhr.withCredentials = false; // Ayuda a prevenir bloqueos CORS en algunos servidores M3U
+                        xhr.withCredentials = false;
                     }
                 });
+
                 hls.loadSource(url);
                 hls.attachMedia(video);
+                
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("Reproducción automática restringida por el navegador:", e));
+                    video.play().catch(e => console.log("Autoplay restringido:", e));
                 });
+
                 hls.on(Hls.Events.ERROR, function(event, data) {
                     if (data.fatal) {
                         switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.error("Error de red intentando recuperar stream...");
                                 hls.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.error("Error de medios, intentando recuperar...");
                                 hls.recoverMediaError();
                                 break;
                             default:
@@ -225,13 +208,26 @@
                         }
                     }
                 });
+
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Soporte nativo para dispositivos Apple (iPhone, iPad / Safari)
                 video.src = url;
                 video.addEventListener('loadedmetadata', function() {
                     video.play().catch(e => console.log(e));
                 });
             }
+        }
+
+        function closePlayer() {
+            const modal = document.getElementById('playerModal');
+            const video = document.getElementById('videoPlayer');
+            
+            video.pause();
+            video.src = "";
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            modal.classList.remove('active');
         }
 
         render('canales', document.querySelector('.nav-btn'));

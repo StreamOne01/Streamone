@@ -119,8 +119,8 @@
             .item-row { font-size: 1.1rem; padding: 1rem 1.2rem; }
         }
 
-        /* ADAPTACIÓN RESPONSIVA PARA TELÉFONOS MÓVILES */
-        @media screen and (max-width: 768px) {
+        /* ADAPTACIÓN AUTOMÁTICA PARA MEDIDAS DE TELÉFONOS (800x360 y 915x412 dp) */
+        @media screen and (max-width: 920px) and (max-height: 450px) {
             .app-container {
                 flex-direction: column;
                 height: calc(100vh - 65px);
@@ -128,7 +128,7 @@
             }
             .sidebar-categories {
                 width: 100%;
-                max-height: 120px;
+                max-height: 100px;
                 flex-direction: row;
                 overflow-x: auto;
                 overflow-y: hidden;
@@ -150,14 +150,14 @@
             }
             .middle-items {
                 width: 100%;
-                height: 180px;
+                height: 150px;
                 border-right: none;
                 border-bottom: 1px solid var(--border);
             }
             .right-player {
                 width: 100%;
-                height: 250px;
-                min-height: 220px;
+                height: 220px;
+                min-height: 200px;
             }
         }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One - Smart TV & Premium</title>
+    <title>Stream One - Smart TV Premium</title>
     <!-- Librería HLS para decodificar streams M3U -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -19,44 +19,72 @@
 
         body { background-color: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Barra de Navegación apta para TV */
+        /* Barra de Navegación Superior Estática */
         nav { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 1.25rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .logo { font-weight: 800; color: var(--accent); font-size: 1.8rem; letter-spacing: 1px; text-transform: uppercase; }
         .nav-links { display: flex; gap: 1rem; }
         .nav-btn { background: transparent; border: 2px solid var(--border); color: var(--text-muted); padding: 0.75rem 1.75rem; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: all 0.2s; }
         
-        /* Efecto de Enfoque por Control Remoto (Focus) */
-        .nav-btn:focus, .filter-btn:focus, .card:focus {
+        /* Efecto de Enfoque Activo por Control Remoto */
+        .nav-btn.tv-focused, .filter-btn.tv-focused, .card.tv-focused, .modal-close.tv-focused {
             outline: none;
-            border-color: var(--accent);
-            background: var(--card-hover);
-            color: var(--text);
-            transform: scale(1.08);
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+            border-color: var(--accent) !important;
+            background: var(--card-hover) !important;
+            color: var(--text) !important;
+            transform: scale(1.06);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
             z-index: 10;
         }
         .nav-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
-        /* Contenedor Principal Amplio para TV */
-        .container { max-width: 1600px; width: 100%; margin: 0 auto; padding: 2.5rem 3rem; box-sizing: border-box; flex: 1; }
+        /* Contenedor Principal */
+        .container { max-width: 1600px; width: 100%; margin: 0 auto; padding: 2rem 3rem; box-sizing: border-box; flex: 1; display: flex; flex-direction: column; }
 
-        /* Filtros de Categoría */
-        .filters { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 2rem; scrollbar-width: none; }
+        /* Pestañas de Categorías FIJAS (Sticky) */
+        .filters-wrapper { 
+            position: sticky; 
+            top: 85px; 
+            background: var(--bg); 
+            z-index: 90; 
+            padding: 0.75rem 0;
+            margin-bottom: 2rem; 
+        }
+        .filters { 
+            display: flex; 
+            gap: 1rem; 
+            overflow-x: auto; 
+            padding: 0.25rem; 
+            scroll-behavior: smooth;
+            scrollbar-width: none; 
+        }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { background: var(--card); border: 2px solid var(--border); color: var(--text-muted); padding: 0.75rem 1.5rem; border-radius: 25px; white-space: nowrap; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+
+        .filter-btn { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            color: var(--text-muted); 
+            padding: 0.75rem 1.5rem; 
+            border-radius: 25px; 
+            white-space: nowrap; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            transition: all 0.2s; 
+            flex-shrink: 0;
+        }
         .filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
 
-        /* Grilla de Contenido Adaptada a Pantallas Grandes */
+        /* Contenido Vertical */
+        .grid-container-scroll { flex: 1; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+        
         .card { background: var(--card); border-radius: 16px; padding: 2rem 1.25rem; text-align: center; cursor: pointer; transition: all 0.2s ease; border: 2px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; box-shadow: 0 6px 12px -2px rgba(0,0,0,0.3); }
         .card p { font-size: 1.1rem; font-weight: 600; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #f1f5f9; }
 
-        /* Modal Reproductor Flotante Optimizando la Pantalla de la Sala */
+        /* Modal Reproductor Flotante */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 2rem; }
         .modal-overlay.active { display: flex; }
         .modal-content { width: 100%; max-width: 1200px; background: #000; border-radius: 20px; overflow: hidden; position: relative; border: 2px solid var(--border); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8); aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
         .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(0, 0, 0, 0.7); border: 2px solid var(--border); color: #fff; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; z-index: 1010; transition: 0.2s; }
-        .modal-close:focus, .modal-close:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); transform: scale(1.1); outline: none; }
         video { width: 100%; height: 100%; object-fit: contain; outline: none; background: #000; }
         
         .modal-title { position: absolute; bottom: 1.5rem; left: 2rem; color: #fff; font-weight: 700; font-size: 1.3rem; text-shadow: 0 2px 6px rgba(0,0,0,0.9); pointer-events: none; z-index: 1005; }
@@ -67,21 +95,28 @@
     <nav>
         <div class="logo">Stream One</div>
         <div class="nav-links">
-            <button class="nav-btn active" tabindex="0" onclick="render('canales', this)">TV</button>
-            <button class="nav-btn" tabindex="0" onclick="render('peliculas', this)">Cine</button>
-            <button class="nav-btn" tabindex="0" onclick="render('series', this)">Series</button>
+            <button class="nav-btn active tv-focusable" onclick="render('canales', this)">TV</button>
+            <button class="nav-btn tv-focusable" onclick="render('peliculas', this)">Cine</button>
+            <button class="nav-btn tv-focusable" onclick="render('series', this)">Series</button>
         </div>
     </nav>
 
     <div class="container">
-        <div id="filter-container" class="filters"></div>
-        <div id="grid-container" class="grid"></div>
+        <!-- Pestañas de categorías fijas -->
+        <div class="filters-wrapper">
+            <div id="filter-container" class="filters"></div>
+        </div>
+
+        <!-- Contenido vertical -->
+        <div class="grid-container-scroll">
+            <div id="grid-container" class="grid"></div>
+        </div>
     </div>
 
     <!-- Modal del Reproductor -->
     <div class="modal-overlay" id="playerModal">
         <div class="modal-content">
-            <div class="modal-close" tabindex="0" id="closeBtn" onclick="closePlayer()">✕</div>
+            <div class="modal-close tv-focusable" id="closeBtn" onclick="closePlayer()">✕</div>
             <div class="modal-title" id="modalTitle">Reproduciendo...</div>
             <video id="videoPlayer" controls autoplay playsinline></video>
         </div>
@@ -90,6 +125,7 @@
     <script>
         let currentData = [];
         let hls = null;
+        let currentFocusIndex = 0;
 
         async function fetchData(tipo) {
             let url = '';
@@ -129,9 +165,9 @@
             const cats = [...new Set(currentData.map(i => i.categoria))];
             
             const fCont = document.getElementById('filter-container');
-            fCont.innerHTML = `<button class="filter-btn active" tabindex="0" onclick="filterData('All', this)">Todos</button>`;
+            fCont.innerHTML = `<button class="filter-btn active tv-focusable" onclick="filterData('All', this)">Todos</button>`;
             cats.forEach(c => {
-                fCont.innerHTML += `<button class="filter-btn" tabindex="0" onclick="filterData('${c.replace(/'/g, "\\'")}', this)">${c}</button>`;
+                fCont.innerHTML += `<button class="filter-btn tv-focusable" onclick="filterData('${c.replace(/'/g, "\\'")}', this)">${c}</button>`;
             });
             
             displayGrid(currentData);
@@ -144,10 +180,13 @@
                 return;
             }
             grid.innerHTML = data.map((item) => `
-                <div class="card" tabindex="0" onclick="openPlayer('${item.url}', '${item.nombre.replace(/'/g, "\\'")}')">
+                <div class="card tv-focusable" onclick="openPlayer('${item.url}', '${item.nombre.replace(/'/g, "\\'")}')">
                     <p>${item.nombre}</p>
                 </div>
             `).join('');
+            
+            // Actualizar elementos enfocables tras renderizar
+            updateFocusables();
         }
 
         function filterData(cat, btn) {
@@ -156,15 +195,85 @@
             displayGrid(cat === 'All' ? currentData : currentData.filter(i => i.categoria === cat));
         }
 
+        // --- MOTOR DE NAVEGACIÓN ESPACIAL PARA CONTROL REMOTO DE TV ---
+        let focusableElements = [];
+
+        function updateFocusables() {
+            const modalActive = document.getElementById('playerModal').classList.contains('active');
+            if (modalActive) {
+                focusableElements = Array.from(document.querySelectorAll('#playerModal .tv-focusable'));
+            } else {
+                focusableElements = Array.from(document.querySelectorAll('.tv-focusable'));
+            }
+            if (focusableElements.length > 0) {
+                currentFocusIndex = Math.min(currentFocusIndex, focusableElements.length - 1);
+                if (currentFocusIndex < 0) currentFocusIndex = 0;
+                setFocus(currentFocusIndex);
+            }
+        }
+
+        function setFocus(index) {
+            focusableElements.forEach(el => el.classList.remove('tv-focused'));
+            if (focusableElements[index]) {
+                currentFocusIndex = index;
+                const el = focusableElements[index];
+                el.classList.add('tv-focused');
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            }
+        }
+
+        // Manejador de eventos de teclado (Control Remoto)
+        window.addEventListener('keydown', (e) => {
+            updateFocusables();
+            if (focusableElements.length === 0) return;
+
+            let cols = 4; // Estimación de columnas de la grilla para navegación vertical inteligente
+            const gridEl = document.getElementById('grid-container');
+            if (gridEl) {
+                const computedCols = window.getComputedStyle(gridEl).gridTemplateColumns;
+                if (computedCols) cols = computedCols.split(' ').length;
+            }
+
+            let newIndex = currentFocusIndex;
+
+            switch(e.key) {
+                case 'ArrowRight':
+                    newIndex = Math.min(currentFocusIndex + 1, focusableElements.length - 1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    newIndex = Math.max(currentFocusIndex - 1, 0);
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    newIndex = Math.min(currentFocusIndex + cols, focusableElements.length - 1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowUp':
+                    newIndex = Math.max(currentFocusIndex - cols, 0);
+                    e.preventDefault();
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (focusableElements[currentFocusIndex]) {
+                        focusableElements[currentFocusIndex].click();
+                    }
+                    break;
+            }
+
+            setFocus(newIndex);
+        });
+
         function openPlayer(url, nombre) {
             const modal = document.getElementById('playerModal');
             const video = document.getElementById('videoPlayer');
             const titleEl = document.getElementById('modalTitle');
-            const closeBtn = document.getElementById('closeBtn');
             
             titleEl.textContent = nombre;
             modal.classList.add('active');
-            closeBtn.focus(); // El control remoto se posiciona en el botón de cerrar al abrir
+            
+            updateFocusables();
+            setFocus(0); // Enfocar el botón de cerrar en el modal
 
             if (hls) {
                 hls.destroy();
@@ -228,9 +337,13 @@
                 hls = null;
             }
             modal.classList.remove('active');
+            updateFocusables();
         }
 
-        render('canales', document.querySelector('.nav-btn'));
+        // Inicializar carga de canales y enfoque al arrancar
+        render('canales', document.querySelector('.nav-btn')).then(() => {
+            updateFocusables();
+        });
     </script>
 </body>
 </html>

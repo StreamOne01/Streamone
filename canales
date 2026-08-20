@@ -13,19 +13,11 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 #EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",DIRECTV SPORTS FHD
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/214.ts
+https://regionales.saohgdassregions.com:25463/StreamOne/J6jGM3dsEu/214.ts
 #EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",DIRECTV SPORTS 2 FHD
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/215.ts
+https://regionales.saohgdassregions.com:25463/StreamOne/J6jGM3dsEu/215.ts
 #EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",DIRECTV SPORTS PLUS FHD
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/216.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 1
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/230.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 2
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/232.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 3
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/238.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 4
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/240.ts
+https://regionales.saohgdassregions.com:25463/StreamOne/J6jGM3dsEu/216.ts
 #EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM ONE",DRAGON BALL TV
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",El Chavo TV

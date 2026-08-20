@@ -104,7 +104,7 @@
             100% { transform: rotate(90deg); }
         }
 
-        /* DETECCIÓN DE PANTALLAS GIGANTES / SMART TV (Ej. Pantallas desde 1920px en adelante) */
+        /* DETECCIÓN DE PANTALLAS GIGANTES / SMART TV */
         @media (min-width: 1920px) {
             header { height: 90px; padding: 1rem 3rem; }
             .logo { font-size: 2.2rem; }
@@ -119,6 +119,48 @@
             .item-row { font-size: 1.1rem; padding: 1rem 1.2rem; }
         }
 
+        /* ADAPTACIÓN RESPONSIVA PARA TELÉFONOS MÓVILES */
+        @media screen and (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+                height: calc(100vh - 65px);
+                overflow-y: auto;
+            }
+            .sidebar-categories {
+                width: 100%;
+                max-height: 120px;
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .category-list {
+                display: flex;
+                flex-direction: row;
+            }
+            .category-item {
+                white-space: nowrap;
+                border-bottom: none;
+                border-right: 1px solid rgba(30, 41, 59, 0.5);
+            }
+            .category-item.active {
+                border-left: none;
+                border-bottom: 4px solid var(--accent);
+            }
+            .middle-items {
+                width: 100%;
+                height: 180px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .right-player {
+                width: 100%;
+                height: 250px;
+                min-height: 220px;
+            }
+        }
+
         /* FORZAR AVISO EN MÓVILES VERTICALES */
         @media screen and (max-width: 768px) and (orientation: portrait) {
             #orientation-warning { display: flex; }
@@ -131,7 +173,7 @@
     <div id="orientation-warning">
         <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
         <h2>Gira tu dispositivo</h2>
-        <p>Para una experiencia óptima en Stream One, por favor coloca tu teléfono u ഹോടel en posición horizontal.</p>
+        <p>Para una experiencia óptima en Stream One, por favor coloca tu teléfono en posición horizontal.</p>
     </div>
 
     <header>
@@ -184,31 +226,6 @@
     </div>
 
     <script>
-        const canalesStreamOne = [
-            { categoria: "ESPN", nombre: "ESPN Deportes", url: "https://stream-xhd.com/live2.php?stream=espndeportes" },
-            { categoria: "ESPN", nombre: "ESPN MX", url: "https://stream-xhd.com/live2.php?stream=espnmx" },
-            { categoria: "ESPN", nombre: "ESPN 2 MX", url: "https://stream-xhd.com/live2.php?stream=espn2mx" },
-            { categoria: "ESPN", nombre: "ESPN 3 MX", url: "https://stream-xhd.com/live2.php?stream=espn3mx" },
-            { categoria: "ESPN", nombre: "ESPN 4 MX", url: "https://stream-xhd.com/live2.php?stream=espn4mx" },
-            { categoria: "ESPN", nombre: "ESPN Premium", url: "https://stream-xhd.com/live2.php?stream=espnpremium" },
-            { categoria: "ESPN", nombre: "ESPN Colombia", url: "https://stream-xhd.com/live2.php?stream=espnco" },
-            { categoria: "ESPN", nombre: "ESPN 2 Colombia", url: "https://stream-xhd.com/live2.php?stream=espn2co" },
-            { categoria: "ESPN", nombre: "ESPN 3 Colombia", url: "https://stream-xhd.com/live2.php?stream=espn3co" },
-            { categoria: "ESPN", nombre: "ESPN Argentina", url: "https://stream-xhd.com/live2.php?stream=espnar" },
-            { categoria: "ESPN", nombre: "ESPN 4 Argentina", url: "https://stream-xhd.com/live2.php?stream=espn4ar" },
-            { categoria: "Sky", nombre: "Sky Sports LaLiga", url: "https://stream-xhd.com/live2.php?stream=sky_sports_laliga" },
-            { categoria: "Sky", nombre: "Sky F1", url: "https://stream-xhd.com/live2.php?stream=sky_f1" },
-            { categoria: "Premiere", nombre: "Premiere 1", url: "https://stream-xhd.com/live2.php?stream=premiere1" },
-            { categoria: "Premiere", nombre: "Premiere 2", url: "https://stream-xhd.com/live2.php?stream=premiere2" },
-            { categoria: "Premiere", nombre: "Premiere 3", url: "https://stream-xhd.com/live2.php?stream=premiere3" },
-            { categoria: "Sportv", nombre: "Sportv BR 1", url: "https://stream-xhd.com/live2.php?stream=sporttvbr1" },
-            { categoria: "Sportv", nombre: "Sportv BR 2", url: "https://stream-xhd.com/live2.php?stream=sporttvbr2" },
-            { categoria: "TUDN", nombre: "TUDN MX", url: "https://stream-xhd.com/live2.php?stream=tudnmx" },
-            { categoria: "General", nombre: "Azteca 7", url: "https://stream-xhd.com/live2.php?stream=azteca7" },
-            { categoria: "General", nombre: "Canal 5 MX", url: "https://stream-xhd.com/live2.php?stream=canal5mx" },
-            { categoria: "General", nombre: "Win Sports", url: "https://stream-xhd.com/live2.php?stream=winsports" }
-        ];
-
         const fondosLobby = [
             'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600&auto=format&fit=crop',
             'https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=1600&auto=format&fit=crop',
@@ -299,7 +316,7 @@
             if(cats.length > 0) renderItems(cats[0]);
         }
 
-        setupSection(canalesStreamOne, 'catListChannels', 'itemListChannels', 'headerChannels', 'playerChannels');
+        cargarListaM3U('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales', d => setupSection(d, 'catListChannels', 'itemListChannels', 'headerChannels', 'playerChannels'));
         cargarListaM3U('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas', d => setupSection(d, 'catListMovies', 'itemListMovies', 'headerMovies', 'playerMovies'));
         cargarListaM3U('https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Series', d => setupSection(d, 'catListSeries', 'itemListSeries', 'headerSeries', 'playerSeries'));
     </script>

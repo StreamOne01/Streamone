@@ -56,9 +56,14 @@
         .logo-one { color: var(--bg); background: var(--accent); padding: 0.1rem 0.5rem; border-radius: 6px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
 
         .nav-right { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-        .nav-links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .nav-links { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
         .nav-btn { background: rgba(15, 23, 42, 0.5); border: 2px solid var(--border); color: var(--text-muted); padding: 0.45rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
         
+        /* Estilo para el buscador */
+        .search-input { background: rgba(15, 23, 42, 0.6); border: 2px solid var(--border); color: var(--text); padding: 0.45rem 0.9rem; border-radius: 8px; font-size: 0.9rem; outline: none; transition: all 0.2s; width: 160px; }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); width: 200px; }
+        .search-input::placeholder { color: var(--text-muted); }
+
         .visit-counter { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); padding: 0.35rem 0.75rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; backdrop-filter: blur(5px); }
 
         .tv-focused { outline: none; border-color: var(--accent) !important; background: var(--card-hover) !important; color: var(--text) !important; transform: scale(1.04); box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); z-index: 10; }
@@ -95,8 +100,9 @@
         <div class="nav-right">
             <div class="visit-counter" id="visitCounter">👁️ <span id="countNum">...</span></div>
             <div class="nav-links">
-                <button class="nav-btn active tv-focusable" onclick="render('canales', this)">TV</button>
-                <button class="nav-btn tv-focusable" onclick="render('peliculas', this)">Cine</button>
+                <input type="text" id="searchInput" class="search-input tv-focusable" placeholder="Buscar..." oninput="filterContent()">
+                <button class="nav-btn active tv-focusable" onclick="switchTab('canales', this)">TV</button>
+                <button class="nav-btn tv-focusable" onclick="switchTab('peliculas', this)">Cine</button>
             </div>
         </div>
     </nav>
@@ -120,6 +126,8 @@
         let mpegtsInstance = null;
         let currentUrl = "";
         let currentName = "";
+        let currentType = 'canales';
+        let allItems = [];
 
         async function initCounter() {
             try {
@@ -133,39 +141,93 @@
             let url = tipo === 'canales' ? 'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/canales' :
                       'https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/Peliculas';
             
-            const resp = await fetch(url);
-            const text = await resp.text();
-            let data = [], cat = "General", nom = "";
-            
-            text.split('\n').forEach(l => {
-                l = l.trim();
-                if (l.startsWith('#EXTINF:')) {
-                    let m = l.match(/group-title="([^"]+)"/);
-                    cat = m ? m[1] : "General";
-                    nom = l.split(',')[1] || "";
-                } else if (l.startsWith('http')) {
-                    if (nom !== "") {
-                        data.push({categoria: cat, nombre: nom, url: l});
+            try {
+                const resp = await fetch(url);
+                const text = await resp.text();
+                let data = [], cat = "General", nom = "";
+                
+                text.split('\n').forEach(l => {
+                    l = l.trim();
+                    if (l.startsWith('#EXTINF:')) {
+                        let m = l.match(/group-title="([^"]+)"/);
+                        cat = m ? m[1] : "General";
+                        nom = l.split(',')[1] || "";
+                    } else if (l.startsWith('http')) {
+                        if (nom !== "") {
+                            data.push({categoria: cat, nombre: nom, url: l});
+                        }
+                        nom = "";
                     }
-                    nom = "";
-                }
-            });
-            return data;
+                });
+                return data.filter(item => item.nombre && item.url && item.url.startsWith('http'));
+            } catch (e) {
+                console.error("Error al cargar datos:", e);
+                return [];
+            }
         }
 
-        async function render(tipo, btn) {
+        async function switchTab(tipo, btn) {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
             
-            const rawData = await fetchData(tipo);
-            const cleanData = rawData.filter(item => item.nombre && item.url && item.url.startsWith('http'));
-            
+            currentType = tipo;
+            document.getElementById('searchInput').value = '';
+            allItems = await fetchData(tipo);
+            renderGrid(allItems);
+            renderCategories(allItems);
+        }
+
+        function renderGrid(data) {
             const grid = document.getElementById('grid-container');
-            grid.innerHTML = cleanData.map(item => `
+            if (data.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No se encontraron resultados</p>`;
+                return;
+            }
+            grid.innerHTML = data.map(item => `
                 <div class="card tv-focusable" onclick="openPlayer('${item.url}', '${item.nombre.replace(/'/g, "\\'")}')">
                     <p>${item.nombre}</p>
                 </div>
             `).join('');
+        }
+
+        function renderCategories(data) {
+            const categories = ['Todos', ...new Set(data.map(i => i.categoria))];
+            const filterContainer = document.getElementById('filter-container');
+            
+            filterContainer.innerHTML = categories.map((cat, index) => `
+                <button class="filter-btn tv-focusable ${index === 0 ? 'active' : ''}" onclick="filterByCategory('${cat}', this)">${cat}</button>
+            `).join('');
+        }
+
+        function filterByCategory(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allItems;
+
+            if (cat !== 'Todos') {
+                filtered = filtered.filter(item => item.categoria === cat);
+            }
+            if (query) {
+                filtered = filtered.filter(item => item.nombre.toLowerCase().includes(query));
+            }
+            renderGrid(filtered);
+        }
+
+        function filterContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const activeCatBtn = document.querySelector('.filter-btn.active');
+            const activeCat = activeCatBtn ? activeCatBtn.textContent : 'Todos';
+
+            let filtered = allItems;
+            if (activeCat !== 'Todos') {
+                filtered = filtered.filter(item => item.categoria === activeCat);
+            }
+            if (query) {
+                filtered = filtered.filter(item => item.nombre.toLowerCase().includes(query));
+            }
+            renderGrid(filtered);
         }
 
         function openPlayer(url, nombre) {
@@ -175,11 +237,9 @@
             const video = document.getElementById('videoPlayer');
             modal.classList.add('active');
 
-            // Limpiar reproductores anteriores
             if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
             if (mpegtsInstance) { mpegtsInstance.unload(); mpegtsInstance.detachMediaElement(); mpegtsInstance.destroy(); mpegtsInstance = null; }
 
-            // 1. Enlaces Transport Stream (.ts)
             if (url.endsWith('.ts') || url.includes('.ts?')) {
                 if (mpegts.getFeatureList().mseLivePlayback) {
                     mpegtsInstance = mpegts.createPlayer({ type: 'mse', isLive: true, url: url });
@@ -189,9 +249,7 @@
                 } else {
                     alert("Tu navegador no soporta reproducción MSE para flujos Transport Stream.");
                 }
-            }
-            // 2. Enlaces HLS (.m3u8)
-            else if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('live') || url.includes('stream'))) {
+            } else if (Hls.isSupported() && (url.includes('.m3u8') || url.includes('live') || url.includes('stream'))) {
                 hlsInstance = new Hls({
                     fragLoadingMaxRetry: 10,
                     fragLoadingRetryDelay: 2000,
@@ -208,12 +266,10 @@
                         }
                     }
                 });
-            } 
-            // 3. Formatos nativos directos (MP4, MKV, WebM, etc. para películas y videos)
-            else {
+            } else {
                 video.src = url;
                 video.load();
-                video.play().catch(err => console.error("Error al reproducir formato nativo (MP4/Video):", err));
+                video.play().catch(err => console.error("Error al reproducir formato nativo:", err));
             }
         }
 
@@ -228,7 +284,7 @@
         }
 
         initCounter();
-        render('canales', document.querySelector('.nav-btn'));
+        switchTab('canales', document.querySelector('.nav-btn'));
     </script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream One - Rápido</title>
-    <!-- Librería HLS.js para reproducción veloz de streams -->
+    <title>Stream One - M3U Player</title>
+    <!-- Librería HLS avanzada para decodificar streams M3U -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
@@ -25,7 +25,7 @@
         .nav-btn:hover { background: #1e293b; color: var(--text); }
         .nav-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
 
-        /* Reproductor Nativo Fijo Superior */
+        /* Reproductor Fijo Superior de Video Real */
         .player-sticky-container {
             width: 100%;
             background: #000;
@@ -101,10 +101,10 @@
         </div>
     </nav>
 
-    <!-- Reproductor Fijo Superior con Video Nativo -->
+    <!-- Reproductor Fijo con Video HTML5 Nativo -->
     <div class="player-sticky-container">
         <div class="player-wrapper">
-            <div class="player-placeholder" id="placeholder">Selecciona un elemento para reproducir</div>
+            <div class="player-placeholder" id="placeholder">Selecciona un canal para reproducir</div>
             <video id="videoPlayer" controls autoplay playsinline></video>
         </div>
     </div>
@@ -116,7 +116,7 @@
 
     <script>
         let currentData = [];
-        let hlsInstance = null;
+        let hls = null;
 
         async function fetchData(tipo) {
             let url = '';
@@ -129,12 +129,14 @@
                 const text = await resp.text();
                 let data = [], cat = "General", nom = "";
                 text.split('\n').forEach(l => {
+                    l = l.trim();
                     if (l.startsWith('#EXTINF:')) {
                         let m = l.match(/group-title="([^"]+)"/);
                         cat = m ? m[1] : "General";
                         nom = l.split(',')[1] || "Sin nombre";
-                    } else if (l.trim() && !l.startsWith('#')) {
-                        data.push({categoria: cat, nombre: nom, url: l.trim()});
+                    } else if (l && !l.startsWith('#')) {
+                        data.push({categoria: cat, nombre: nom, url: l});
+                        nom = "";
                     }
                 });
                 return data;
@@ -187,30 +189,48 @@
 
             const video = document.getElementById('videoPlayer');
             const placeholder = document.getElementById('placeholder');
+            
             placeholder.style.display = 'none';
 
-            // Destruir instancia anterior de HLS si existe
-            if (hlsInstance) {
-                hlsInstance.destroy();
+            // Limpiar instancia previa de HLS para evitar conflictos de memoria
+            if (hls) {
+                hls.destroy();
             }
 
             if (Hls.isSupported()) {
-                hlsInstance = new Hls();
-                hlsInstance.loadSource(url);
-                hlsInstance.attachMedia(video);
-                hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(err => console.log("Autoplay bloqueado:", err));
+                hls = new Hls({
+                    xhrSetup: function (xhr, url) {
+                        xhr.withCredentials = false; // Ayuda a prevenir bloqueos CORS en algunos servidores M3U
+                    }
+                });
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(e => console.log("Reproducción automática restringida por el navegador:", e));
+                });
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.error("Error de red intentando recuperar stream...");
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.error("Error de medios, intentando recuperar...");
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.destroy();
+                                break;
+                        }
+                    }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Soporte nativo para Safari / iOS
+                // Soporte nativo para dispositivos Apple (iPhone, iPad / Safari)
                 video.src = url;
-                video.addEventListener('loadedmetadata', () => {
-                    video.play().catch(err => console.log("Autoplay bloqueado:", err));
+                video.addEventListener('loadedmetadata', function() {
+                    video.play().catch(e => console.log(e));
                 });
-            } else {
-                // Fallback por si acaso el enlace es un iframe web o embebido directo
-                placeholder.style.display = 'block';
-                placeholder.innerHTML = 'Formato no compatible con reproductor nativo';
             }
         }
 

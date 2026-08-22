@@ -561,7 +561,7 @@
         }
     }
 
-    // FUNCIÓN REPRODUCIR OPTIMIZADA PARA PC Y MÓVIL
+    // FUNCIÓN REPRODUCIR EQUILIBRADA (SIN EFECTO ACELERADO)
     function reproducir(item) {
         document.getElementById('nombre-contenido').textContent = item.nombre;
         const videoElement = document.getElementById('video-player');
@@ -580,8 +580,10 @@
                     url: item.url
                 }, {
                     enableWorker: true,
-                    lowLatencyMode: true,
-                    liveBufferLatencyChasing: true
+                    lazyLoad: false,
+                    autoCleanupSourceBuffer: true,
+                    autoCleanupMaxBackwardDuration: 30,
+                    autoCleanupMinBackwardDuration: 10
                 });
                 
                 mpegtsPlayer.attachMediaElement(videoElement);

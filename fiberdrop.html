@@ -618,7 +618,11 @@
                         html += renderizarItem(reg, index);
                     });
                     historyList.innerHTML = html;
-                    filtrarRegistros();
+                    
+                    // Si el usuario está escribiendo en el buscador, actualiza el filtro al instante
+                    if (document.getElementById('inputBuscar').value.trim() !== '') {
+                        filtrarRegistros();
+                    }
                 })
                 .catch(err => {
                     console.error("Error al obtener datos:", err);
@@ -679,22 +683,34 @@
         }
 
         function filtrarRegistros() {
-            const query = document.getElementById('inputBuscar').value.toLowerCase();
-            const registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            const query = document.getElementById('inputBuscar').value.trim().toLowerCase();
             const contenedor = document.getElementById('resultadoBusqueda');
+            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
 
-            if (!query.trim()) {
+            if (!query) {
                 contenedor.innerHTML = '<div class="no-records">Escribe un código o poste para buscar...</div>';
                 return;
             }
 
-            const filtrados = registros.map((reg, index) => ({ reg, index })).filter(({ reg }) => {
-                return (reg.codigoCliente && reg.codigoCliente.toLowerCase().includes(query)) || 
-                       (reg.poste && reg.poste.toLowerCase().includes(query));
+            if (registros.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales. Ve a la pestaña "Lista" para sincronizar la nube.</div>';
+                return;
+            }
+
+            const filtrados = [];
+            registros.forEach((reg, index) => {
+                const codigo = (reg.codigoCliente || "").toString().toLowerCase();
+                const poste = (reg.poste || "").toString().toLowerCase();
+                const tap = (reg.tap || "").toString().toLowerCase();
+                const nap = (reg.nap || "").toString().toLowerCase();
+
+                if (codigo.includes(query) || poste.includes(query) || tap.includes(query) || nap.includes(query)) {
+                    filtrados.push({ reg, index });
+                }
             });
 
             if (filtrados.length === 0) {
-                contenedor.innerHTML = '<div class="no-records">No se encontraron coincidencias.</div>';
+                contenedor.innerHTML = `<div class="no-records">No se encontró ninguna coincidencia con "${query}".</div>`;
                 return;
             }
 

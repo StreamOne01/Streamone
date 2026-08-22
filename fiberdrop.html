@@ -603,8 +603,15 @@
             const historyList = document.getElementById('historyList');
             historyList.innerHTML = '<div class="loading-text">Sincronizando con la nube...</div>';
 
-            fetch(WEB_APP_URL)
-                .then(response => response.json())
+            const urlConAntiCache = `${WEB_APP_URL}?nocache=${new Date().getTime()}`;
+
+            fetch(urlConAntiCache)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
                 .then(registros => {
                     localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
 
@@ -619,14 +626,14 @@
                     });
                     historyList.innerHTML = html;
                     
-                    // Si el usuario está escribiendo en el buscador, actualiza el filtro al instante
                     if (document.getElementById('inputBuscar').value.trim() !== '') {
                         filtrarRegistros();
                     }
                 })
                 .catch(err => {
-                    console.error("Error al obtener datos:", err);
+                    console.error("Error al obtener datos de la nube:", err);
                     const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+                    
                     if (registrosLocales.length > 0) {
                         let html = '';
                         registrosLocales.forEach((reg, index) => {

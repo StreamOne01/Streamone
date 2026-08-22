@@ -105,6 +105,7 @@
             body.vista-canales .btn-movil-atras { display: block; }
             body.vista-reproductor #sidebar-carpetas, body.vista-reproductor #sidebar-canales { display: none; }
             body.vista-reproductor #main { display: flex; justify-content: flex-start; padding: 0; background: black; }
+            body.vista-reproductor .btn-movil-atras { display: block; }
             video { height: 100vh; width: 100vw; border-radius: 0; }
             #zapping-overlay { height: 100vh; width: 100vw; border-radius: 0; padding: 15px; }
             .zapping-lista { max-width: 100%; }
@@ -164,7 +165,7 @@
 </div>
 
 <div id="main">
-    <button class="btn-movil-atras" onclick="volverACanalesMovil()" style="display: block; width: auto; margin-bottom: 10px;">⬅ Volver a la lista</button>
+    <button class="btn-movil-atras" onclick="volverACanalesMovil()">⬅ Volver a la lista</button>
     <div class="video-container" id="video-container-wrapper">
         <button class="btn-flotante-zapping" onclick="alternarZapping()" id="btn-texto-zapping">📺 Canales</button>
         <div id="loading-spinner"></div>
@@ -182,12 +183,16 @@
 </div>
 
 <script>
-    // VALIDACIÓN DE DOMINIO (Protección anti-copia)
-    // Cambia 'tucuenta.github.io' por tu usuario o dominio oficial real cuando lo publiques
+    // VALIDACIÓN DE DOMINIO (Protección anti-copia con soporte para desarrollo local)
     const dominioPermitido = "tucuenta.github.io"; 
     const hostnameActual = window.location.hostname;
     
-    if (hostnameActual !== "streamone01.github.io" && hostnameActual !== "127.0.0.1" && !hostnameActual.endsWith(dominioPermitido)) {
+    if (
+        hostnameActual !== "streamone01.github.io" && 
+        hostnameActual !== "127.0.0.1" && 
+        hostnameActual !== "localhost" && 
+        !hostnameActual.endsWith(dominioPermitido)
+    ) {
         document.body.innerHTML = `
             <div style="background:#0b1320; color:white; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:sans-serif; text-align:center; padding: 20px;">
                 <h2 style="color: #38bdf8; margin-bottom: 10px;">⚠️ Aplicación No Autorizada</h2>
@@ -219,6 +224,13 @@
                 localStorage.removeItem('streamone_m3u_contenido');
             }
         }
+
+        // Configurar listener de error para el reproductor de video
+        const videoElement = document.getElementById('video-player');
+        videoElement.onerror = function() {
+            mostrarSpinner(false);
+            document.getElementById('nombre-contenido').textContent = "⚠️ Error: No se puede reproducir este canal o enlace caído.";
+        };
     };
 
     function mostrarLobby() {
@@ -245,7 +257,9 @@
         } else {
             favoritos.push(item);
         }
-        localStorage.setItem('streamone_favoritos', JSON.stringify(favoritos));
+        try {
+            localStorage.setItem('streamone_favoritos', JSON.stringify(favoritos));
+        } catch (e) {}
         renderizarCanales(canalesActuales);
     }
 
@@ -350,7 +364,11 @@
     }
 
     function guardarYProcesar(contenido) {
-        try { localStorage.setItem('streamone_m3u_contenido', contenido); } catch (e) {}
+        try { 
+            localStorage.setItem('streamone_m3u_contenido', contenido); 
+        } catch (e) {
+            console.warn("La lista es demasiado grande para guardarse en localStorage.");
+        }
         document.getElementById('lobby-status').textContent = "Procesando...";
         setTimeout(() => {
             procesarListaM3U(contenido);
@@ -580,7 +598,7 @@
         if (favoritos.length > 0 && '⭐ Favoritos'.toLowerCase().includes(busqueda)) {
             const divFav = document.createElement('div');
             divFav.className = 'item-lista folder-item' + (carpetaActual === '⭐ Favoritos' ? ' active-folder' : '');
-            divFav.innerHTML = `<span>⭐ Favoritos</span> <span style="font-size:10px; color:#94a3b8;">(${favoritos.length})</span>`;
+            divFav.innerHTML = `⭐ Favoritos <span style="font-size:10px; color:#94a3b8;">(${favoritos.length})</span>`;
             divFav.onclick = () => seleccionarCarpeta('⭐ Favoritos');
             contenedor.appendChild(divFav);
         }
@@ -590,7 +608,7 @@
                 const count = tipoActual === 'series' ? Object.keys(grupos[nombreGrupo]).length : grupos[nombreGrupo].length;
                 const div = document.createElement('div');
                 div.className = 'item-lista folder-item' + (carpetaActual === nombreGrupo ? ' active-folder' : '');
-                div.innerHTML = `<span>📁 ${nombreGrupo}</span> <span style="font-size:10px; color:#94a3b8;">(${count})</span>`;
+                div.innerHTML = `📁 ${nombreGrupo} <span style="font-size:10px; color:#94a3b8;">(${count})</span>`;
                 div.onclick = () => seleccionarCarpeta(nombreGrupo);
                 contenedor.appendChild(div);
             }

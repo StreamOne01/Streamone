@@ -45,7 +45,6 @@
             max-width: 480px;
         }
 
-        /* Estilos del Logo e Encabezado */
         header {
             text-align: center;
             margin-bottom: 20px;
@@ -81,7 +80,6 @@
             color: var(--text-muted);
         }
 
-        /* Pantalla de Lobby / Selección de Técnico */
         #lobbyScreen {
             display: flex;
             flex-direction: column;
@@ -112,7 +110,6 @@
             margin-bottom: 20px;
         }
 
-        /* Barra superior de usuario activo en la app principal */
         .user-banner {
             display: flex;
             justify-content: space-between;
@@ -145,7 +142,6 @@
             color: var(--text-main);
         }
 
-        /* Pestañas de navegación */
         .tabs {
             display: flex;
             gap: 6px;
@@ -293,7 +289,6 @@
             margin-top: 3px;
         }
 
-        /* Botón de Mapa en los registros */
         .btn-mapa {
             display: inline-flex;
             align-items: center;
@@ -343,12 +338,19 @@
             font-size: 0.85rem;
             padding: 20px;
         }
+
+        .loading-text {
+            text-align: center;
+            color: var(--accent);
+            font-size: 0.85rem;
+            padding: 15px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- PANTALLA 1: LOBBY (SELECCIÓN DE TÉCNICO) -->
+        <!-- PANTALLA 1: LOBBY -->
         <div id="lobbyScreen">
             <header>
                 <div class="app-logo">
@@ -382,20 +384,18 @@
                 <p>Control de Infraestructura y GPS en Poste</p>
             </header>
 
-            <!-- Banner de usuario activo -->
             <div class="user-banner">
                 <div>Técnico: <span id="displayTecnicoActivo"></span></div>
                 <button class="btn-switch" onclick="cambiarTecnico()">Cambiar</button>
             </div>
 
-            <!-- Navegación por pestañas -->
             <div class="tabs">
                 <button class="tab-btn active" onclick="cambiarTab('registro', event)">Registrar</button>
                 <button class="tab-btn" onclick="cambiarTab('buscar', event)">Buscar</button>
                 <button class="tab-btn" onclick="cambiarTab('lista', event)">Lista</button>
             </div>
 
-            <!-- PESTAÑA 1: REGISTRO / EDICIÓN -->
+            <!-- PESTAÑA 1: REGISTRO -->
             <div id="tab-registro" class="tab-content active">
                 <div class="card">
                     <form id="registroForm">
@@ -448,14 +448,14 @@
                     </div>
                 </div>
                 <div id="resultadoBusqueda" class="history-list">
-                    <!-- Resultados de búsqueda -->
+                    <!-- Resultados -->
                 </div>
             </div>
 
             <!-- PESTAÑA 3: LISTA GENERAL -->
             <div id="tab-lista" class="tab-content">
                 <div id="historyList" class="history-list">
-                    <!-- Se llenará dinámicamente -->
+                    <!-- Se llenará con la nube -->
                 </div>
             </div>
         </div>
@@ -496,7 +496,7 @@
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('displayTecnicoActivo').textContent = nombreTecnico;
             document.getElementById('tecnico').value = nombreTecnico;
-            cargarRegistros();
+            cargarRegistrosDesdeNube();
         }
 
         function cambiarTecnico() {
@@ -514,7 +514,7 @@
             event.currentTarget.classList.add('active');
 
             if (tabName === 'lista' || tabName === 'buscar') {
-                cargarRegistros();
+                cargarRegistrosDesdeNube();
             }
         }
 
@@ -528,9 +528,9 @@
             gpsInput.value = 'Buscando satélites (alta precisión)...';
 
             const opcionesGPS = {
-                enableHighAccuracy: true,  // Fuerza el uso del chip GPS real del teléfono
-                timeout: 15000,            // Espera hasta 15 segundos para fijar buena señal satelital
-                maximumAge: 0              // No usa ubicaciones guardadas en caché, toma la lectura en vivo
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
             };
 
             navigator.geolocation.getCurrentPosition(
@@ -542,9 +542,9 @@
                 (error) => {
                     let mensaje = 'No se pudo obtener la ubicación.';
                     if (error.code === error.TIMEOUT) {
-                        mensaje = 'El GPS tardó demasiado en responder. Intenta salir un momento al aire libre o acércate a la calle.';
+                        mensaje = 'El GPS tardó demasiado. Sal al aire libre o acércate a la calle.';
                     } else if (error.code === error.PERMISSION_DENIED) {
-                        mensaje = 'Permiso de ubicación denegado. Habilítalo en los ajustes de tu navegador o teléfono.';
+                        mensaje = 'Permiso de ubicación denegado en el navegador.';
                     }
                     alert(mensaje);
                     gpsInput.value = '';
@@ -556,11 +556,10 @@
         document.getElementById('registroForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const editIndex = document.getElementById('editIndex').value;
             const tecnicoActual = localStorage.getItem('tecnico_activo_fiber') || 'Carlos Muñoz';
 
             const nuevoRegistro = {
-                id: editIndex !== "" ? JSON.parse(localStorage.getItem('registros_fiber_dog'))[editIndex].id : Date.now(),
+                id: Date.now(),
                 tecnico: tecnicoActual,
                 codigoCliente: document.getElementById('codigoCliente').value,
                 poste: document.getElementById('poste').value || 'N/D',
@@ -570,51 +569,73 @@
                 fecha: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
-            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            // Mostrar aviso visual rápido de envío
+            const btnGuardar = document.getElementById('btnGuardar');
+            const textoOriginal = btnGuardar.textContent;
+            btnGuardar.textContent = 'Enviando a la nube...';
+            btnGuardar.disabled = true;
 
-            if (editIndex !== "") {
-                registros[editIndex] = nuevoRegistro;
-                document.getElementById('editIndex').value = "";
-                document.getElementById('btnGuardar').textContent = "Guardar Registro";
-                alert('Registro actualizado localmente');
-            } else {
-                registros.unshift(nuevoRegistro);
-                
-                // Enviar datos a Google Sheets en segundo plano
-                if (WEB_APP_URL) {
-                    fetch(WEB_APP_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(nuevoRegistro)
-                    }).catch(err => console.error("Error al sincronizar con la nube:", err));
-                }
-            }
-
-            localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
-
-            this.reset();
-            document.getElementById('tecnico').value = tecnicoActual;
-            document.getElementById('gps').value = '';
-            cargarRegistros();
-            cambiarTab('lista', { currentTarget: document.querySelectorAll('.tab-btn')[2] });
+            // Enviar a Google Sheets
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoRegistro)
+            })
+            .then(() => {
+                alert('¡Registro guardado y sincronizado con éxito!');
+                this.reset();
+                document.getElementById('tecnico').value = tecnicoActual;
+                document.getElementById('gps').value = '';
+                btnGuardar.textContent = textoOriginal;
+                btnGuardar.disabled = false;
+                cambiarTab('lista', { currentTarget: document.querySelectorAll('.tab-btn')[2] });
+            })
+            .catch(err => {
+                console.error("Error al enviar:", err);
+                alert('Ocurrió un error al sincronizar con Google Sheets.');
+                btnGuardar.textContent = textoOriginal;
+                btnGuardar.disabled = false;
+            });
         });
 
-        function cargarRegistros() {
+        // Función para descargar y mostrar datos directo desde Google Sheets
+        function cargarRegistrosDesdeNube() {
             const historyList = document.getElementById('historyList');
-            const registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            historyList.innerHTML = '<div class="loading-text">Sincronizando con la nube...</div>';
 
-            if (registros.length === 0) {
-                historyList.innerHTML = '<div class="no-records">No hay registros guardados aún.</div>';
-                return;
-            }
+            fetch(WEB_APP_URL)
+                .then(response => response.json())
+                .then(registros => {
+                    // Guardamos una copia local auxiliar para el buscador instantáneo
+                    localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
 
-            let html = '';
-            registros.forEach((reg, index) => {
-                html += renderizarItem(reg, index);
-            });
-            historyList.innerHTML = html;
-            filtrarRegistros();
+                    if (!registros || registros.length === 0) {
+                        historyList.innerHTML = '<div class="no-records">No hay registros en la hoja de cálculo todavía.</div>';
+                        return;
+                    }
+
+                    let html = '';
+                    registros.forEach((reg, index) => {
+                        html += renderizarItem(reg, index);
+                    });
+                    historyList.innerHTML = html;
+                    filtrarRegistros();
+                })
+                .catch(err => {
+                    console.error("Error al obtener datos:", err);
+                    // Si falla el internet, cargamos lo último que tenga en caché local
+                    const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+                    if (registrosLocales.length > 0) {
+                        let html = '';
+                        registrosLocales.forEach((reg, index) => {
+                            html += renderizarItem(reg, index);
+                        });
+                        historyList.innerHTML = '<div style="color: #f59e0b; font-size: 0.75rem; text-align:center; margin-bottom: 8px;">⚠️ Modo sin conexión (Mostrando caché local)</div>' + html;
+                    } else {
+                        historyList.innerHTML = '<div class="no-records">No se pudo conectar a la nube y no hay registros locales.</div>';
+                    }
+                });
         }
 
         function renderizarItem(reg, index) {
@@ -638,36 +659,8 @@
                     <p>GPS: ${reg.gps}</p>
                     ${botonMapa}
                     <p><small style="color: var(--text-muted); margin-top: 6px; display: block;">${reg.fecha}</small></p>
-                    <div class="item-actions">
-                        <button class="btn-action" onclick="editarRegistro(${index})">Editar</button>
-                        <button class="btn-action" style="color: var(--danger);" onclick="eliminarRegistro(${index})">Eliminar</button>
-                    </div>
                 </div>
             `;
-        }
-
-        function editarRegistro(index) {
-            const registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            const reg = registros[index];
-
-            document.getElementById('editIndex').value = index;
-            document.getElementById('codigoCliente').value = reg.codigoCliente;
-            document.getElementById('poste').value = reg.poste === 'N/D' ? '' : reg.poste;
-            document.getElementById('tap').value = reg.tap === 'N/D' ? '' : reg.tap;
-            document.getElementById('nap').value = reg.nap === 'N/D' ? '' : reg.nap;
-            document.getElementById('gps').value = reg.gps === 'Sin coordenadas' ? '' : reg.gps;
-
-            document.getElementById('btnGuardar').textContent = "Actualizar Registro";
-            cambiarTab('registro', { currentTarget: document.querySelectorAll('.tab-btn')[0] });
-        }
-
-        function eliminarRegistro(index) {
-            if (confirm('¿Estás seguro de eliminar este registro?')) {
-                let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-                registros.splice(index, 1);
-                localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
-                cargarRegistros();
-            }
         }
 
         function filtrarRegistros() {
@@ -675,8 +668,9 @@
             const registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
             const contenedor = document.getElementById('resultadoBusqueda');
 
-            const filtrados = registros.map((reg, index) => ({ reg, index })).filter(({ reg }) => {
-                return reg.codigoCliente.toLowerCase().includes(query) || reg.poste.toLowerCase().includes(query);
+            const filtrados = registros.filter(reg => {
+                return (reg.codigoCliente && reg.codigoCliente.toLowerCase().includes(query)) || 
+                       (reg.poste && reg.poste.toLowerCase().includes(query));
             });
 
             if (filtrados.length === 0) {
@@ -685,7 +679,7 @@
             }
 
             let html = '';
-            filtrados.forEach(({ reg, index }) => {
+            filtrados.forEach((reg, index) => {
                 html += renderizarItem(reg, index);
             });
             contenedor.innerHTML = html;

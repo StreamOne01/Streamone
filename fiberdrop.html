@@ -525,7 +525,13 @@
                 return;
             }
 
-            gpsInput.value = 'Obteniendo ubicación...';
+            gpsInput.value = 'Buscando satélites (alta precisión)...';
+
+            const opcionesGPS = {
+                enableHighAccuracy: true,  // Fuerza el uso del chip GPS real del teléfono
+                timeout: 15000,            // Espera hasta 15 segundos para fijar buena señal satelital
+                maximumAge: 0              // No usa ubicaciones guardadas en caché, toma la lectura en vivo
+            };
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -534,10 +540,16 @@
                     gpsInput.value = `${lat}, ${lon}`;
                 },
                 (error) => {
-                    alert('No se pudo obtener la ubicación. Verifique los permisos.');
+                    let mensaje = 'No se pudo obtener la ubicación.';
+                    if (error.code === error.TIMEOUT) {
+                        mensaje = 'El GPS tardó demasiado en responder. Intenta salir un momento al aire libre o acércate a la calle.';
+                    } else if (error.code === error.PERMISSION_DENIED) {
+                        mensaje = 'Permiso de ubicación denegado. Habilítalo en los ajustes de tu navegador o teléfono.';
+                    }
+                    alert(mensaje);
                     gpsInput.value = '';
                 },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                opcionesGPS
             );
         }
 

@@ -24,7 +24,7 @@
 
         #lobby-overlay h1 { 
             color: #38bdf8; 
-            font-size: 52px; 
+            font-size: 42px; 
             margin: 0 0 8px 0; 
             letter-spacing: 3px; 
             font-weight: 800;
@@ -33,9 +33,8 @@
         
         #lobby-overlay p { 
             color: #94a3b8; 
-            font-size: 16px; 
+            font-size: 15px; 
             margin: 0; 
-            letter-spacing: 0.5px;
         }
 
         @keyframes flotar {
@@ -46,34 +45,17 @@
         .upload-card {
             background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(10px);
-            padding: 30px; 
+            padding: 25px; 
             border-radius: 16px;
             border: 1px solid rgba(56, 189, 248, 0.2); 
             width: 100%; 
-            max-width: 480px;
+            max-width: 420px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .upload-card:hover {
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.1);
-        }
-
-        .upload-card label-titulo { 
-            font-size: 13px; 
-            color: #cbd5e1; 
-            margin-bottom: 12px; 
-            display: block; 
-            font-weight: 600; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: left;
         }
 
         .input-enlace {
             width: 100%; 
-            padding: 14px 16px; 
+            padding: 12px 14px; 
             background: #0b1320; 
             color: white;
             border: 1px solid #334155; 
@@ -81,52 +63,40 @@
             margin-bottom: 15px;
             font-size: 14px; 
             outline: none;
-            transition: border-color 0.2s;
         }
         .input-enlace:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
 
         .btn-accion {
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
             color: #0b1320; 
-            padding: 14px;
+            padding: 12px;
             border-radius: 10px; 
             cursor: pointer; 
             display: inline-block;
             font-weight: bold; 
             border: none; 
-            font-size: 15px; 
+            font-size: 14px; 
             width: 100%;
             transition: all 0.2s ease;
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
         }
-        .btn-accion:hover { 
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.4);
-        }
+        .btn-accion:hover { filter: brightness(1.1); }
 
         .btn-secundario {
             background: rgba(30, 41, 59, 0.8);
             color: #cbd5e1;
             border: 1px solid #334155;
         }
-        .btn-secundario:hover {
-            background: #334155;
-            color: white;
-            box-shadow: none;
-        }
 
         .separador-o { 
             color: #64748b; 
             font-size: 12px; 
-            margin: 20px 0; 
+            margin: 15px 0; 
             font-weight: bold; 
-            letter-spacing: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 480px;
         }
         .separador-o::before, .separador-o::after {
             content: "";
@@ -136,33 +106,57 @@
             margin: 0 15px;
         }
 
-        /* Estructura de Columnas de la App */
-        #sidebar-carpetas { width: 280px; min-width: 250px; background: #151f30; padding: 15px; display: flex; flex-direction: column; border-right: 1px solid #2a384c; }
-        #sidebar-canales { width: 320px; min-width: 280px; background: #111827; padding: 15px; display: flex; flex-direction: column; border-right: 1px solid #2a384c; }
+        /* Estructura de Columnas Base (Desktop) */
+        #sidebar-carpetas { width: 280px; min-width: 250px; background: #151f30; padding: 15px; display: flex; flex-direction: column; border-right: 1px solid #2a384c; z-index: 10; }
+        #sidebar-canales { width: 320px; min-width: 280px; background: #111827; padding: 15px; display: flex; flex-direction: column; border-right: 1px solid #2a384c; z-index: 9; }
         #main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #0b1320; overflow-y: auto; }
 
         .tabs { display: flex; margin-bottom: 10px; gap: 5px; }
         .tabs button { flex: 1; padding: 8px; background: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
         .tabs button.active { background: #38bdf8; color: #0b1320; }
         
-        .item-lista { padding: 10px; border-bottom: 1px solid #2a384c; cursor: pointer; font-size: 13px; border-radius: 4px; margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center; }
+        .item-lista { padding: 12px 10px; border-bottom: 1px solid #2a384c; cursor: pointer; font-size: 13px; border-radius: 4px; margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center; }
         .item-lista:hover { background: #2a384c; }
         .folder-item { background: #1e293b; font-weight: bold; border-left: 4px solid #38bdf8; }
         .folder-item.active-folder { background: #1d4ed8; }
 
         video { width: 100%; max-width: 800px; height: 450px; background: black; border-radius: 8px; }
         
-        input, textarea { padding: 10px; margin-bottom: 10px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 4px; width: 100%; font-family: sans-serif; }
+        input { padding: 10px; margin-bottom: 10px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 4px; width: 100%; font-family: sans-serif; outline: none; }
         #estado { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
         
         #lista-carpetas, #lista-canales { overflow-y: auto; flex-grow: 1; }
         input[type="file"] { display: none; }
 
-        .btn-volver { background: #334155; color: #38bdf8; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 11px; text-align: left; }
+        .btn-volver { background: #334155; color: #38bdf8; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 12px; text-align: left; }
         .btn-volver:hover { background: #475569; }
 
-        .btn-cambiar-lista { background: #334155; color: #cbd5e1; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 11px; width: 100%; text-align: center; }
+        .btn-cambiar-lista { background: #334155; color: #cbd5e1; border: none; padding: 8px 10px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 11px; width: 100%; text-align: center; }
         .btn-cambiar-lista:hover { background: #475569; color: white; }
+
+        /* Botón exclusivo para volver atrás en celulares */
+        .btn-movil-atras { display: none; background: #1e293b; color: #38bdf8; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 12px; width: 100%; text-align: left; }
+
+        /* --- DISEÑO ADAPTABLE PARA TELÉFONOS (RESPONSIVE) --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            
+            /* Por defecto en móvil, solo mostramos las categorías (sidebar-carpetas) */
+            #sidebar-carpetas { width: 100%; height: 100%; border-right: none; display: flex; }
+            #sidebar-canales { display: none; width: 100%; height: 100%; border-right: none; }
+            #main { display: none; width: 100%; height: 100%; padding: 10px; }
+
+            /* Clases activas para controlar la navegación móvil por pasos */
+            body.vista-canales #sidebar-carpetas { display: none; }
+            body.vista-canales #sidebar-canales { display: flex; }
+            body.vista-canales .btn-movil-atras { display: block; }
+
+            body.vista-reproductor #sidebar-carpetas { display: none; }
+            body.vista-reproductor #sidebar-canales { display: none; }
+            body.vista-reproductor #main { display: flex; justify-content: flex-start; }
+
+            video { height: 260px; max-width: 100%; }
+        }
     </style>
     <!-- Librerías de reproducción -->
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js"></script>
@@ -170,7 +164,7 @@
 </head>
 <body>
 
-<!-- PANTALLA DE INICIO (LOBBY) REDISEÑADA -->
+<!-- PANTALLA DE INICIO (LOBBY) -->
 <div id="lobby-overlay">
     <div class="lobby-logo-container">
         <h1>STREAM ONE</h1>
@@ -178,13 +172,13 @@
     </div>
     
     <div class="upload-card">
-        <span style="font-size: 12px; color: #38bdf8; font-weight: bold; display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Conexión por Enlace</span>
+        <span style="font-size: 11px; color: #38bdf8; font-weight: bold; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; text-align: left;">Conexión por Enlace</span>
         <input type="text" id="input-url-lobby" class="input-enlace" placeholder="https://ejemplo.com/lista.m3u">
         <button class="btn-accion" onclick="cargarDesdeEnlace()">Cargar Lista</button>
         
         <div class="separador-o">O</div>
 
-        <span style="font-size: 12px; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Archivo Local</span>
+        <span style="font-size: 11px; color: #94a3b8; font-weight: bold; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; text-align: left;">Archivo Local</span>
         <label for="input-archivo-lobby" class="btn-accion btn-secundario" style="margin-top: 0; text-align: center; display: block; cursor: pointer;">📁 Buscar Archivo M3U</label>
         <input type="file" id="input-archivo-lobby" accept=".m3u,.m3u8" onchange="cargarDesdeArchivo(event)">
     </div>
@@ -195,7 +189,6 @@
 <!-- COLUMNA 1: Categorías -->
 <div id="sidebar-carpetas">
     <h3 style="margin-top:0; font-size: 16px; color: #38bdf8; margin-bottom: 5px;">Stream One</h3>
-    
     <div id="estado">Lista cargada correctamente.</div>
     <button class="btn-cambiar-lista" onclick="mostrarLobby()">🔄 Cambiar / Cargar otra lista</button>
     
@@ -209,8 +202,9 @@
     <div id="lista-carpetas"></div>
 </div>
 
-<!-- COLUMNA 2 -->
+<!-- COLUMNA 2: Canales / Series -->
 <div id="sidebar-canales">
+    <button class="btn-movil-atras" onclick="volverACarpetasMovil()">⬅ Volver a Categorías</button>
     <div id="contenedor-navegacion-series"></div>
     <h4 style="margin-top:0; font-size: 14px; color: #94a3b8;" id="titulo-columna-canales">Contenido</h4>
     <input type="text" id="buscador-canales" placeholder="Buscar..." onkeyup="filtrarCanales()">
@@ -219,10 +213,11 @@
     </div>
 </div>
 
-<!-- COLUMNA 3 -->
+<!-- COLUMNA 3: Reproductor -->
 <div id="main">
+    <button class="btn-movil-atras" onclick="volverACanalesMovil()" style="display: block; width: auto; margin-bottom: 15px;">⬅ Volver a la lista</button>
     <video id="video-player" controls autoplay playsinline></video>
-    <p id="nombre-contenido" style="font-size: 16px; font-weight: bold; margin-top: 15px;">Selecciona un elemento</p>
+    <p id="nombre-contenido" style="font-size: 15px; font-weight: bold; margin-top: 15px; text-align: center; padding: 0 10px;">Selecciona un elemento</p>
 </div>
 
 <script>
@@ -259,6 +254,42 @@
         const lobby = document.getElementById('lobby-overlay');
         lobby.style.opacity = '0';
         setTimeout(() => { lobby.style.display = 'none'; }, 500);
+    }
+
+    // Navegación adaptativa para móviles
+    function seleccionarCarpeta(nombreGrupo) {
+        carpetaActual = nombreGrupo;
+        serieSeleccionada = null;
+        document.getElementById('buscador-canales').value = '';
+        document.getElementById('contenedor-navegacion-series').innerHTML = '';
+        
+        document.getElementById('titulo-columna-canales').textContent = nombreGrupo;
+        mostrarCarpetas();
+
+        if (tipoActual === 'series') {
+            mostrarSeriesDeCategoria(nombreGrupo);
+        } else {
+            canalesActuales = datosIPTV[tipoActual][nombreGrupo];
+            renderizarCanales(canalesActuales);
+        }
+
+        // Si estamos en móvil, cambiamos la vista a la columna de canales
+        if (window.innerWidth <= 768) {
+            document.body.classList.add('vista-canales');
+        }
+    }
+
+    function volverACarpetasMovil() {
+        document.body.classList.remove('vista-canales');
+    }
+
+    function volverACanalesMovil() {
+        if (mpegtsPlayer) { mpegtsPlayer.pause(); mpegtsPlayer.unload(); }
+        if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
+        document.getElementById('video-player').pause();
+        
+        document.body.classList.remove('vista-reproductor');
+        document.body.classList.add('vista-canales');
     }
 
     async function cargarDesdeEnlace() {
@@ -493,23 +524,6 @@
         contenedor.appendChild(fragmento);
     }
 
-    function seleccionarCarpeta(nombreGrupo) {
-        carpetaActual = nombreGrupo;
-        serieSeleccionada = null;
-        document.getElementById('buscador-canales').value = '';
-        document.getElementById('contenedor-navegacion-series').innerHTML = '';
-        
-        document.getElementById('titulo-columna-canales').textContent = nombreGrupo;
-        mostrarCarpetas();
-
-        if (tipoActual === 'series') {
-            mostrarSeriesDeCategoria(nombreGrupo);
-        } else {
-            canalesActuales = datosIPTV[tipoActual][nombreGrupo];
-            renderizarCanales(canalesActuales);
-        }
-    }
-
     function mostrarSeriesDeCategoria(nombreGrupo) {
         const contenedor = document.getElementById('lista-canales');
         contenedor.innerHTML = '';
@@ -569,7 +583,13 @@
             const div = document.createElement('div');
             div.className = 'item-lista';
             div.textContent = "▶ " + item.nombre;
-            div.onclick = () => reproducir(item);
+            div.onclick = () => {
+                reproducir(item);
+                if (window.innerWidth <= 768) {
+                    document.body.classList.remove('vista-canales');
+                    document.body.classList.add('vista-reproductor');
+                }
+            };
             fragmento.appendChild(div);
         });
         contenedor.appendChild(fragmento);
@@ -606,7 +626,7 @@
                 });
                 mpegtsPlayer.attachMediaElement(videoElement);
                 mpegtsPlayer.load();
-                mpegtsPlayer.play().catch(err => console.error("Error reproduciendo enlace TS con mpegts.js:", err));
+                mpegtsPlayer.play().catch(err => console.error("Error reproduciendo enlace TS:", err));
             } else {
                 alert("Tu navegador no soporta reproducción MPEG-TS mediante MSE.");
             }
@@ -624,17 +644,6 @@
                 hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function() {
                     videoElement.play().catch(e => console.log("Error HLS:", e));
                 });
-                hlsPlayer.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-                            hlsPlayer.startLoad();
-                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-                            hlsPlayer.recoverMediaError();
-                        } else {
-                            hlsPlayer.destroy();
-                        }
-                    }
-                });
             } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
                 videoElement.src = item.url;
                 videoElement.play().catch(e => console.log("Error nativo HLS:", e));
@@ -643,7 +652,7 @@
         else {
             videoElement.src = item.url;
             videoElement.load();
-            videoElement.play().catch(e => console.log("Error reproductor nativo:", e));
+            videoElement.play().catch(e => console.log("Error reproductor:", e));
         }
     }
 
@@ -670,8 +679,8 @@
         
         if (tipoActual === 'series' && !serieSeleccionada) {
             if (!carpetaActual) return;
-            constレンダー = document.getElementById('lista-canales');
-            render.innerHTML = '';
+            const contenedor = document.getElementById('lista-canales');
+            contenedor.innerHTML = '';
             const seriesMap = seriesEstructuradas[carpetaActual];
             if (!seriesMap) return;
             
@@ -682,7 +691,7 @@
                     div.className = 'item-lista folder-item';
                     div.innerHTML = `<span>🎬 ${nombreSerie}</span> <span style="font-size:10px; color:#38bdf8;">(${totalEpisodios} eps)</span>`;
                     div.onclick = () => seleccionarSerie(nombreSerie);
-                    render.appendChild(div);
+                    contenedor.appendChild(div);
                 }
             });
         } else {

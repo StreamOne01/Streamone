@@ -234,7 +234,6 @@
             }
         }
 
-        // Configurar listener de error para el reproductor de video
         const videoElement = document.getElementById('video-player');
         videoElement.onerror = function() {
             mostrarSpinner(false);
@@ -562,6 +561,7 @@
         }
     }
 
+    // FUNCIÓN REPRODUCIR OPTIMIZADA PARA PC Y MÓVIL
     function reproducir(item) {
         document.getElementById('nombre-contenido').textContent = item.nombre;
         const videoElement = document.getElementById('video-player');
@@ -574,10 +574,28 @@
 
         if (urlLower.endsWith('.ts') || urlLower.includes('.ts?') || (!urlLower.includes('.m3u8') && !urlLower.endsWith('.mp4'))) {
             if (mpegts.getFeatureList().mseLivePlayback) {
-                mpegtsPlayer = mpegts.createPlayer({ type: 'mse', isLive: true, url: item.url });
+                mpegtsPlayer = mpegts.createPlayer({
+                    type: 'mse',
+                    isLive: true,
+                    url: item.url
+                }, {
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    liveBufferLatencyChasing: true
+                });
+                
                 mpegtsPlayer.attachMediaElement(videoElement);
                 mpegtsPlayer.load();
-                mpegtsPlayer.play().catch(e => {});
+                
+                mpegtsPlayer.on(mpegts.Events.ERROR, (errorType, errorDetail) => {
+                    console.warn("Error en mpegts.js:", errorType, errorDetail);
+                    mostrarSpinner(false);
+                    document.getElementById('nombre-contenido').textContent = "⚠️ Error de reproducción en PC (Stream caído o CORS)";
+                });
+
+                mpegtsPlayer.play().catch(e => {
+                    mostrarSpinner(false);
+                });
             } else {
                 videoElement.src = item.url;
                 videoElement.play().catch(e => {});
@@ -588,6 +606,12 @@
                 hlsPlayer.loadSource(item.url);
                 hlsPlayer.attachMedia(videoElement);
                 hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => videoElement.play().catch(e => {}));
+                hlsPlayer.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        mostrarSpinner(false);
+                        document.getElementById('nombre-contenido').textContent = "⚠️ Error al cargar el stream HLS";
+                    }
+                });
             } else {
                 videoElement.src = item.url;
                 videoElement.play().catch(e => {});
@@ -626,41 +650,12 @@
 
     function filtrarCanales() {
         const busqueda = document.getElementById('buscador-canales').value.toLowerCase();
-        const contenedor = document.getElementById('lista-canales');
-        contenedor.innerHTML = '';
-        
         let lista = canalesActuales;
         if (tipoActual === 'series' && serieSeleccionada) {
-            lista = seriesEstructuradas[carpetaActual][serieSeleccionada] || [];
+            lista = seriesEstructuradas[carpetaActual][serieSeleccionada];
         }
-
-        const filtrados = lista.filter(item => item.nombre.toLowerCase().includes(busqueda));
-        
-        if (filtrados.length === 0) {
-            contenedor.innerHTML = '<div style="padding: 10px; color: #64748b; font-size: 13px;">No se encontraron resultados.</div>';
-            return;
-        }
-
-        const fragmento = document.createDocumentFragment();
-        filtrados.forEach((item) => {
-            const indexReal = lista.findIndex(l => l.url === item.url);
-            const esFav = favoritos.some(f => f.url === item.url);
-            
-            const div = document.createElement('div');
-            div.className = 'item-lista';
-            div.innerHTML = `<span>▶ ${item.nombre}</span> <button class="btn-favorito" onclick="toggleFavorito(${JSON.stringify(item).replace(/"/g, '&quot;')}, event)">${esFav ? '⭐' : '☆'}</button>`;
-            
-            div.onclick = () => {
-                canalActualIndex = indexReal;
-                reproducir(item);
-                if (window.innerWidth <= 768) {
-                    document.body.classList.remove('vista-canales');
-                    document.body.classList.add('vista-reproductor');
-                }
-            };
-            fragmento.appendChild(div);
-        });
-        contenedor.appendChild(fragmento);
+        const filtrada = lista.filter(item => item.nombre.toLowerCase().includes(busqueda));
+        renderizarCanales(filtrada);
     }
 </script>
 </body>

@@ -14,15 +14,16 @@
             background: radial-gradient(circle at center, #1e293b 0%, #0b1320 70%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 1000; transition: opacity 0.5s ease; padding: 20px; text-align: center;
+            overflow-y: auto;
         }
-        .lobby-logo-container { margin-bottom: 25px; animation: flotar 3s ease-in-out infinite; }
-        #lobby-overlay h1 { color: #38bdf8; font-size: 42px; margin: 0 0 8px 0; letter-spacing: 3px; font-weight: 800; text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
-        #lobby-overlay p { color: #94a3b8; font-size: 15px; margin: 0; }
+        .lobby-logo-container { margin-bottom: 20px; animation: flotar 3s ease-in-out infinite; }
+        #lobby-overlay h1 { color: #38bdf8; font-size: 38px; margin: 0 0 5px 0; letter-spacing: 3px; font-weight: 800; text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+        #lobby-overlay p { color: #94a3b8; font-size: 14px; margin: 0; }
         @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
         .upload-card {
             background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px);
-            padding: 25px; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 20px; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.2);
             width: 100%; max-width: 420px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
         .input-enlace {
@@ -38,7 +39,7 @@
         }
         .btn-accion:hover { filter: brightness(1.1); }
         .btn-secundario { background: rgba(30, 41, 59, 0.8); color: #cbd5e1; border: 1px solid #334155; }
-        .separador-o { color: #64748b; font-size: 12px; margin: 15px 0; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .separador-o { color: #64748b; font-size: 12px; margin: 12px 0; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%; }
         .separador-o::before, .separador-o::after { content: ""; flex: 1; height: 1px; background: #1e293b; margin: 0 15px; }
 
         /* Estructura Columnas */
@@ -128,7 +129,15 @@
         <label for="input-archivo-lobby" class="btn-accion btn-secundario" style="margin-top: 0; text-align: center; display: block; cursor: pointer;">📁 Buscar Archivo M3U</label>
         <input type="file" id="input-archivo-lobby" accept=".m3u,.m3u8" onchange="cargarDesdeArchivo(event)">
     </div>
-    <p id="lobby-status" style="font-size: 13px; margin-top: 20px; color: #38bdf8; font-weight: 500; min-height: 20px;"></p>
+    <p id="lobby-status" style="font-size: 13px; margin-top: 15px; color: #38bdf8; font-weight: 500; min-height: 20px;"></p>
+    
+    <!-- Aviso Legal / Disclaimer Integrado -->
+    <div style="margin-top: 15px; max-width: 420px; font-size: 11px; color: #64748b; line-height: 1.4; text-align: center;">
+        <p style="margin: 0 0 3px 0; font-weight: bold; color: #94a3b8;">⚠️ Descargo de Responsabilidad</p>
+        <p style="margin: 0;">
+            Stream One es exclusivamente un reproductor de medios. No incluye, aloja ni promueve ningún tipo de contenido multimedia. El usuario es el único responsable de las listas de reproducción M3U que decida utilizar.
+        </p>
+    </div>
 </div>
 
 <div id="sidebar-carpetas">

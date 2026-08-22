@@ -109,7 +109,7 @@
         /* Estructura de Columnas Base (Desktop) */
         #sidebar-carpetas { width: 280px; min-width: 250px; background: #151f30; padding: 15px; display: flex; flex-direction: column; border-right: 1px solid #2a384c; z-index: 10; }
         #sidebar-canales { width: 320px; min-width: 280px; background: #111827; padding: 15px; display: flex; flex-direction: column; border-right: 1px solid #2a384c; z-index: 9; }
-        #main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #0b1320; overflow-y: auto; }
+        #main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #0b1320; overflow-y: auto; position: relative; }
 
         .tabs { display: flex; margin-bottom: 10px; gap: 5px; }
         .tabs button { flex: 1; padding: 8px; background: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
@@ -120,7 +120,9 @@
         .folder-item { background: #1e293b; font-weight: bold; border-left: 4px solid #38bdf8; }
         .folder-item.active-folder { background: #1d4ed8; }
 
-        video { width: 100%; max-width: 800px; height: 450px; background: black; border-radius: 8px; }
+        /* Contenedor del reproductor */
+        .video-container { position: relative; width: 100%; max-width: 900px; display: flex; justify-content: center; align-items: center; }
+        video { width: 100%; height: 480px; background: black; border-radius: 8px; object-fit: contain; }
         
         input { padding: 10px; margin-bottom: 10px; background: #1e293b; color: white; border: 1px solid #334155; border-radius: 4px; width: 100%; font-family: sans-serif; outline: none; }
         #estado { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
@@ -134,28 +136,100 @@
         .btn-cambiar-lista { background: #334155; color: #cbd5e1; border: none; padding: 8px 10px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 11px; width: 100%; text-align: center; }
         .btn-cambiar-lista:hover { background: #475569; color: white; }
 
-        /* Botón exclusivo para volver atrás en celulares */
         .btn-movil-atras { display: none; background: #1e293b; color: #38bdf8; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-weight: bold; font-size: 12px; width: 100%; text-align: left; }
+
+        /* --- MENÚ ZAPPING FLOTANTE SOBRE EL VIDEO --- */
+        #zapping-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(11, 19, 32, 0.95) 0%, rgba(11, 19, 32, 0.75) 45%, rgba(0,0,0,0.1) 100%);
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 50;
+            border-radius: 8px;
+            backdrop-filter: blur(2px);
+        }
+        #zapping-overlay.activo { display: flex; }
+        
+        .zapping-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+            padding-bottom: 10px;
+        }
+        .zapping-header h3 { margin: 0; color: #38bdf8; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .zapping-lista {
+            overflow-y: auto;
+            flex-grow: 1;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .zapping-item {
+            padding: 12px 15px;
+            background: rgba(21, 31, 48, 0.85);
+            border-left: 4px solid #334155;
+            color: #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s ease;
+        }
+        .zapping-item:hover { background: rgba(30, 41, 59, 0.95); color: white; }
+        .zapping-item.seleccionado {
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.4) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-left: 5px solid #38bdf8;
+            color: white;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-flotante-zapping {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 60;
+            backdrop-filter: blur(5px);
+        }
+        .btn-flotante-zapping:hover { background: rgba(56, 189, 248, 0.2); color: white; }
 
         /* --- DISEÑO ADAPTABLE PARA TELÉFONOS (RESPONSIVE) --- */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            
-            /* Por defecto en móvil, solo mostramos las categorías (sidebar-carpetas) */
             #sidebar-carpetas { width: 100%; height: 100%; border-right: none; display: flex; }
             #sidebar-canales { display: none; width: 100%; height: 100%; border-right: none; }
-            #main { display: none; width: 100%; height: 100%; padding: 10px; }
+            #main { display: none; width: 100%; height: 100%; padding: 0; background: black; justify-content: flex-start; }
 
-            /* Clases activas para controlar la navegación móvil por pasos */
             body.vista-canales #sidebar-carpetas { display: none; }
             body.vista-canales #sidebar-canales { display: flex; }
             body.vista-canales .btn-movil-atras { display: block; }
 
             body.vista-reproductor #sidebar-carpetas { display: none; }
             body.vista-reproductor #sidebar-canales { display: none; }
-            body.vista-reproductor #main { display: flex; justify-content: flex-start; }
+            body.vista-reproductor #main { display: flex; }
 
-            video { height: 260px; max-width: 100%; }
+            .video-container { width: 100vw; height: 100vh; max-width: none; }
+            video { height: 100vh; width: 100vw; border-radius: 0; object-fit: contain; }
+            #zapping-overlay { height: 100vh; width: 100vw; border-radius: 0; padding: 20px; background: rgba(11, 19, 32, 0.95); }
+            .zapping-lista { max-width: 100%; }
+            #nombre-contenido { display: none; } /* Ocultar texto debajo del video en móvil para aprovechar toda la pantalla horizontal */
         }
     </style>
     <!-- Librerías de reproducción -->
@@ -202,7 +276,7 @@
     <div id="lista-carpetas"></div>
 </div>
 
-<!-- COLUMNA 2: Canales / Series -->
+<!-- COLUMNA 2: Canales / Películas / Series -->
 <div id="sidebar-canales">
     <button class="btn-movil-atras" onclick="volverACarpetasMovil()">⬅ Volver a Categorías</button>
     <div id="contenedor-navegacion-series"></div>
@@ -213,10 +287,27 @@
     </div>
 </div>
 
-<!-- COLUMNA 3: Reproductor -->
+<!-- COLUMNA 3: Reproductor con Zapping Flotante -->
 <div id="main">
-    <button class="btn-movil-atras" onclick="volverACanalesMovil()" style="display: block; width: auto; margin-bottom: 15px;">⬅ Volver a la lista</button>
-    <video id="video-player" controls autoplay playsinline></video>
+    <div class="video-container" id="video-container-wrapper">
+        <!-- Botón flotante para regresar a la lista en móviles -->
+        <button class="btn-flotante-zapping" onclick="volverACanalesMovil()" style="top: 15px; right: 15px; left: auto; background: rgba(239, 68, 68, 0.8); border-color: rgba(239, 68, 68, 0.5);">⬅ Salir</button>
+        
+        <!-- Botón flotante encima del video para abrir el menú zapping -->
+        <button class="btn-flotante-zapping" onclick="alternarZapping()" id="btn-texto-zapping" style="top: 15px; left: 15px;">📺 Canales</button>
+        
+        <video id="video-player" controls autoplay playsinline></video>
+        
+        <!-- Menú Zapping Lateral Flotante -->
+        <div id="zapping-overlay">
+            <div class="zapping-header">
+                <h3 id="zapping-titulo-categoria">CATEGORÍA</h3>
+                <button class="btn-volver" style="margin:0;" onclick="alternarZapping()">✕ Cerrar</button>
+            </div>
+            <div class="zapping-lista" id="zapping-lista-items"></div>
+        </div>
+    </div>
+
     <p id="nombre-contenido" style="font-size: 15px; font-weight: bold; margin-top: 15px; text-align: center; padding: 0 10px;">Selecciona un elemento</p>
 </div>
 
@@ -227,6 +318,7 @@
     let carpetaActual = null;
     let serieSeleccionada = null;
     let canalesActuales = [];
+    let canalActualIndex = 0;
     let mpegtsPlayer = null;
     let hlsPlayer = null;
 
@@ -256,7 +348,6 @@
         setTimeout(() => { lobby.style.display = 'none'; }, 500);
     }
 
-    // Navegación adaptativa para móviles
     function seleccionarCarpeta(nombreGrupo) {
         carpetaActual = nombreGrupo;
         serieSeleccionada = null;
@@ -273,7 +364,6 @@
             renderizarCanales(canalesActuales);
         }
 
-        // Si estamos en móvil, cambiamos la vista a la columna de canales
         if (window.innerWidth <= 768) {
             document.body.classList.add('vista-canales');
         }
@@ -283,13 +373,73 @@
         document.body.classList.remove('vista-canales');
     }
 
+    // Forzar pantalla horizontal al entrar al reproductor en móviles
+    async function activarModoReproductorMovil() {
+        if (window.innerWidth <= 768) {
+            document.body.classList.remove('vista-canales');
+            document.body.classList.add('vista-reproductor');
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock('landscape');
+                }
+            } catch (err) {
+                console.log("Bloqueo de orientación no soportado o denegado por el navegador:", err);
+            }
+        }
+    }
+
+    // Liberar orientación al salir del reproductor
     function volverACanalesMovil() {
         if (mpegtsPlayer) { mpegtsPlayer.pause(); mpegtsPlayer.unload(); }
         if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
         document.getElementById('video-player').pause();
         
+        try {
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        } catch (err) {}
+
         document.body.classList.remove('vista-reproductor');
         document.body.classList.add('vista-canales');
+    }
+
+    function alternarZapping() {
+        const zapping = document.getElementById('zapping-overlay');
+        if (!zapping.classList.contains('activo')) {
+            poblarZappingFlotante();
+        }
+        zapping.classList.toggle('activo');
+    }
+
+    function poblarZappingFlotante() {
+        document.getElementById('zapping-titulo-categoria').textContent = carpetaActual || "CONTENIDO";
+        const contenedor = document.getElementById('zapping-lista-items');
+        contenedor.innerHTML = '';
+
+        let lista = canalesActuales;
+        if (tipoActual === 'series' && serieSeleccionada) {
+            lista = seriesEstructuradas[carpetaActual][serieSeleccionada];
+        }
+
+        if (!lista || lista.length === 0) {
+            contenedor.innerHTML = '<div style="padding:10px; color:#94a3b8;">No hay elementos disponibles.</div>';
+            return;
+        }
+
+        const fragmento = document.createDocumentFragment();
+        lista.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'zapping-item' + (index === canalActualIndex ? ' seleccionado' : '');
+            div.innerHTML = `<span>▶</span> <span>${item.nombre}</span>`;
+            div.onclick = () => {
+                canalActualIndex = index;
+                reproducir(item);
+                alternarZapping();
+            };
+            fragmento.appendChild(div);
+        });
+        contenedor.appendChild(fragmento);
     }
 
     async function cargarDesdeEnlace() {
@@ -303,31 +453,27 @@
         
         try {
             let respuesta = await fetch(url);
-            if (!respuesta.ok) throw new Error("No se pudo conectar con el servidor.");
+            if (!respuesta.ok) throw new Error("No se pudo conectar.");
             let contenido = await respuesta.text();
 
             if (contenido && contenido.includes('#EXTM3U')) {
                 guardarYProcesar(contenido);
             } else {
-                throw new Error("El contenido no es una lista M3U válida.");
+                throw new Error("Formato inválido.");
             }
         } catch (error) {
-            console.warn("Fallo descarga directa, intentando con proxy CORS...", error);
             try {
                 let proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
                 let respuestaProxy = await fetch(proxyUrl);
-                if (!respuestaProxy.ok) throw new Error("Error al conectar mediante proxy.");
                 let contenidoProxy = await respuestaProxy.text();
-                
                 if (contenidoProxy) {
                     guardarYProcesar(contenidoProxy);
                 } else {
-                    throw new Error("La lista está vacía.");
+                    throw new Error("Vacío.");
                 }
             } catch (errProxy) {
-                console.error(errProxy);
                 document.getElementById('lobby-status').textContent = "";
-                alert("Error al descargar la lista. Comprueba que el enlace sea correcto o esté activo.");
+                alert("Error al descargar la lista. Comprueba el enlace.");
             }
         }
     }
@@ -343,38 +489,24 @@
         lector.onload = function(e) {
             try {
                 const contenido = e.target.result;
-                if (contenido) {
-                    guardarYProcesar(contenido);
-                } else {
-                    throw new Error("El archivo está vacío.");
-                }
+                if (contenido) guardarYProcesar(contenido);
             } catch (error) {
-                console.error(error);
                 document.getElementById('lobby-status').textContent = "";
-                alert("No se pudo abrir el archivo. Asegúrate de que sea una lista M3U válida.");
+                alert("Error al leer el archivo.");
             }
-        };
-        
-        lector.onerror = function() {
-            document.getElementById('lobby-status').textContent = "";
-            alert("Ocurrió un error al leer el archivo.");
         };
     }
 
     function guardarYProcesar(contenido) {
         try {
             localStorage.setItem('streamone_m3u_contenido', contenido);
-        } catch (e) {
-            console.warn("La lista es muy grande para el almacenamiento local del navegador.", e);
-        }
+        } catch (e) {}
 
-        document.getElementById('lobby-status').textContent = "Procesando contenido...";
+        document.getElementById('lobby-status').textContent = "Procesando...";
         setTimeout(() => {
             procesarListaM3U(contenido);
             document.getElementById('lobby-status').textContent = "¡Cargado con éxito!";
-            setTimeout(() => {
-                ocultarLobby();
-            }, 400);
+            setTimeout(() => { ocultarLobby(); }, 400);
         }, 50);
     }
 
@@ -387,7 +519,6 @@
 
         lineas.forEach(linea => {
             linea = linea.trim();
-
             if (linea.startsWith('#EXTINF:')) {
                 itemActual = {};
                 let partes = linea.split(',');
@@ -397,7 +528,6 @@
                 itemActual.grupo = matchGrupo ? matchGrupo[1] : "General";
 
                 let grupoLower = itemActual.grupo.toLowerCase();
-                
                 if (grupoLower.includes('serie') || grupoLower.includes('series') || grupoLower.includes('season')) {
                     itemActual.tipo = 'series';
                 } else if (grupoLower.includes('vod') || grupoLower.includes('movie') || grupoLower.includes('pelicula') || grupoLower.includes('cine')) {
@@ -405,75 +535,25 @@
                 } else {
                     itemActual.tipo = 'tv';
                 }
-
             } else if (linea && !linea.startsWith('#') && itemActual) {
                 itemActual.url = linea;
 
-                if (linea.includes('/series/')) {
-                    itemActual.tipo = 'series';
-                } else if (linea.includes('/movie/') || linea.endsWith('.mp4') || linea.endsWith('.mkv')) {
-                    itemActual.tipo = 'vod';
-                }
-
                 if (itemActual.tipo === 'series') {
-                    let nombreLimpio = itemActual.nombre
-                        .replace(/s\d+[\s\.\-]*e\d+/gi, '')
-                        .replace(/\b\d+x\d+\b/g, '')
-                        .replace(/temporada\s*\d+/gi, '')
-                        .replace(/season\s*\d+/gi, '')
-                        .trim();
-                    
+                    let nombreLimpio = itemActual.nombre.replace(/s\d+[\s\.\-]*e\d+/gi, '').replace(/\b\d+x\d+\b/g, '').trim();
                     if (nombreLimpio.length < 2) nombreLimpio = itemActual.grupo;
 
-                    if (!seriesEstructuradas[itemActual.grupo]) {
-                        seriesEstructuradas[itemActual.grupo] = {};
-                    }
-                    if (!seriesEstructuradas[itemActual.grupo][nombreLimpio]) {
-                        seriesEstructuradas[itemActual.grupo][nombreLimpio] = [];
-                    }
+                    if (!seriesEstructuradas[itemActual.grupo]) seriesEstructuradas[itemActual.grupo] = {};
+                    if (!seriesEstructuradas[itemActual.grupo][nombreLimpio]) seriesEstructuradas[itemActual.grupo][nombreLimpio] = [];
                     seriesEstructuradas[itemActual.grupo][nombreLimpio].push(itemActual);
                 } else {
                     let cat = datosIPTV[itemActual.tipo];
-                    if (!cat[itemActual.grupo]) {
-                        cat[itemActual.grupo] = [];
-                    }
+                    if (!cat[itemActual.grupo]) cat[itemActual.grupo] = [];
                     cat[itemActual.grupo].push(itemActual);
                 }
-                
                 itemActual = null;
             }
         });
-
-        Object.keys(seriesEstructuradas).forEach(grupo => {
-            Object.keys(seriesEstructuradas[grupo]).forEach(serie => {
-                seriesEstructuradas[grupo][serie].sort((a, b) => {
-                    let seA = extraerTemporadaEpisodio(a.nombre);
-                    let seB = extraerTemporadaEpisodio(b.nombre);
-                    if (seA.temporada !== seB.temporada) {
-                        return seA.temporada - seB.temporada;
-                    }
-                    return seA.episodio - seB.episodio;
-                });
-            });
-        });
-
         cambiarTipoPrincipal('tv');
-    }
-
-    function extraerTemporadaEpisodio(nombre) {
-        let matchS_E = nombre.match(/s(\d+)[\s\.\-]*e(\d+)/i);
-        if (matchS_E) {
-            return { temporada: parseInt(matchS_E[1]), episodio: parseInt(matchS_E[2]) };
-        }
-        let matchNxN = nombre.match(/(\d+)x(\d+)/);
-        if (matchNxN) {
-            return { temporada: parseInt(matchNxN[1]), episodio: parseInt(matchNxN[2]) };
-        }
-        let matchEp = nombre.match(/cap[ií]tulo\s*(\d+)/i) || nombre.match(/episodio\s*(\d+)/i);
-        if (matchEp) {
-            return { temporada: 1, episodio: parseInt(matchEp[1]) };
-        }
-        return { temporada: 1, episodio: 9999 };
     }
 
     function cambiarTipoPrincipal(tipo) {
@@ -484,15 +564,22 @@
         
         document.getElementById('buscador-carpetas').value = '';
         document.getElementById('buscador-canales').value = '';
-
         document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
         const btn = document.getElementById(`btn-${tipo}`);
         if(btn) btn.classList.add('active');
+
+        const btnZappingTexto = document.getElementById('btn-texto-zapping');
+        if (tipo === 'vod') {
+            btnZappingTexto.textContent = "🎬 Películas";
+        } else if (tipo === 'series') {
+            btnZappingTexto.textContent = "📺 Episodios";
+        } else {
+            btnZappingTexto.textContent = "📺 Canales";
+        }
         
         document.getElementById('contenedor-navegacion-series').innerHTML = '';
-        document.getElementById('lista-canales').innerHTML = '<div style="padding: 10px; color: #64748b; font-size: 13px;">Selecciona una categoría a la izquierda.</div>';
+        document.getElementById('lista-canales').innerHTML = '<div style="padding: 10px; color: #64748b; font-size: 13px;">Selecciona una categoría.</div>';
         document.getElementById('titulo-columna-canales').textContent = "Contenido";
-        
         mostrarCarpetas();
     }
 
@@ -500,21 +587,11 @@
         const contenedor = document.getElementById('lista-carpetas');
         if(!contenedor) return;
         contenedor.innerHTML = '';
-
         const grupos = tipoActual === 'series' ? seriesEstructuradas : datosIPTV[tipoActual];
-        const nombresGrupos = Object.keys(grupos);
-
-        if (nombresGrupos.length === 0) {
-            contenedor.innerHTML = '<div style="padding:10px; color:#94a3b8; font-size:12px;">No hay categorías en esta sección.</div>';
-            return;
-        }
-
+        
         const fragmento = document.createDocumentFragment();
-        nombresGrupos.forEach(nombreGrupo => {
-            const count = tipoActual === 'series' 
-                ? Object.keys(grupos[nombreGrupo]).length 
-                : grupos[nombreGrupo].length;
-
+        Object.keys(grupos).forEach(nombreGrupo => {
+            const count = tipoActual === 'series' ? Object.keys(grupos[nombreGrupo]).length : grupos[nombreGrupo].length;
             const div = document.createElement('div');
             div.className = 'item-lista folder-item' + (carpetaActual === nombreGrupo ? ' active-folder' : '');
             div.innerHTML = `<span>📁 ${nombreGrupo}</span> <span style="font-size:10px; color:#94a3b8;">(${count})</span>`;
@@ -529,19 +606,12 @@
         contenedor.innerHTML = '';
         const seriesMap = seriesEstructuradas[nombreGrupo];
         if (!seriesMap) return;
-        const nombresSeries = Object.keys(seriesMap);
-
-        if (nombresSeries.length === 0) {
-            contenedor.innerHTML = '<div style="padding: 10px; color: #64748b; font-size: 13px;">No hay series en esta categoría.</div>';
-            return;
-        }
 
         const fragmento = document.createDocumentFragment();
-        nombresSeries.forEach(nombreSerie => {
-            const totalEpisodios = seriesMap[nombreSerie].length;
+        Object.keys(seriesMap).forEach(nombreSerie => {
             const div = document.createElement('div');
             div.className = 'item-lista folder-item';
-            div.innerHTML = `<span>🎬 ${nombreSerie}</span> <span style="font-size:10px; color:#38bdf8;">(${totalEpisodios} eps)</span>`;
+            div.innerHTML = `<span>🎬 ${nombreSerie}</span>`;
             div.onclick = () => seleccionarSerie(nombreSerie);
             fragmento.appendChild(div);
         });
@@ -550,20 +620,14 @@
 
     function seleccionarSerie(nombreSerie) {
         serieSeleccionada = nombreSerie;
-        document.getElementById('buscador-canales').value = '';
         document.getElementById('titulo-columna-canales').textContent = nombreSerie;
-        
-        document.getElementById('contenedor-navegacion-series').innerHTML = `
-            <button class="btn-volver" onclick="regresarASeries()">⬅ Volver a Series</button>
-        `;
-
+        document.getElementById('contenedor-navegacion-series').innerHTML = `<button class="btn-volver" onclick="regresarASeries()">⬅ Volver a Series</button>`;
         canalesActuales = seriesEstructuradas[carpetaActual][nombreSerie];
         renderizarCanales(canalesActuales);
     }
 
     function regresarASeries() {
         serieSeleccionada = null;
-        document.getElementById('buscador-canales').value = '';
         document.getElementById('contenedor-navegacion-series').innerHTML = '';
         document.getElementById('titulo-columna-canales').textContent = carpetaActual;
         mostrarSeriesDeCategoria(carpetaActual);
@@ -572,23 +636,17 @@
     function renderizarCanales(listaCanales) {
         const contenedor = document.getElementById('lista-canales');
         contenedor.innerHTML = '';
-
-        if (!listaCanales || listaCanales.length === 0) {
-            contenedor.innerHTML = '<div style="padding: 10px; color: #64748b; font-size: 13px;">Sin elementos disponibles.</div>';
-            return;
-        }
+        if (!listaCanales) return;
 
         const fragmento = document.createDocumentFragment();
-        listaCanales.forEach(item => {
+        listaCanales.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'item-lista';
             div.textContent = "▶ " + item.nombre;
             div.onclick = () => {
+                canalActualIndex = index;
                 reproducir(item);
-                if (window.innerWidth <= 768) {
-                    document.body.classList.remove('vista-canales');
-                    document.body.classList.add('vista-reproductor');
-                }
+                activarModoReproductorMovil();
             };
             fragmento.appendChild(div);
         });
@@ -599,60 +657,32 @@
         document.getElementById('nombre-contenido').textContent = item.nombre;
         const videoElement = document.getElementById('video-player');
 
-        if (mpegtsPlayer) {
-            mpegtsPlayer.pause();
-            mpegtsPlayer.unload();
-            mpegtsPlayer.detachMediaElement();
-            mpegtsPlayer.destroy();
-            mpegtsPlayer = null;
-        }
-
-        if (hlsPlayer) {
-            hlsPlayer.destroy();
-            hlsPlayer = null;
-        }
-
+        if (mpegtsPlayer) { mpegtsPlayer.pause(); mpegtsPlayer.unload(); mpegtsPlayer.destroy(); mpegtsPlayer = null; }
+        if (hlsPlayer) { hlsPlayer.destroy(); hlsPlayer = null; }
         videoElement.removeAttribute('src');
-        videoElement.load();
 
         const urlLower = item.url.toLowerCase();
 
-        if (urlLower.endsWith('.ts') || urlLower.includes('.ts?') || (!urlLower.includes('.m3u8') && !urlLower.endsWith('.mp4') && !urlLower.endsWith('.mkv') && !urlLower.endsWith('.webm') && !urlLower.includes('/movie/'))) {
+        if (urlLower.endsWith('.ts') || urlLower.includes('.ts?') || (!urlLower.includes('.m3u8') && !urlLower.endsWith('.mp4') && !urlLower.endsWith('.mkv'))) {
             if (mpegts.getFeatureList().mseLivePlayback) {
-                mpegtsPlayer = mpegts.createPlayer({
-                    type: 'mse',
-                    isLive: true,
-                    url: item.url
-                });
+                mpegtsPlayer = mpegts.createPlayer({ type: 'mse', isLive: true, url: item.url });
                 mpegtsPlayer.attachMediaElement(videoElement);
                 mpegtsPlayer.load();
-                mpegtsPlayer.play().catch(err => console.error("Error reproduciendo enlace TS:", err));
-            } else {
-                alert("Tu navegador no soporta reproducción MPEG-TS mediante MSE.");
+                mpegtsPlayer.play().catch(e => {});
             }
-        }
-        else if (urlLower.includes('.m3u8')) {
+        } else if (urlLower.includes('.m3u8')) {
             if (Hls.isSupported()) {
-                hlsPlayer = new Hls({
-                    maxBufferLength: 30,
-                    liveSyncDurationCount: 3,
-                    lowLatencyMode: true,
-                    enableWorker: true
-                });
+                hlsPlayer = new Hls();
                 hlsPlayer.loadSource(item.url);
                 hlsPlayer.attachMedia(videoElement);
-                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function() {
-                    videoElement.play().catch(e => console.log("Error HLS:", e));
-                });
-            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => videoElement.play().catch(e => {}));
+            } else {
                 videoElement.src = item.url;
-                videoElement.play().catch(e => console.log("Error nativo HLS:", e));
+                videoElement.play().catch(e => {});
             }
-        } 
-        else {
+        } else {
             videoElement.src = item.url;
-            videoElement.load();
-            videoElement.play().catch(e => console.log("Error reproductor:", e));
+            videoElement.play().catch(e => {});
         }
     }
 
@@ -664,10 +694,9 @@
         
         Object.keys(grupos).forEach(nombreGrupo => {
             if (nombreGrupo.toLowerCase().includes(busqueda)) {
-                const count = tipoActual === 'series' ? Object.keys(grupos[nombreGrupo]).length : grupos[nombreGrupo].length;
                 const div = document.createElement('div');
-                div.className = 'item-lista folder-item' + (carpetaActual === nombreGrupo ? ' active-folder' : '');
-                div.innerHTML = `<span>📁 ${nombreGrupo}</span> <span style="font-size:10px; color:#94a3b8;">(${count})</span>`;
+                div.className = 'item-lista folder-item';
+                div.innerHTML = `<span>📁 ${nombreGrupo}</span>`;
                 div.onclick = () => seleccionarCarpeta(nombreGrupo);
                 contenedor.appendChild(div);
             }
@@ -676,32 +705,12 @@
 
     function filtrarCanales() {
         const busqueda = document.getElementById('buscador-canales').value.toLowerCase();
-        
-        if (tipoActual === 'series' && !serieSeleccionada) {
-            if (!carpetaActual) return;
-            const contenedor = document.getElementById('lista-canales');
-            contenedor.innerHTML = '';
-            const seriesMap = seriesEstructuradas[carpetaActual];
-            if (!seriesMap) return;
-            
-            Object.keys(seriesMap).forEach(nombreSerie => {
-                if (nombreSerie.toLowerCase().includes(busqueda)) {
-                    const totalEpisodios = seriesMap[nombreSerie].length;
-                    const div = document.createElement('div');
-                    div.className = 'item-lista folder-item';
-                    div.innerHTML = `<span>🎬 ${nombreSerie}</span> <span style="font-size:10px; color:#38bdf8;">(${totalEpisodios} eps)</span>`;
-                    div.onclick = () => seleccionarSerie(nombreSerie);
-                    contenedor.appendChild(div);
-                }
-            });
-        } else {
-            let baseDatos = canalesActuales;
-            if (tipoActual === 'series' && serieSeleccionada) {
-                baseDatos = seriesEstructuradas[carpetaActual][serieSeleccionada];
-            }
-            const filtrados = baseDatos.filter(i => i.nombre.toLowerCase().includes(busqueda));
-            renderizarCanales(filtrados);
+        let baseDatos = canalesActuales;
+        if (tipoActual === 'series' && serieSeleccionada) {
+            baseDatos = seriesEstructuradas[carpetaActual][serieSeleccionada];
         }
+        const filtrados = baseDatos.filter(i => i.nombre.toLowerCase().includes(busqueda));
+        renderizarCanales(filtrados);
     }
 </script>
 </body>

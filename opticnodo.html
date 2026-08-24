@@ -526,7 +526,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyBHpenDSTJe8mtjexLmdZcXagwc3x26qHalJoh2e1t-6eSudc3H5iDFMybrJBRsySjaQ/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrT8yY2BRjbWlI0DktZZc6T4AZPCnXGW0HX7ytLts2-FOmbslAudnz4GY4fyam-LxNwQ/exec';
 
         document.addEventListener('DOMContentLoaded', () => {
             verificarSesion();
@@ -867,99 +867,122 @@
             const reg = registros[index];
             if (!reg) return;
 
-            cambiarTab('registro', { currentTarget: document.querySelectorAll('.tab-btn')[0] });
-
             document.getElementById('editIndex').value = index;
-            document.getElementById('tecnico').value = reg.tecnico;
             document.getElementById('codigoCliente').value = reg.codigoCliente;
             document.getElementById('poste').value = reg.poste;
             document.getElementById('tap').value = reg.tap;
             document.getElementById('nap').value = reg.nap;
             document.getElementById('gps').value = reg.gps;
 
-            document.getElementById('btnGuardar').textContent = "Actualizar Registro";
+            cambiarTab('registro', { currentTarget: document.querySelectorAll('.tab-btn')[0] });
+        }
+
+        function calcularDistanciaGPS(lat1, lon1, lat2, lon2) {
+            const R = 6371000;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
         }
 
         function verificarPorGPSCercano() {
             const contenedor = document.getElementById('resultadoVerificacion');
             if (!navigator.geolocation) {
-                alert('La geolocalización no es compatible con este dispositivo.');
+                alert('La geolocalización no es compatible con este navegador.');
                 return;
             }
 
-            contenedor.innerHTML = '<div class="loading-text">Obteniendo tu posición GPS para buscar postes cercanos...</div>';
+            contenedor.innerHTML = '<div class="loading-text">Buscando satélites y calculando postes cercanos...</div>';
+
+            const opcionesGPS = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const latUser = position.coords.latitude;
-                    const lonUser = position.coords.longitude;
+                    const latActual = position.coords.latitude;
+                    const lonActual = position.coords.longitude;
+                    
                     let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-
                     if (registros.length === 0) {
-                        contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales para comparar distancia. Sincroniza en la pestaña "Lista".</div>';
+                        contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales para comparar. Sincroniza la lista primero.</div>';
                         return;
                     }
 
-                    let posteCercano = null;
-                    let menorDistancia = Infinity;
-
+                    let postesUnicos = {};
                     registros.forEach(reg => {
                         if (reg.gps && reg.gps !== 'Sin coordenadas' && reg.gps.includes(',')) {
                             const partes = reg.gps.split(',');
-                            const latPoste = parseFloat(partes[0]);
-                            const lonPoste = parseFloat(partes[1]);
-
-                            if (!isNaN(latPoste) && !isNaN(lonPoste)) {
-                                const distancia = calcularDistanciaMetros(latUser, lonUser, latPoste, lonPoste);
-                                if (distancia < menorDistancia) {
-                                    menorDistancia = distancia;
-                                    posteCercano = { ...reg, distanciaMetros: Math.round(distancia) };
+                            const pLat = parseFloat(partes[0].trim());
+                            const pLon = parseFloat(partes[1].trim());
+                            
+                            if (!isNaN(pLat) && !isNaN(pLon)) {
+                                const clavePoste = reg.poste || 'Sin Número';
+                                if (!postesUnicos[clavePoste]) {
+                                    postesUnicos[clavePoste] = {
+                                        poste: clavePoste,
+                                        lat: pLat,
+                                        lon: pLon,
+                                        tap: reg.tap,
+                                        nap: reg.nap,
+                                        fecha: reg.fecha,
+                                        clientes: []
+                                    };
                                 }
+                                postesUnicos[clavePoste].clientes.push(reg.codigoCliente);
                             }
                         }
                     });
 
-                    if (!posteCercano || menorDistancia > 100) {
-                        contenedor.innerHTML = `<div class="no-records" style="color: #f59e0b;">⚠️ No hay postes registrados a menos de 100 metros de tu posición actual. (El más cercano está a unos ${posteCercano ? posteCercano.distanciaMetros + 'm' : 'desconocidos'})</div>`;
+                    let cercano = null;
+                    let menorDistancia = Infinity;
+
+                    for (let key in postesUnicos) {
+                        const p = postesUnicos[key];
+                        const distancia = calcularDistanciaGPS(latActual, lonActual, p.lat, p.lon);
+                        if (distancia < menorDistancia) {
+                            menorDistancia = distancia;
+                            cercano = p;
+                            cercano.distanciaMetros = Math.round(distancia);
+                        }
+                    }
+
+                    if (!cercano || menorDistancia > 50) {
+                        contenedor.innerHTML = `
+                            <div class="no-records" style="color: #ef4444;">
+                                ❌ No hay ningún poste registrado cerca de tu ubicación actual.<br>
+                                <small style="color: var(--text-muted);">(El más cercano está a ${cercano ? cercano.distanciaMetros + 'm' : 'desconocido'}). ¡Este podría ser un poste nuevo!</small>
+                            </div>
+                        `;
                         return;
                     }
 
-                    const encontrados = registros.filter(r => r.poste === posteCercano.poste);
-                    const totalClientes = encontrados.length;
-                    const listaClientes = encontrados.map(r => `• ${r.codigoCliente}`).join('<br>');
-
-                    const coords = posteCercano.gps.replace(/\s+/g, '');
-                    const botonMapa = `<a href="https://www.google.com/maps/search/?api=1&query=${coords}" target="_blank" class="btn-mapa">📍 Ver Ubicación GPS del Poste</a>`;
+                    const listaClientesStr = cercano.clientes.map(c => `• ${c}`).join('<br>');
+                    const coordsStr = `${cercano.lat}, ${cercano.lon}`;
+                    const urlGoogleMaps = `https://www.google.com/maps/search/?api=1&query=${coordsStr}`;
 
                     contenedor.innerHTML = `
                         <div class="history-item" style="border-color: var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <span class="badge-distancia">📍 Aprox. a ${posteCercano.distanciaMetros} metros</span>
-                                <small style="color: var(--text-muted);">${posteCercano.fecha}</small>
+                                <span class="badge-distancia">📍 A ${cercano.distanciaMetros} metros de ti</span>
+                                <span class="badge-poste">${cercano.poste}</span>
                             </div>
-                            <strong>Poste: ${posteCercano.poste}</strong>
-                            <p><strong>TAP:</strong> ${posteCercano.tap} | <strong>NAP:</strong> ${posteCercano.nap}</p>
-                            <p style="margin-top: 6px;"><strong>Clientes conectados (${totalClientes}):</strong><br>${listaClientes}</p>
-                            ${botonMapa}
+                            <strong>Poste Cercano Encontrado</strong>
+                            <p><strong>TAP:</strong> ${cercano.tap} | <strong>NAP:</strong> ${cercano.nap}</p>
+                            <p style="margin-top: 6px;"><strong>Clientes conectados (${cercano.clientes.length}):</strong><br>${listaClientesStr}</p>
+                            <a href="${urlGoogleMaps}" target="_blank" class="btn-mapa">📍 Abrir ruta al poste</a>
                         </div>
                     `;
                 },
                 (error) => {
-                    contenedor.innerHTML = '<div class="no-records" style="color: #ef4444;">❌ No se pudo obtener tu ubicación GPS para la verificación por proximidad.</div>';
+                    let mensaje = 'No se pudo obtener la ubicación GPS.';
+                    if (error.code === error.TIMEOUT) mensaje = 'El GPS tardó demasiado.';
+                    else if (error.code === error.PERMISSION_DENIED) mensaje = 'Permiso de ubicación denegado.';
+                    contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ ${mensaje}</div>`;
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                opcionesGPS
             );
-        }
-
-        function calcularDistanciaMetros(lat1, lon1, lat2, lon2) {
-            const R = 6371000;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
         }
     </script>
 </body>

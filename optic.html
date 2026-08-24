@@ -383,14 +383,13 @@
                 
                 <div class="form-group">
                     <label for="selectTecnicoLobby">Técnico Operativo</label>
-                    <select id="selectTecnicoLobby">
-                        <option value="">Seleccione su nombre...</option>
-                        <option value="Carlos Muñoz">Carlos Muñoz</option>
-                        <option value="Jorge García">Jorge García</option>
-                        <!-- Puedes agregar más técnicos aquí abajo copiando otra línea option -->
-                         <option value="Jorge García">Jared Acosta</option>
-                         <option value="Jorge García">Jose Castro</option>
-                    </select>
+                   <select id="selectTecnicoLobby">
+    <option value="">Seleccione su nombre...</option>
+    <option value="Carlos Muñoz">Carlos Muñoz</option>
+    <option value="Jorge García">Jorge García</option>
+    <option value="Jared Acosta">Jared Acosta</option>
+    <option value="Jose Castro">Jose Castro</option>
+</select>
                 </div>
 
                 <div class="form-group">
@@ -514,11 +513,11 @@
 
         // 🔐 CONTRASEÑAS DE CADA TÉCNICO (Puedes cambiarlas aquí cuando gustes)
         const CLAVES_TECNICOS = {
-            "Carlos Muñoz": "94532043",   
-            "Jorge García": "94530917"
-            "Jose Castro": "93930345"    
-            "Jared Acosta": "94559577"    
-        };
+    "Carlos Muñoz": "94532043",    
+    "Jorge García": "94530917", // <-- ¡Aquí faltaba la coma!
+    "Jose Castro": "93930345",    
+    "Jared Acosta": "94559577"    
+};
 
         document.addEventListener('DOMContentLoaded', () => {
             verificarSesion();

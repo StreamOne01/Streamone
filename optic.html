@@ -217,7 +217,7 @@
 
         textarea {
             resize: vertical;
-            min-height: 70px;
+            min-height: 90px;
         }
 
         .gps-container {
@@ -323,6 +323,23 @@
             width: 100%;
         }
 
+        .btn-editar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: #334155;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+
         .no-records {
             text-align: center;
             color: var(--text-muted);
@@ -410,6 +427,7 @@
                 <div class="card">
                     <form id="registroForm">
                         <input type="hidden" id="editIndex" value="">
+                        <input type="hidden" id="editIdUnico" value="">
                         
                         <div class="form-group">
                             <label for="tecnico">Técnico Responsable</label>
@@ -417,7 +435,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="codigoCliente">Códigos de Clientes (Sepáralos por comas o saltos de línea)</label>
+                            <label for="codigoCliente">Códigos de Clientes (Puedes pegar hasta 30 separados por comas o saltos de línea)</label>
                             <textarea id="codigoCliente" required placeholder="Ej. CLI-001, CLI-002, CLI-003..."></textarea>
                         </div>
 
@@ -445,17 +463,17 @@
                         </div>
 
                         <!-- CASILLA PARA FIJAR DATOS -->
-                        <div class="lock-container">
+                        <div class="lock-container" id="contenedorFijar">
                             <input type="checkbox" id="fijarPoste">
                             <label for="fijarPoste">📌 Mantener Poste, TAP, NAP y GPS para el siguiente registro</label>
                         </div>
 
-                        <button type="submit" id="btnGuardar" class="btn-primary">Guardar Registros</button>
+                        <button type="submit" id="btnGuardar" class="btn-primary">Guardar Lote de Registros</button>
                     </form>
                 </div>
             </div>
 
-            <!-- VERIFICAR (Poste o GPS en la misma pestaña) -->
+            <!-- VERIFICAR -->
             <div id="tab-verificar" class="tab-content">
                 <div class="card">
                     <div class="form-group">
@@ -466,13 +484,11 @@
                         </select>
                     </div>
 
-                    <!-- Input para Poste -->
                     <div id="seccionVerificarPoste" class="form-group" style="margin-bottom: 0;">
                         <label for="inputVerificarPoste">Número de Poste a Consultar</label>
                         <input type="text" id="inputVerificarPoste" placeholder="Ej. P-4052..." oninput="ejecutarVerificacion()">
                     </div>
 
-                    <!-- Input para GPS -->
                     <div id="seccionVerificarGps" class="form-group" style="display: none; margin-bottom: 0;">
                         <label for="inputVerificarGps">Coordenadas GPS (Lat, Lon)</label>
                         <div class="gps-container">
@@ -660,7 +676,7 @@
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const editIndex = document.getElementById('editIndex').value;
+            const editIdUnico = document.getElementById('editIdUnico').value;
             const tecnicoActual = localStorage.getItem('tecnico_activo_fiber') || 'Carlos Muñoz';
             const mantenerDatos = document.getElementById('fijarPoste').checked;
             
@@ -676,42 +692,47 @@
             }
 
             const btnGuardar = document.getElementById('btnGuardar');
-            btnGuardar.textContent = `Guardando ${codigosArray.length} registro(s)...`;
-            btnGuardar.disabled = true;
-
             let registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            
-            if (editIndex !== "") {
-                const nuevoRegistro = {
-                    id: Date.now(),
+            const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // SI ESTAMOS EDITANDO UN REGISTRO ESPECÍFICO
+            if (editIdUnico !== "") {
+                btnGuardar.textContent = `Actualizando registro...`;
+                btnGuardar.disabled = true;
+
+                const registroModificado = {
+                    id: Number(editIdUnico),
                     tecnico: tecnicoActual,
-                    codigoCliente: codigosArray[0],
+                    codigoCliente: codigosArray[0], // Toma el primer código ingresado al editar
                     poste: document.getElementById('poste').value || 'N/D',
                     tap: document.getElementById('tap').value || 'N/D',
                     nap: document.getElementById('nap').value || 'N/D',
                     gps: document.getElementById('gps').value || 'Sin coordenadas',
-                    fecha: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    fecha: fechaActual
                 };
-                registrosLocales[editIndex] = nuevoRegistro;
+
+                // Actualizar local
+                registrosLocales = registrosLocales.map(r => r.id == editIdUnico ? registroModificado : r);
                 localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
 
-                const datosFormulario = new URLSearchParams();
-                datosFormulario.append('data', JSON.stringify(nuevoRegistro));
-                
                 try {
+                    const datosFormulario = new URLSearchParams();
+                    datosFormulario.append('data', JSON.stringify(registroModificado));
                     await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
-                    alert('¡Registro actualizado con éxito!');
+                    alert('¡Registro actualizado con éxito en la nube!');
                 } catch (err) {
-                    alert('¡Actualizado localmente (modo offline)!');
+                    alert('⚠️ Actualizado localmente (se sincronizará al conectar).');
                 }
 
-                finalizarGuardado(mantenerDatos, tecnicoActual);
+                finalizarGuardado(false, tecnicoActual);
                 return;
             }
 
-            let nuevosRegistros = [];
-            const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            // MODO NUEVO LOTE (Hasta 30 o más)
+            btnGuardar.textContent = `Guardando ${codigosArray.length} registro(s) en lote...`;
+            btnGuardar.disabled = true;
 
+            let nuevosRegistros = [];
             codigosArray.forEach((codigo, idx) => {
                 nuevosRegistros.push({
                     id: Date.now() + idx,
@@ -729,15 +750,13 @@
             localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
 
             try {
-                for (let reg of nuevosRegistros) {
-                    const datosFormulario = new URLSearchParams();
-                    datosFormulario.append('data', JSON.stringify(reg));
-                    await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
-                }
-                alert(`¡Se guardaron y sincronizaron ${nuevosRegistros.length} cliente(s) con éxito!`);
+                const datosFormulario = new URLSearchParams();
+                datosFormulario.append('data', JSON.stringify(nuevosRegistros));
+                await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
+                alert(`¡Se guardaron y sincronizarán ${nuevosRegistros.length} cliente(s) con éxito en la nube!`);
             } catch (err) {
                 console.warn("Error de red:", err);
-                alert(`⚠️ Se guardaron ${nuevosRegistros.length} cliente(s) localmente (Se sincronizarán al conectar).`);
+                alert(`⚠️ Se guardaron ${nuevosRegistros.length} cliente(s) localmente.`);
             }
 
             finalizarGuardado(mantenerDatos, tecnicoActual);
@@ -745,7 +764,8 @@
 
         function finalizarGuardado(mantenerDatos, tecnicoActual) {
             document.getElementById('codigoCliente').value = '';
-            document.getElementById('editIndex').value = "";
+            document.getElementById('editIdUnico').value = "";
+            document.getElementById('contenedorFijar').style.display = 'flex';
             
             if (!mantenerDatos) {
                 document.getElementById('poste').value = '';
@@ -756,7 +776,7 @@
 
             document.getElementById('tecnico').value = tecnicoActual;
             const btnGuardar = document.getElementById('btnGuardar');
-            btnGuardar.textContent = "Guardar Registros";
+            btnGuardar.textContent = "Guardar Lote de Registros";
             btnGuardar.disabled = false;
             
             cargarRegistrosDesdeNube();
@@ -783,8 +803,8 @@
                     }
 
                     let html = '';
-                    registros.forEach((reg, index) => {
-                        html += renderizarItem(reg, index);
+                    registros.forEach((reg) => {
+                        html += renderizarItem(reg);
                     });
                     historyList.innerHTML = html;
                 })
@@ -794,8 +814,8 @@
                     
                     if (registrosLocales.length > 0) {
                         let html = '';
-                        registrosLocales.forEach((reg, index) => {
-                            html += renderizarItem(reg, index);
+                        registrosLocales.forEach((reg) => {
+                            html += renderizarItem(reg);
                         });
                         historyList.innerHTML = '<div style="color: #f59e0b; font-size: 0.75rem; text-align:center; margin-bottom: 8px;">⚠️ Modo sin conexión (Mostrando caché local)</div>' + html;
                     } else {
@@ -804,7 +824,7 @@
                 });
         }
 
-        function renderizarItem(reg, index) {
+        function renderizarItem(reg) {
             let botonMapa = '';
             if (reg.gps && reg.gps !== 'Sin coordenadas' && reg.gps.includes(',')) {
                 const coords = reg.gps.replace(/\s+/g, '');
@@ -817,6 +837,9 @@
                 `;
             }
 
+            // Serializamos los datos del registro para enviarlos de forma segura a la función editarRegistro
+            const regJson = encodeURIComponent(JSON.stringify(reg));
+
             return `
                 <div class="history-item">
                     <strong>Código: ${reg.codigoCliente}</strong>
@@ -824,9 +847,33 @@
                     <p>Poste: ${reg.poste} | TAP: ${reg.tap} | NAP: ${reg.nap}</p>
                     <p>GPS: ${reg.gps}</p>
                     ${botonMapa}
+                    <button type="button" class="btn-editar" onclick="cargarRegistroParaEditar('${regJson}')">
+                        ✏️ Editar Registro
+                    </button>
                     <p><small style="color: var(--text-muted); margin-top: 6px; display: block;">${reg.fecha}</small></p>
                 </div>
             `;
+        }
+
+        function cargarRegistroParaEditar(regJsonEncoded) {
+            const reg = JSON.parse(decodeURIComponent(regJsonEncoded));
+
+            // Rellenar formulario con los datos de ese registro
+            document.getElementById('editIdUnico').value = reg.id;
+            document.getElementById('codigoCliente').value = reg.codigoCliente;
+            document.getElementById('poste').value = reg.poste;
+            document.getElementById('tap').value = reg.tap;
+            document.getElementById('nap').value = reg.nap;
+            document.getElementById('gps').value = reg.gps;
+            document.getElementById('tecnico').value = reg.tecnico;
+
+            // Ocultar opción de fijar datos y cambiar texto del botón principal
+            document.getElementById('contenedorFijar').style.display = 'none';
+            document.getElementById('btnGuardar').textContent = 'Actualizar Registro';
+
+            // Cambiar a la pestaña de registro
+            cambiarTab('registro', { currentTarget: document.querySelector('.tab-btn') });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function ejecutarVerificacion() {
@@ -926,8 +973,8 @@
             }
 
             let html = `<div style="color: var(--success); font-size: 0.8rem; margin-bottom: 8px; text-align: center;">✅ ¡Se encontraron ${encontrados.length} registro(s) en esta ubicación!</div>`;
-            encontrados.forEach((reg, index) => {
-                html += renderizarItem(reg, index);
+            encontrados.forEach((reg) => {
+                html += renderizarItem(reg);
             });
             contenedor.innerHTML = html;
         }
@@ -954,8 +1001,8 @@
             }
 
             let html = '';
-            encontrados.forEach((reg, index) => {
-                html += renderizarItem(reg, index);
+            encontrados.forEach((reg) => {
+                html += renderizarItem(reg);
             });
             contenedor.innerHTML = html;
         }

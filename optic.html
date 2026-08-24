@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIGA NODE</title>
     
-    <link rel="icon" type="image/svg+xml" href="https://github.com/StreamOne01/Streamone/blob/main/giganode%201.png?raw=true">
-    <link rel="apple-touch-icon" href="https://github.com/StreamOne01/Streamone/blob/main/giganode%201.png?raw=true">
+    <link rel="icon" type="image/svg+xml" href="https://github.com/StreamOne01/Streamone/raw/main/giganode%201.png">
+    <link rel="apple-touch-icon" href="https://github.com/StreamOne01/Streamone/raw/main/giganode%201.png">
 
     <style>
         :root {
@@ -394,7 +394,7 @@
         <div id="lobbyScreen">
             <header>
                 <div class="app-logo">
-                    <img src="https://github.com/StreamOne01/Streamone/blob/main/giganode%201.png?raw=true" alt="Logo Giganode">
+                    <img src="https://github.com/StreamOne01/Streamone/raw/main/giganode%201.png" alt="Logo Giganode">
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
@@ -418,7 +418,7 @@
         <div id="mainApp" style="display: none;">
             <header>
                 <div class="app-logo">
-                    <img src="https://github.com/StreamOne01/Streamone/blob/main/Fiber%20Drop.png?raw=true" alt="Logo Fiber Drop">
+                    <img src="https://github.com/StreamOne01/Streamone/raw/main/Fiber%20Drop.png" alt="Logo Fiber Drop">
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
@@ -875,114 +875,6 @@
             document.getElementById('gps').value = reg.gps;
 
             cambiarTab('registro', { currentTarget: document.querySelectorAll('.tab-btn')[0] });
-        }
-
-        function calcularDistanciaGPS(lat1, lon1, lat2, lon2) {
-            const R = 6371000;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-
-        function verificarPorGPSCercano() {
-            const contenedor = document.getElementById('resultadoVerificacion');
-            if (!navigator.geolocation) {
-                alert('La geolocalización no es compatible con este navegador.');
-                return;
-            }
-
-            contenedor.innerHTML = '<div class="loading-text">Buscando satélites y calculando postes cercanos...</div>';
-
-            const opcionesGPS = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latActual = position.coords.latitude;
-                    const lonActual = position.coords.longitude;
-                    
-                    let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-                    if (registros.length === 0) {
-                        contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales para comparar. Sincroniza la lista primero.</div>';
-                        return;
-                    }
-
-                    let postesUnicos = {};
-                    registros.forEach(reg => {
-                        if (reg.gps && reg.gps !== 'Sin coordenadas' && reg.gps.includes(',')) {
-                            const partes = reg.gps.split(',');
-                            const pLat = parseFloat(partes[0].trim());
-                            const pLon = parseFloat(partes[1].trim());
-                            
-                            if (!isNaN(pLat) && !isNaN(pLon)) {
-                                const clavePoste = reg.poste || 'Sin Número';
-                                if (!postesUnicos[clavePoste]) {
-                                    postesUnicos[clavePoste] = {
-                                        poste: clavePoste,
-                                        lat: pLat,
-                                        lon: pLon,
-                                        tap: reg.tap,
-                                        nap: reg.nap,
-                                        fecha: reg.fecha,
-                                        clientes: []
-                                    };
-                                }
-                                postesUnicos[clavePoste].clientes.push(reg.codigoCliente);
-                            }
-                        }
-                    });
-
-                    let cercano = null;
-                    let menorDistancia = Infinity;
-
-                    for (let key in postesUnicos) {
-                        const p = postesUnicos[key];
-                        const distancia = calcularDistanciaGPS(latActual, lonActual, p.lat, p.lon);
-                        if (distancia < menorDistancia) {
-                            menorDistancia = distancia;
-                            cercano = p;
-                            cercano.distanciaMetros = Math.round(distancia);
-                        }
-                    }
-
-                    if (!cercano || menorDistancia > 50) {
-                        contenedor.innerHTML = `
-                            <div class="no-records" style="color: #ef4444;">
-                                ❌ No hay ningún poste registrado cerca de tu ubicación actual.<br>
-                                <small style="color: var(--text-muted);">(El más cercano está a ${cercano ? cercano.distanciaMetros + 'm' : 'desconocido'}). ¡Este podría ser un poste nuevo!</small>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    const listaClientesStr = cercano.clientes.map(c => `• ${c}`).join('<br>');
-                    const coordsStr = `${cercano.lat}, ${cercano.lon}`;
-                    const urlGoogleMaps = `https://www.google.com/maps/search/?api=1&query=${coordsStr}`;
-
-                    contenedor.innerHTML = `
-                        <div class="history-item" style="border-color: var(--success);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <span class="badge-distancia">📍 A ${cercano.distanciaMetros} metros de ti</span>
-                                <span class="badge-poste">${cercano.poste}</span>
-                            </div>
-                            <strong>Poste Cercano Encontrado</strong>
-                            <p><strong>TAP:</strong> ${cercano.tap} | <strong>NAP:</strong> ${cercano.nap}</p>
-                            <p style="margin-top: 6px;"><strong>Clientes conectados (${cercano.clientes.length}):</strong><br>${listaClientesStr}</p>
-                            <a href="${urlGoogleMaps}" target="_blank" class="btn-mapa">📍 Abrir ruta al poste</a>
-                        </div>
-                    `;
-                },
-                (error) => {
-                    let mensaje = 'No se pudo obtener la ubicación GPS.';
-                    if (error.code === error.TIMEOUT) mensaje = 'El GPS tardó demasiado.';
-                    else if (error.code === error.PERMISSION_DENIED) mensaje = 'Permiso de ubicación denegado.';
-                    contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ ${mensaje}</div>`;
-                },
-                opcionesGPS
-            );
         }
     </script>
 </body>

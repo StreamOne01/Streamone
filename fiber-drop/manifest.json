@@ -1,0 +1,15 @@
+{
+  "name": "Fiber Drop",
+  "short_name": "FiberDrop",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b1320",
+  "theme_color": "#0072d2",
+  "icons": [
+    {
+      "src": "https://github.com/StreamOne01/Streamone/blob/main/Fiber%20Drop.png?raw=true",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

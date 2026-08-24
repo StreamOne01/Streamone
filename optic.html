@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIGA NODE</title>
     
-    <link rel="icon" type="image/svg+xml" href="https://github.com/StreamOne01/Streamone/raw/main/giganode%201.png">
-    <link rel="apple-touch-icon" href="https://github.com/StreamOne01/Streamone/raw/main/giganode%201.png">
+    <!-- Favicon SVG integrado -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230072d2'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E">
 
     <style>
         :root {
@@ -58,13 +58,12 @@
             align-items: center;
             margin-bottom: 10px;
             box-shadow: 0 4px 12px rgba(0, 114, 210, 0.3);
-            overflow: hidden;
         }
 
-        .app-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .app-logo svg {
+            width: 38px;
+            height: 38px;
+            fill: #ffffff;
         }
 
         header h1 {
@@ -376,15 +375,6 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-
-        .badge-distancia {
-            background-color: #10b981;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
     </style>
 </head>
 <body>
@@ -394,7 +384,8 @@
         <div id="lobbyScreen">
             <header>
                 <div class="app-logo">
-                    <img src="https://github.com/StreamOne01/Streamone/raw/main/giganode%201.png" alt="Logo Giganode">
+                    <!-- Icono SVG integrado -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
@@ -418,7 +409,7 @@
         <div id="mainApp" style="display: none;">
             <header>
                 <div class="app-logo">
-                    <img src="https://github.com/StreamOne01/Streamone/raw/main/Fiber%20Drop.png" alt="Logo Fiber Drop">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
@@ -489,17 +480,13 @@
             <!-- VERIFICAR POSTE -->
             <div id="tab-verificar" class="tab-content">
                 <div class="card">
-                    <button type="button" class="btn-gps-check" onclick="verificarPorGPSCercano()">📍 Buscar Poste por mi ubicación GPS</button>
-                    
-                    <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin: 6px 0 12px 0;">— O si el poste tiene número —</div>
-
                     <div class="form-group">
                         <label for="inputVerificarPoste">Número de Poste a Consultar</label>
                         <input type="text" id="inputVerificarPoste" placeholder="Ej. P-4052..." oninput="verificarPosteEnBase()">
                     </div>
                 </div>
                 <div id="resultadoVerificacion" class="history-list">
-                    <div class="no-records">Usa la ubicación GPS si el poste no tiene número, o escribe su código arriba.</div>
+                    <div class="no-records">Escribe el número del poste arriba para verificar si ya está registrado.</div>
                 </div>
             </div>
 

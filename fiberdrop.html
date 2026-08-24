@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiber Drop</title>
+    <title>Fiber Dog Track</title>
     
-    <!-- Configuración de Iconos para Móviles y Pestañas (iOS / Android) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 rx=%22112%22 fill=%22%230072d2%22/><path d=%22M256 120c-53 0-96 43-96 96 0 35.3 19.3 66 48 82.5V336c0 13.3 10.7 24 24 24h48c13.3 0 24-10.7 24-24v-37.5c28.7-16.5 48-47.2 48-82.5 0-53-43-96-96-96zm0 50c25.4 0 46 20.6 46 46s-20.6 46-46 46-46-20.6-46-46 20.6-46 46-46zM140 380c-13.3 0-24 10.7-24 24s10.7 24 24 24h232c13.3 0 24-10.7 24-24s-10.7-24-24-24H140z%22 fill=%22%23ffffff%22/></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 rx=%22112%22 fill=%22%230072d2%22/><path d=%22M256 120c-53 0-96 43-96 96 0 35.3 19.3 66 48 82.5V336c0 13.3 10.7 24 24 24h48c13.3 0 24-10.7 24-24v-37.5c28.7-16.5 48-47.2 48-82.5 0-53-43-96-96-96zm0 50c25.4 0 46 20.6 46 46s-20.6 46-46 46-46-20.6-46-46 20.6-46 46-46zM140 380c-13.3 0-24 10.7-24 24s10.7 24 24 24h232c13.3 0 24-10.7 24-24s-10.7-24-24-24H140z%22 fill=%22%23ffffff%22/></svg>">
 
@@ -16,7 +15,6 @@
             --accent: #0072d2;
             --accent-hover: #005bb5;
             --danger: #ef4444;
-            --danger-hover: #dc2626;
             --success: #10b981;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -137,14 +135,9 @@
             cursor: pointer;
         }
 
-        .btn-switch:active {
-            background: var(--border);
-            color: var(--text-main);
-        }
-
         .tabs {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             margin-bottom: 16px;
             background-color: var(--bg-card);
             padding: 4px;
@@ -154,11 +147,11 @@
 
         .tab-btn {
             flex: 1;
-            padding: 10px 8px;
+            padding: 10px 4px;
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 600;
             cursor: pointer;
             border-radius: 8px;
@@ -200,7 +193,7 @@
             font-weight: 500;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
             background-color: var(--bg-main);
@@ -212,13 +205,18 @@
             transition: border-color 0.2s;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--accent);
         }
 
         input[readonly] {
             background-color: #162032;
             color: var(--text-muted);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
         }
 
         .gps-container {
@@ -239,12 +237,45 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 500;
-            transition: background 0.2s;
             white-space: nowrap;
         }
 
-        .btn-gps:active {
-            background-color: #475569;
+        .btn-gps-check {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .lock-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #131d31;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px dashed var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .lock-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .lock-container label {
+            color: var(--text-main);
+            margin-bottom: 0;
+            font-size: 0.8rem;
+            cursor: pointer;
         }
 
         .btn-primary {
@@ -257,7 +288,6 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
             margin-top: 6px;
         }
 
@@ -303,11 +333,6 @@
             font-weight: 600;
             margin-top: 8px;
             width: 100%;
-            transition: background 0.2s;
-        }
-
-        .btn-mapa:active {
-            background-color: #059669;
         }
 
         .item-actions {
@@ -328,10 +353,6 @@
             text-align: center;
         }
 
-        .btn-action:active {
-            background: #334155;
-        }
-
         .no-records {
             text-align: center;
             color: var(--text-muted);
@@ -345,6 +366,24 @@
             font-size: 0.85rem;
             padding: 15px;
         }
+        
+        .badge-poste {
+            background-color: #0284c7;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-distancia {
+            background-color: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -356,7 +395,7 @@
                 <div class="app-logo">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                 </div>
-                <h1>Fiber Dog Track</h1>
+                <h1>FIBER DROP</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
             </header>
             <div class="lobby-card">
@@ -391,6 +430,7 @@
 
             <div class="tabs">
                 <button class="tab-btn active" onclick="cambiarTab('registro', event)">Registrar</button>
+                <button class="tab-btn" onclick="cambiarTab('verificar', event)">Verificar</button>
                 <button class="tab-btn" onclick="cambiarTab('buscar', event)">Buscar</button>
                 <button class="tab-btn" onclick="cambiarTab('lista', event)">Lista</button>
             </div>
@@ -407,13 +447,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="codigoCliente">Código del Cliente</label>
-                            <input type="text" id="codigoCliente" required placeholder="Ej. CLI-1042">
+                            <label for="codigoCliente">Códigos de Clientes (Sepáralos por comas o saltos de línea)</label>
+                            <textarea id="codigoCliente" required placeholder="Ej. CLI-001, CLI-002, CLI-003..."></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="poste">Número de Poste</label>
-                            <input type="text" id="poste" placeholder="Ej. P-4052">
+                            <input type="text" id="poste" placeholder="Ej. P-4052 (O dejar N/D si no tiene)">
                         </div>
 
                         <div class="form-group">
@@ -434,8 +474,31 @@
                             </div>
                         </div>
 
-                        <button type="submit" id="btnGuardar" class="btn-primary">Guardar Registro</button>
+                        <!-- CASILLA PARA FIJAR DATOS -->
+                        <div class="lock-container">
+                            <input type="checkbox" id="fijarPoste">
+                            <label for="fijarPoste">📌 Mantener Poste, TAP, NAP y GPS para el siguiente registro</label>
+                        </div>
+
+                        <button type="submit" id="btnGuardar" class="btn-primary">Guardar Registros</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- VERIFICAR POSTE (CON GPS CER CANO) -->
+            <div id="tab-verificar" class="tab-content">
+                <div class="card">
+                    <button type="button" class="btn-gps-check" onclick="verificarPorGPSCercano()">📍 Buscar Poste por mi ubicación GPS</button>
+                    
+                    <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin: 6px 0 12px 0;">— O si el poste tiene número —</div>
+
+                    <div class="form-group">
+                        <label for="inputVerificarPoste">Número de Poste a Consultar</label>
+                        <input type="text" id="inputVerificarPoste" placeholder="Ej. P-4052..." oninput="verificarPosteEnBase()">
+                    </div>
+                </div>
+                <div id="resultadoVerificacion" class="history-list">
+                    <div class="no-records">Usa la ubicación GPS si el poste no tiene número, o escribe su código arriba.</div>
                 </div>
             </div>
 
@@ -527,11 +590,7 @@
 
             gpsInput.value = 'Buscando satélites (alta precisión)...';
 
-            const opcionesGPS = {
-                enableHighAccuracy: true,
-                timeout: 15000,
-                maximumAge: 0
-            };
+            const opcionesGPS = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -541,11 +600,8 @@
                 },
                 (error) => {
                     let mensaje = 'No se pudo obtener la ubicación.';
-                    if (error.code === error.TIMEOUT) {
-                        mensaje = 'El GPS tardó demasiado. Sal al aire libre o acércate a la calle.';
-                    } else if (error.code === error.PERMISSION_DENIED) {
-                        mensaje = 'Permiso de ubicación denegado en el navegador.';
-                    }
+                    if (error.code === error.TIMEOUT) mensaje = 'El GPS tardó demasiado. Sal al aire libre.';
+                    else if (error.code === error.PERMISSION_DENIED) mensaje = 'Permiso de ubicación denegado.';
                     alert(mensaje);
                     gpsInput.value = '';
                 },
@@ -553,67 +609,111 @@
             );
         }
 
-        document.getElementById('registroForm').addEventListener('submit', function(e) {
+        document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const editIndex = document.getElementById('editIndex').value;
             const tecnicoActual = localStorage.getItem('tecnico_activo_fiber') || 'Carlos Muñoz';
+            const mantenerDatos = document.getElementById('fijarPoste').checked;
+            
+            const rawInput = document.getElementById('codigoCliente').value;
+            const codigosArray = rawInput
+                .split(/[\n,]+/)
+                .map(c => c.trim())
+                .filter(c => c.length > 0);
 
-            const nuevoRegistro = {
-                id: editIndex !== "" ? Date.now() : Date.now(),
-                tecnico: tecnicoActual,
-                codigoCliente: document.getElementById('codigoCliente').value,
-                poste: document.getElementById('poste').value || 'N/D',
-                tap: document.getElementById('tap').value || 'N/D',
-                nap: document.getElementById('nap').value || 'N/D',
-                gps: document.getElementById('gps').value || 'Sin coordenadas',
-                fecha: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-
-            let registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            if (editIndex !== "") {
-                registrosLocales[editIndex] = nuevoRegistro;
-            } else {
-                registrosLocales.unshift(nuevoRegistro);
+            if (codigosArray.length === 0) {
+                alert('Por favor ingresa al menos un código de cliente.');
+                return;
             }
-            localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
 
             const btnGuardar = document.getElementById('btnGuardar');
-            btnGuardar.textContent = 'Sincronizando con la nube...';
+            btnGuardar.textContent = `Guardando ${codigosArray.length} registro(s)...`;
             btnGuardar.disabled = true;
 
-            const datosFormulario = new URLSearchParams();
-            datosFormulario.append('data', JSON.stringify(nuevoRegistro));
+            let registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            
+            if (editIndex !== "") {
+                const nuevoRegistro = {
+                    id: Date.now(),
+                    tecnico: tecnicoActual,
+                    codigoCliente: codigosArray[0],
+                    poste: document.getElementById('poste').value || 'N/D',
+                    tap: document.getElementById('tap').value || 'N/D',
+                    nap: document.getElementById('nap').value || 'N/D',
+                    gps: document.getElementById('gps').value || 'Sin coordenadas',
+                    fecha: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                registrosLocales[editIndex] = nuevoRegistro;
+                localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
 
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: datosFormulario
-            })
-            .then(response => response.json())
-            .then(() => {
-                alert(editIndex !== "" ? '¡Registro actualizado con éxito!' : '¡Guardado y sincronizado con éxito!');
-                this.reset();
-                document.getElementById('editIndex').value = "";
-                document.getElementById('tecnico').value = tecnicoActual;
-                document.getElementById('gps').value = '';
-                btnGuardar.textContent = "Guardar Registro";
-                btnGuardar.disabled = false;
+                const datosFormulario = new URLSearchParams();
+                datosFormulario.append('data', JSON.stringify(nuevoRegistro));
                 
-                cargarRegistrosDesdeNube();
-                cambiarTab('lista', { currentTarget: document.querySelectorAll('.tab-btn')[2] });
-            })
-            .catch(err => {
-                console.warn("Aviso de red o modo offline:", err);
-                alert('¡Guardado localmente! (Se sincronizará al actualizar la lista).');
-                this.reset();
-                document.getElementById('editIndex').value = "";
-                document.getElementById('tecnico').value = tecnicoActual;
-                document.getElementById('gps').value = '';
-                btnGuardar.textContent = "Guardar Registro";
-                btnGuardar.disabled = false;
-                cambiarTab('lista', { currentTarget: document.querySelectorAll('.tab-btn')[2] });
+                try {
+                    await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
+                    alert('¡Registro actualizado con éxito!');
+                } catch (err) {
+                    alert('¡Actualizado localmente (modo offline)!');
+                }
+
+                finalizarGuardado(mantenerDatos, tecnicoActual);
+                return;
+            }
+
+            let nuevosRegistros = [];
+            const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            codigosArray.forEach((codigo, idx) => {
+                nuevosRegistros.push({
+                    id: Date.now() + idx,
+                    tecnico: tecnicoActual,
+                    codigoCliente: codigo,
+                    poste: document.getElementById('poste').value || 'N/D',
+                    tap: document.getElementById('tap').value || 'N/D',
+                    nap: document.getElementById('nap').value || 'N/D',
+                    gps: document.getElementById('gps').value || 'Sin coordenadas',
+                    fecha: fechaActual
+                });
             });
+
+            registrosLocales = [...nuevosRegistros, ...registrosLocales];
+            localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
+
+            try {
+                for (let reg of nuevosRegistros) {
+                    const datosFormulario = new URLSearchParams();
+                    datosFormulario.append('data', JSON.stringify(reg));
+                    await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
+                }
+                alert(`¡Se guardaron y sincronizaron ${nuevosRegistros.length} cliente(s) con éxito!`);
+            } catch (err) {
+                console.warn("Error de red:", err);
+                alert(`⚠️ Se guardaron ${nuevosRegistros.length} cliente(s) localmente (Se sincronizarán al conectar).`);
+            }
+
+            finalizarGuardado(mantenerDatos, tecnicoActual);
         });
+
+        function finalizarGuardado(mantenerDatos, tecnicoActual) {
+            document.getElementById('codigoCliente').value = '';
+            document.getElementById('editIndex').value = "";
+            
+            if (!mantenerDatos) {
+                document.getElementById('poste').value = '';
+                document.getElementById('tap').value = '';
+                document.getElementById('nap').value = '';
+                document.getElementById('gps').value = '';
+            }
+
+            document.getElementById('tecnico').value = tecnicoActual;
+            const btnGuardar = document.getElementById('btnGuardar');
+            btnGuardar.textContent = "Guardar Registros";
+            btnGuardar.disabled = false;
+            
+            cargarRegistrosDesdeNube();
+            cambiarTab('lista', { currentTarget: document.querySelectorAll('.tab-btn')[3] });
+        }
 
         function cargarRegistrosDesdeNube() {
             const historyList = document.getElementById('historyList');
@@ -623,9 +723,7 @@
 
             fetch(urlConAntiCache)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor');
-                    }
+                    if (!response.ok) throw new Error('Error en el servidor');
                     return response.json();
                 })
                 .then(registros => {
@@ -641,10 +739,6 @@
                         html += renderizarItem(reg, index);
                     });
                     historyList.innerHTML = html;
-                    
-                    if (document.getElementById('inputBuscar').value.trim() !== '') {
-                        filtrarRegistros();
-                    }
                 })
                 .catch(err => {
                     console.error("Error al obtener datos de la nube:", err);
@@ -688,6 +782,182 @@
                     </div>
                 </div>
             `;
+        }
+
+        function verificarPosteEnBase() {
+            const query = document.getElementById('inputVerificarPoste').value.trim().toLowerCase();
+            const contenedor = document.getElementById('resultadoVerificacion');
+            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+
+            if (!query) {
+                contenedor.innerHTML = '<div class="no-records">Escribe el número del poste para consultar...</div>';
+                return;
+            }
+
+            if (registros.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales. Ve a la pestaña "Lista" para sincronizar la base de datos.</div>';
+                return;
+            }
+
+            const encontrados = registros.filter(reg => {
+                const posteReg = (reg.poste || "").toString().toLowerCase();
+                return posteReg.includes(query);
+            });
+
+            if (encontrados.length === 0) {
+                contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ El poste "<strong>${query}</strong>" NO está registrado en la base de datos. ¡Poste libre o nuevo!</div>`;
+                return;
+            }
+
+            const primerMatch = encontrados[0];
+            const totalClientes = encontrados.length;
+            const listaClientes = encontrados.map(r => `• ${r.codigoCliente}`).join('<br>');
+
+            let botonMapa = '';
+            if (primerMatch.gps && primerMatch.gps !== 'Sin coordenadas' && primerMatch.gps.includes(',')) {
+                const coords = primerMatch.gps.replace(/\s+/g, '');
+                botonMapa = `<a href="https://www.google.com/maps/search/?api=1&query=${coords}" target="_blank" class="btn-mapa">📍 Ver Ubicación GPS del Poste</a>`;
+            }
+
+            contenedor.innerHTML = `
+                <div class="history-item" style="border-color: var(--success);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span class="badge-poste">POSTE REGISTRADO</span>
+                        <small style="color: var(--text-muted);">${primerMatch.fecha}</small>
+                    </div>
+                    <strong style="font-size: 1.1rem; color: var(--success);">Poste: ${primerMatch.poste}</strong>
+                    <p style="margin-top: 6px;"><strong>TAP:</strong> ${primerMatch.tap} &nbsp;|&nbsp; <strong>NAP:</strong> ${primerMatch.nap}</p>
+                    <p style="margin-top: 6px;"><strong>GPS:</strong> ${primerMatch.gps}</p>
+                    ${botonMapa}
+                    <div style="margin-top: 10px; background: #162032; padding: 10px; border-radius: 6px;">
+                        <strong style="color: var(--accent); font-size: 0.85rem;">Clientes asociados (${totalClientes}):</strong>
+                        <p style="margin-top: 4px; font-size: 0.9rem; color: var(--text-main);">${listaClientes}</p>
+                    </div>
+                    <p style="margin-top: 8px;"><small>Registrado por: ${primerMatch.tecnico}</small></p>
+                </div>
+            `;
+        }
+
+        // FÓRMULA DE DISTANCIA HAVERSINE (EN METROS)
+        function calcularDistanciaMetros(lat1, lon1, lat2, lon2) {
+            const R = 6371000; // Radio de la tierra en metros
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return Math.round(R * c);
+        }
+
+        function verificarPorGPSCercano() {
+            const contenedor = document.getElementById('resultadoVerificacion');
+            contenedor.innerHTML = '<div class="loading-text">Obteniendo coordenadas actuales...</div>';
+
+            if (!navigator.geolocation) {
+                alert('La geolocalización no está activada o no es compatible.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const latActual = position.coords.latitude;
+                    const lonActual = position.coords.longitude;
+
+                    let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+
+                    if (registros.length === 0) {
+                        contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales cargados para comparar.</div>';
+                        return;
+                    }
+
+                    // Buscar postes guardados con coordenadas válidas
+                    let coincidenciaCercana = null;
+                    let menorDistancia = 50; // Umbral máximo de 50 metros para considerar que está en el mismo poste
+
+                    // Agrupar registros por clave única de GPS o poste
+                    let mapaPostes = {};
+
+                    registros.forEach(reg => {
+                        if (reg.gps && reg.gps.includes(',')) {
+                            const partes = reg.gps.split(',');
+                            const lat = parseFloat(partes[0].trim());
+                            const lon = parseFloat(partes[1].trim());
+
+                            if (!isNaN(lat) && !isNaN(lon)) {
+                                const dist = calcularDistanciaMetros(latActual, lonActual, lat, lon);
+                                const clave = `${lat.toFixed(5)},${lon.toFixed(5)}`;
+
+                                if (!mapaPostes[clave] || dist < mapaPostes[clave].distancia) {
+                                    mapaPostes[clave] = {
+                                        distancia: dist,
+                                        poste: reg.poste,
+                                        tap: reg.tap,
+                                        nap: reg.nap,
+                                        gps: reg.gps,
+                                        fecha: reg.fecha,
+                                        tecnico: reg.tecnico,
+                                        clientes: []
+                                    };
+                                }
+                            }
+                        }
+                    });
+
+                    // Llenar clientes agrupados por la clave
+                    registros.forEach(reg => {
+                        if (reg.gps && reg.gps.includes(',')) {
+                            const partes = reg.gps.split(',');
+                            const lat = parseFloat(partes[0].trim());
+                            const lon = parseFloat(partes[1].trim());
+                            const clave = `${lat.toFixed(5)},${lon.toFixed(5)}`;
+                            if (mapaPostes[clave]) {
+                                mapaPostes[clave].clientes.push(reg.codigoCliente);
+                            }
+                        }
+                    });
+
+                    // Buscar el punto más cercano dentro del rango de 50m
+                    let posteCercano = null;
+                    for (let clave in mapaPostes) {
+                        if (mapaPostes[clave].distancia <= menorDistancia) {
+                            menorDistancia = mapaPostes[clave].distancia;
+                            posteCercano = mapaPostes[clave];
+                        }
+                    }
+
+                    if (!posteCercano) {
+                        contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ No se encontró ningún poste registrado dentro de 50 metros a la redonda de tu posición actual.</div>`;
+                        return;
+                    }
+
+                    const listaClientes = posteCercano.clientes.map(c => `• ${c}`).join('<br>');
+                    const coords = posteCercano.gps.replace(/\s+/g, '');
+
+                    contenedor.innerHTML = `
+                        <div class="history-item" style="border-color: #10b981;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span class="badge-distancia">📍 A ${posteCercano.distancia} METROS DE TI</span>
+                                <small style="color: var(--text-muted);">${posteCercano.fecha}</small>
+                            </div>
+                            <strong style="font-size: 1.1rem; color: var(--success);">Poste: ${posteCercano.poste}</strong>
+                            <p style="margin-top: 6px;"><strong>TAP:</strong> ${posteCercano.tap} &nbsp;|&nbsp; <strong>NAP:</strong> ${posteCercano.nap}</p>
+                            <p style="margin-top: 6px;"><strong>GPS del Poste:</strong> ${posteCercano.gps}</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=${coords}" target="_blank" class="btn-mapa">📍 Ver Ubicación en el Mapa</a>
+                            <div style="margin-top: 10px; background: #162032; padding: 10px; border-radius: 6px;">
+                                <strong style="color: var(--accent); font-size: 0.85rem;">Clientes en este punto (${posteCercano.clientes.length}):</strong>
+                                <p style="margin-top: 4px; font-size: 0.9rem; color: var(--text-main);">${listaClientes}</p>
+                            </div>
+                            <p style="margin-top: 8px;"><small>Registrado por: ${posteCercano.tecnico}</small></p>
+                        </div>
+                    `;
+                },
+                (err) => {
+                    alert('No se pudo obtener el GPS actual para la verificación por proximidad.');
+                    contenedor.innerHTML = '<div class="no-records">Error de señal GPS. Reintenta al aire libre.</div>';
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
         }
 
         function editarRegistroLocal(index) {

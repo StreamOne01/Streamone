@@ -323,24 +323,6 @@
             width: 100%;
         }
 
-        .item-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 6px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: #1e293b;
-            color: var(--text-main);
-            font-size: 0.8rem;
-            cursor: pointer;
-            text-align: center;
-        }
-
         .no-records {
             text-align: center;
             color: var(--text-muted);
@@ -473,16 +455,35 @@
                 </div>
             </div>
 
-            <!-- VERIFICAR POSTE -->
+            <!-- VERIFICAR (Poste o GPS en la misma pestaña) -->
             <div id="tab-verificar" class="tab-content">
                 <div class="card">
                     <div class="form-group">
+                        <label for="tipoVerificacion">Método de Verificación</label>
+                        <select id="tipoVerificacion" onchange="cambiarMetodoVerificacion()">
+                            <option value="poste">Por Número de Poste</option>
+                            <option value="gps">Por Coordenadas GPS</option>
+                        </select>
+                    </div>
+
+                    <!-- Input para Poste -->
+                    <div id="seccionVerificarPoste" class="form-group" style="margin-bottom: 0;">
                         <label for="inputVerificarPoste">Número de Poste a Consultar</label>
-                        <input type="text" id="inputVerificarPoste" placeholder="Ej. P-4052..." oninput="verificarPosteEnBase()">
+                        <input type="text" id="inputVerificarPoste" placeholder="Ej. P-4052..." oninput="ejecutarVerificacion()">
+                    </div>
+
+                    <!-- Input para GPS -->
+                    <div id="seccionVerificarGps" class="form-group" style="display: none; margin-bottom: 0;">
+                        <label for="inputVerificarGps">Coordenadas GPS (Lat, Lon)</label>
+                        <div class="gps-container">
+                            <input type="text" id="inputVerificarGps" placeholder="Ej. 15.758412, -86.791234" oninput="ejecutarVerificacion()">
+                            <button type="button" class="btn-gps" onclick="obtenerGpsActualVerificacion()">Mi GPS</button>
+                        </div>
                     </div>
                 </div>
+
                 <div id="resultadoVerificacion" class="history-list">
-                    <div class="no-records">Escribe el número del poste arriba para verificar si ya está registrado.</div>
+                    <div class="no-records">Selecciona el método de arriba para verificar la infraestructura.</div>
                 </div>
             </div>
 
@@ -509,13 +510,11 @@
     </div>
 
     <script>
-        // URL actual corregida de Google Apps Script
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzN0DM2Lmsjlke-Sv6CdpgPK-diKQveDRYskUjSiN2BsnM69YlcvjN0G8-J93qGuCIv/exec';
 
-        // 🔐 CONTRASEÑAS DE CADA TÉCNICO
         const CLAVES_TECNICOS = {
             "Carlos Muñoz": "94532043",    
-            "Jorge García": "94530917", 
+            "Jorge García": "94530917",  
             "Jose Castro": "93930345",    
             "Jared Acosta": "94559577"    
         };
@@ -582,10 +581,29 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
             document.getElementById('tab-' + tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
 
             if (tabName === 'lista' || tabName === 'buscar') {
                 cargarRegistrosDesdeNube();
+            }
+        }
+
+        function cambiarMetodoVerificacion() {
+            const tipo = document.getElementById('tipoVerificacion').value;
+            const secPoste = document.getElementById('seccionVerificarPoste');
+            const secGps = document.getElementById('seccionVerificarGps');
+            const contenedor = document.getElementById('resultadoVerificacion');
+
+            if (tipo === 'poste') {
+                secPoste.style.display = 'block';
+                secGps.style.display = 'none';
+                contenedor.innerHTML = '<div class="no-records">Escribe el número del poste para consultar...</div>';
+            } else {
+                secPoste.style.display = 'none';
+                secGps.style.display = 'block';
+                contenedor.innerHTML = '<div class="no-records">Introduce coordenadas o usa "Mi GPS" para buscar registros cercanos.</div>';
             }
         }
 
@@ -597,7 +615,6 @@
             }
 
             gpsInput.value = 'Buscando satélites (alta precisión)...';
-
             const opcionesGPS = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
 
             navigator.geolocation.getCurrentPosition(
@@ -614,6 +631,29 @@
                     gpsInput.value = '';
                 },
                 opcionesGPS
+            );
+        }
+
+        function obtenerGpsActualVerificacion() {
+            const gpsInput = document.getElementById('inputVerificarGps');
+            if (!navigator.geolocation) {
+                alert('La geolocalización no es compatible con este navegador.');
+                return;
+            }
+
+            gpsInput.value = 'Buscando...';
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lon = position.coords.longitude.toFixed(6);
+                    gpsInput.value = `${lat}, ${lon}`;
+                    ejecutarVerificacion();
+                },
+                (error) => {
+                    alert('No se pudo obtener la ubicación actual.');
+                    gpsInput.value = '';
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
             );
         }
 
@@ -720,7 +760,7 @@
             btnGuardar.disabled = false;
             
             cargarRegistrosDesdeNube();
-            cambiarTab('lista', { currentTarget: document.querySelectorAll('.tab-btn')[3] });
+            cambiarTab('lista', null);
         }
 
         function cargarRegistrosDesdeNube() {
@@ -749,7 +789,7 @@
                     historyList.innerHTML = html;
                 })
                 .catch(err => {
-                    console.error("Error al obtener datos de la nube:", err);
+                    console.warn("Error al obtener datos de la nube:", err);
                     const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
                     
                     if (registrosLocales.length > 0) {
@@ -787,6 +827,15 @@
                     <p><small style="color: var(--text-muted); margin-top: 6px; display: block;">${reg.fecha}</small></p>
                 </div>
             `;
+        }
+
+        function ejecutarVerificacion() {
+            const tipo = document.getElementById('tipoVerificacion').value;
+            if (tipo === 'poste') {
+                verificarPosteEnBase();
+            } else {
+                verificarGpsEnBase();
+            }
         }
 
         function verificarPosteEnBase() {
@@ -834,6 +883,53 @@
                     ${botonMapa}
                 </div>
             `;
+        }
+
+        function verificarGpsEnBase() {
+            const query = document.getElementById('inputVerificarGps').value.trim();
+            const contenedor = document.getElementById('resultadoVerificacion');
+            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+
+            if (!query || !query.includes(',')) {
+                contenedor.innerHTML = '<div class="no-records">Introduce coordenadas válidas (Lat, Lon) o usa "Mi GPS".</div>';
+                return;
+            }
+
+            if (registros.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales para comparar.</div>';
+                return;
+            }
+
+            const partes = query.split(',');
+            const targetLat = parseFloat(partes[0]);
+            const targetLon = parseFloat(partes[1]);
+
+            if (isNaN(targetLat) || isNaN(targetLon)) {
+                contenedor.innerHTML = '<div class="no-records" style="color: #ef4444;">❌ Formato de coordenadas inválido.</div>';
+                return;
+            }
+
+            const TOLERANCIA = 0.0003; 
+            const encontrados = registros.filter(reg => {
+                if (!reg.gps || !reg.gps.includes(',')) return false;
+                const pGps = reg.gps.split(',');
+                const regLat = parseFloat(pGps[0]);
+                const regLon = parseFloat(pGps[1]);
+                if (isNaN(regLat) || isNaN(regLon)) return false;
+
+                return Math.abs(regLat - targetLat) <= TOLERANCIA && Math.abs(regLon - targetLon) <= TOLERANCIA;
+            });
+
+            if (encontrados.length === 0) {
+                contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ No se encontraron registros cercanos a estas coordenadas. ¡Zona libre!</div>`;
+                return;
+            }
+
+            let html = `<div style="color: var(--success); font-size: 0.8rem; margin-bottom: 8px; text-align: center;">✅ ¡Se encontraron ${encontrados.length} registro(s) en esta ubicación!</div>`;
+            encontrados.forEach((reg, index) => {
+                html += renderizarItem(reg, index);
+            });
+            contenedor.innerHTML = html;
         }
 
         function filtrarRegistros() {

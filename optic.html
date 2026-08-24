@@ -384,12 +384,12 @@
                 <div class="form-group">
                     <label for="selectTecnicoLobby">Técnico Operativo</label>
                    <select id="selectTecnicoLobby">
-    <option value="">Seleccione su nombre...</option>
-    <option value="Carlos Muñoz">Carlos Muñoz</option>
-    <option value="Jorge García">Jorge García</option>
-    <option value="Jared Acosta">Jared Acosta</option>
-    <option value="Jose Castro">Jose Castro</option>
-</select>
+                        <option value="">Seleccione su nombre...</option>
+                        <option value="Carlos Muñoz">Carlos Muñoz</option>
+                        <option value="Jorge García">Jorge García</option>
+                        <option value="Jared Acosta">Jared Acosta</option>
+                        <option value="Jose Castro">Jose Castro</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -509,15 +509,16 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrT8yY2BRjbWlI0DktZZc6T4AZPCnXGW0HX7ytLts2-FOmbslAudnz4GY4fyam-LxNwQ/exec';
+        // URL actual corregida de Google Apps Script
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyBHpenDSTJe8mtjexLmdZcXagwc3x26qHalJoh2e1t-6eSudc3H5iDFMybrJBRsySjaQ/exec';
 
-        // 🔐 CONTRASEÑAS DE CADA TÉCNICO (Puedes cambiarlas aquí cuando gustes)
+        // 🔐 CONTRASEÑAS DE CADA TÉCNICO
         const CLAVES_TECNICOS = {
-    "Carlos Muñoz": "94532043",    
-    "Jorge García": "94530917", // <-- ¡Aquí faltaba la coma!
-    "Jose Castro": "93930345",    
-    "Jared Acosta": "94559577"    
-};
+            "Carlos Muñoz": "94532043",    
+            "Jorge García": "94530917", 
+            "Jose Castro": "93930345",    
+            "Jared Acosta": "94559577"    
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
             verificarSesion();
@@ -784,9 +785,6 @@
                     <p>GPS: ${reg.gps}</p>
                     ${botonMapa}
                     <p><small style="color: var(--text-muted); margin-top: 6px; display: block;">${reg.fecha}</small></p>
-                    <div class="item-actions">
-                        <button class="btn-action" onclick="editarRegistroLocal(${index})">Editar</button>
-                    </div>
                 </div>
             `;
         }
@@ -817,9 +815,6 @@
             }
 
             const primerMatch = encontrados[0];
-            const totalClientes = encontrados.length;
-            const listaClientes = encontrados.map(r => `• ${r.codigoCliente}`).join('<br>');
-
             let botonMapa = '';
             if (primerMatch.gps && primerMatch.gps !== 'Sin coordenadas' && primerMatch.gps.includes(',')) {
                 const coords = primerMatch.gps.replace(/\s+/g, '');
@@ -834,7 +829,8 @@
                     </div>
                     <strong>Poste: ${primerMatch.poste}</strong>
                     <p><strong>TAP:</strong> ${primerMatch.tap} | <strong>NAP:</strong> ${primerMatch.nap}</p>
-                    <p style="margin-top: 6px;"><strong>Clientes conectados (${totalClientes}):</strong><br>${listaClientes}</p>
+                    <p style="margin-top: 6px;"><strong>Clientes asociados:</strong></p>
+                    <p style="color: var(--text-main);">${encontrados.map(r => r.codigoCliente).join(', ')}</p>
                     ${botonMapa}
                 </div>
             `;
@@ -850,37 +846,22 @@
                 return;
             }
 
-            const filtrados = registros.filter(reg => {
-                const codigo = (reg.codigoCliente || "").toString().toLowerCase();
-                const poste = (reg.poste || "").toString().toLowerCase();
+            const encontrados = registros.filter(reg => {
+                const codigo = (reg.codigoCliente || "").toLowerCase();
+                const poste = (reg.poste || "").toLowerCase();
                 return codigo.includes(query) || poste.includes(query);
             });
 
-            if (filtrados.length === 0) {
+            if (encontrados.length === 0) {
                 contenedor.innerHTML = '<div class="no-records">No se encontraron coincidencias.</div>';
                 return;
             }
 
             let html = '';
-            filtrados.forEach((reg, index) => {
+            encontrados.forEach((reg, index) => {
                 html += renderizarItem(reg, index);
             });
             contenedor.innerHTML = html;
-        }
-
-        function editarRegistroLocal(index) {
-            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            const reg = registros[index];
-            if (!reg) return;
-
-            document.getElementById('editIndex').value = index;
-            document.getElementById('codigoCliente').value = reg.codigoCliente;
-            document.getElementById('poste').value = reg.poste;
-            document.getElementById('tap').value = reg.tap;
-            document.getElementById('nap').value = reg.nap;
-            document.getElementById('gps').value = reg.gps;
-
-            cambiarTab('registro', { currentTarget: document.querySelectorAll('.tab-btn')[0] });
         }
     </script>
 </body>

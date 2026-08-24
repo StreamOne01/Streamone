@@ -183,6 +183,7 @@
 
         .form-group {
             margin-bottom: 14px;
+            text-align: left;
         }
 
         label {
@@ -238,19 +239,6 @@
             font-size: 0.85rem;
             font-weight: 500;
             white-space: nowrap;
-        }
-
-        .btn-gps-check {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            width: 100%;
-            margin-bottom: 12px;
         }
 
         .lock-container {
@@ -384,25 +372,30 @@
         <div id="lobbyScreen">
             <header>
                 <div class="app-logo">
-                    <!-- Icono SVG integrado -->
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
             </header>
             <div class="lobby-card">
-                <h2>¿Quién trabajará hoy?</h2>
-                <p>Selecciona tu nombre para ingresar al sistema de registro.</p>
-                <div class="form-group" style="text-align: left;">
+                <h2>Acceso de Técnicos</h2>
+                <p>Selecciona tu nombre e ingresa tu contraseña.</p>
+                
+                <div class="form-group">
                     <label for="selectTecnicoLobby">Técnico Operativo</label>
                     <select id="selectTecnicoLobby">
                         <option value="">Seleccione su nombre...</option>
                         <option value="Carlos Muñoz">Carlos Muñoz</option>
                         <option value="Jorge García">Jorge García</option>
-                        <option value="Jorge García">Jared Acosta</option>
-                        <option value="Jorge García">Jose Castro</option>
+                        <!-- Puedes agregar más técnicos aquí abajo copiando otra línea option -->
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="inputPasswordLobby">Contraseña</label>
+                    <input type="password" id="inputPasswordLobby" placeholder="Introduce tu clave...">
+                </div>
+
                 <button type="button" class="btn-primary" onclick="iniciarSesionTecnico()">Comenzar Turno</button>
             </div>
         </div>
@@ -517,6 +510,12 @@
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxrT8yY2BRjbWlI0DktZZc6T4AZPCnXGW0HX7ytLts2-FOmbslAudnz4GY4fyam-LxNwQ/exec';
 
+        // 🔐 CONTRASEÑAS DE CADA TÉCNICO (Puedes cambiarlas aquí cuando gustes)
+        const CLAVES_TECNICOS = {
+            "Carlos Muñoz": "1234",   
+            "Jorge García": "5678"    
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             verificarSesion();
         });
@@ -533,14 +532,28 @@
 
         function iniciarSesionTecnico() {
             const select = document.getElementById('selectTecnicoLobby');
+            const passwordInput = document.getElementById('inputPasswordLobby');
             const tecnicoSeleccionado = select.value;
+            const passwordIngresada = passwordInput.value.trim();
 
             if (!tecnicoSeleccionado) {
-                alert('Por favor selecciona tu nombre para continuar.');
+                alert('Por favor selecciona tu nombre.');
+                return;
+            }
+
+            if (!passwordIngresada) {
+                alert('Por favor introduce tu contraseña.');
+                return;
+            }
+
+            if (CLAVES_TECNICOS[tecnicoSeleccionado] !== passwordIngresada) {
+                alert('❌ Contraseña incorrecta para ' + tecnicoSeleccionado);
+                passwordInput.value = '';
                 return;
             }
 
             localStorage.setItem('tecnico_activo_fiber', tecnicoSeleccionado);
+            passwordInput.value = '';
             activarApp(tecnicoSeleccionado);
         }
 
@@ -555,6 +568,7 @@
         function cambiarTecnico() {
             localStorage.removeItem('tecnico_activo_fiber');
             document.getElementById('selectTecnicoLobby').value = '';
+            document.getElementById('inputPasswordLobby').value = '';
             document.getElementById('mainApp').style.display = 'none';
             document.getElementById('lobbyScreen').style.display = 'flex';
         }

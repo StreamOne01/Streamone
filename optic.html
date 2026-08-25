@@ -507,7 +507,7 @@
             <div id="tab-buscar" class="tab-content">
                 <div class="card">
                     <div class="form-group">
-                        <label for="inputBuscar">Buscar por Código o Poste</label>
+                        <label for="inputBuscar">Buscar por Código, Poste o Técnico</label>
                         <input type="text" id="inputBuscar" placeholder="Escribe para filtrar..." oninput="filtrarRegistros()">
                     </div>
                 </div>
@@ -526,7 +526,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzN0DM2Lmsjlke-Sv6CdpgPK-diKQveDRYskUjSiN2BsnM69YlcvjN0G8-J93qGuCIv/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwr7OxtJ5J9gPeGjc7r0TZmspvbBhHv-8gB7xJ3HK3R0gEpreyXJ_xGyncxzhTY_1Vv/exec';
 
         const CLAVES_TECNICOS = {
             "Carlos Muñoz": "94532043",    
@@ -581,7 +581,9 @@
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('displayTecnicoActivo').textContent = nombreTecnico;
             document.getElementById('tecnico').value = nombreTecnico;
-            cargarRegistrosDesdeNube();
+            
+            // Descargar registros automáticamente en segundo plano para alimentar el buscador de inmediato
+            sincronizarDatosSilencioso();
         }
 
         function cambiarTecnico() {
@@ -601,7 +603,7 @@
                 event.currentTarget.classList.add('active');
             }
 
-            if (tabName === 'lista' || tabName === 'buscar') {
+            if (tabName === 'lista') {
                 cargarRegistrosDesdeNube();
             }
         }
@@ -673,6 +675,42 @@
             );
         }
 
+        function ejecutarVerificacion() {
+            const tipo = document.getElementById('tipoVerificacion').value;
+            const contenedor = document.getElementById('resultadoVerificacion');
+            const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+
+            if (tipo === 'poste') {
+                const query = document.getElementById('inputVerificarPoste').value.toLowerCase().trim();
+                if (!query) {
+                    contenedor.innerHTML = '<div class="no-records">Escribe el número del poste para consultar...</div>';
+                    return;
+                }
+                const encontrados = registrosLocales.filter(r => r.poste && r.poste.toLowerCase().includes(query));
+                if (encontrados.length === 0) {
+                    contenedor.innerHTML = '<div class="no-records">No hay registros asociados a este poste.</div>';
+                    return;
+                }
+                let html = '';
+                encontrados.forEach(reg => html += renderizarItem(reg));
+                contenedor.innerHTML = html;
+            } else {
+                const query = document.getElementById('inputVerificarGps').value.trim();
+                if (!query.includes(',')) {
+                    contenedor.innerHTML = '<div class="no-records">Introduce coordenadas válidas (Lat, Lon).</div>';
+                    return;
+                }
+                const encontrados = registrosLocales.filter(r => r.gps && r.gps.replace(/\s+/g, '') === query.replace(/\s+/g, ''));
+                if (encontrados.length === 0) {
+                    contenedor.innerHTML = '<div class="no-records">No se encontraron registros con estas coordenadas exactas.</div>';
+                    return;
+                }
+                let html = '';
+                encontrados.forEach(reg => html += renderizarItem(reg));
+                contenedor.innerHTML = html;
+            }
+        }
+
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -695,7 +733,6 @@
             let registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
             const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            // SI ESTAMOS EDITANDO UN REGISTRO ESPECÍFICO
             if (editIdUnico !== "") {
                 btnGuardar.textContent = `Actualizando registro...`;
                 btnGuardar.disabled = true;
@@ -703,7 +740,7 @@
                 const registroModificado = {
                     id: Number(editIdUnico),
                     tecnico: tecnicoActual,
-                    codigoCliente: codigosArray[0], // Toma el primer código ingresado al editar
+                    codigoCliente: codigosArray[0],
                     poste: document.getElementById('poste').value || 'N/D',
                     tap: document.getElementById('tap').value || 'N/D',
                     nap: document.getElementById('nap').value || 'N/D',
@@ -711,7 +748,6 @@
                     fecha: fechaActual
                 };
 
-                // Actualizar local
                 registrosLocales = registrosLocales.map(r => r.id == editIdUnico ? registroModificado : r);
                 localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
 
@@ -728,7 +764,6 @@
                 return;
             }
 
-            // MODO NUEVO LOTE (Hasta 30 o más)
             btnGuardar.textContent = `Guardando ${codigosArray.length} registro(s) en lote...`;
             btnGuardar.disabled = true;
 
@@ -779,8 +814,20 @@
             btnGuardar.textContent = "Guardar Lote de Registros";
             btnGuardar.disabled = false;
             
-            cargarRegistrosDesdeNube();
+            sincronizarDatosSilencioso();
             cambiarTab('lista', null);
+        }
+
+        function sincronizarDatosSilencioso() {
+            const urlConAntiCache = `${WEB_APP_URL}?nocache=${new Date().getTime()}`;
+            fetch(urlConAntiCache)
+                .then(response => response.json())
+                .then(registros => {
+                    if (registros && Array.isArray(registros)) {
+                        localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
+                    }
+                })
+                .catch(err => console.warn("Sincronización en segundo plano fallida:", err));
         }
 
         function cargarRegistrosDesdeNube() {
@@ -832,33 +879,67 @@
                 
                 botonMapa = `
                     <a href="${urlGoogleMaps}" target="_blank" class="btn-mapa">
-                        📍 Abrir ruta en el Mapa
+                        📍 Ver en Google Maps
                     </a>
                 `;
             }
 
-            // Serializamos los datos del registro para enviarlos de forma segura a la función editarRegistro
-            const regJson = encodeURIComponent(JSON.stringify(reg));
-
             return `
                 <div class="history-item">
-                    <strong>Código: ${reg.codigoCliente}</strong>
-                    <p><strong>Técnico:</strong> ${reg.tecnico}</p>
-                    <p>Poste: ${reg.poste} | TAP: ${reg.tap} | NAP: ${reg.nap}</p>
-                    <p>GPS: ${reg.gps}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <strong>Cliente: ${reg.codigoCliente}</strong>
+                        <span class="badge-poste">${reg.poste}</span>
+                    </div>
+                    <p><strong>TAP:</strong> ${reg.tap} | <strong>NAP:</strong> ${reg.nap}</p>
+                    <p><strong>GPS:</strong> ${reg.gps}</p>
+                    <p><strong>Técnico:</strong> ${reg.tecnico} (${reg.fecha})</p>
                     ${botonMapa}
-                    <button type="button" class="btn-editar" onclick="cargarRegistroParaEditar('${regJson}')">
-                        ✏️ Editar Registro
-                    </button>
-                    <p><small style="color: var(--text-muted); margin-top: 6px; display: block;">${reg.fecha}</small></p>
+                    <button class="btn-editar" onclick="editarRegistro(${reg.id})">✏️ Editar Registro</button>
                 </div>
             `;
         }
 
-        function cargarRegistroParaEditar(regJsonEncoded) {
-            const reg = JSON.parse(decodeURIComponent(regJsonEncoded));
+      function filtrarRegistros() {
+    const texto = document.getElementById('inputBuscar').value.toLowerCase().trim();
+    const contenedor = document.getElementById('resultadoBusqueda');
+    const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
 
-            // Rellenar formulario con los datos de ese registro
+    if (texto === '') {
+        contenedor.innerHTML = '<div class="no-records">Usa el buscador para filtrar registros.</div>';
+        return;
+    }
+
+    const filtrados = registrosLocales.filter(reg => {
+        const cliente = reg.codigoCliente ? String(reg.codigoCliente).toLowerCase() : '';
+        const poste = reg.poste ? String(reg.poste).toLowerCase() : '';
+        const tecnico = reg.tecnico ? String(reg.tecnico).toLowerCase() : '';
+        const tap = reg.tap ? String(reg.tap).toLowerCase() : '';
+        const nap = reg.nap ? String(reg.nap).toLowerCase() : '';
+
+        return cliente.includes(texto) || 
+               poste.includes(texto) || 
+               tecnico.includes(texto) || 
+               tap.includes(texto) || 
+               nap.includes(texto);
+    });
+
+    if (filtrados.length === 0) {
+        contenedor.innerHTML = `<div class="no-records">No se encontraron resultados para "${texto}".</div>`;
+        return;
+    }
+
+    let html = '';
+    filtrados.forEach(reg => {
+        html += renderizarItem(reg);
+    });
+    contenedor.innerHTML = html;
+}
+
+        function editarRegistro(id) {
+            const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            const reg = registrosLocales.find(r => r.id == id);
+            if (!reg) return;
+
             document.getElementById('editIdUnico').value = reg.id;
             document.getElementById('codigoCliente').value = reg.codigoCliente;
             document.getElementById('poste').value = reg.poste;
@@ -867,144 +948,10 @@
             document.getElementById('gps').value = reg.gps;
             document.getElementById('tecnico').value = reg.tecnico;
 
-            // Ocultar opción de fijar datos y cambiar texto del botón principal
             document.getElementById('contenedorFijar').style.display = 'none';
             document.getElementById('btnGuardar').textContent = 'Actualizar Registro';
 
-            // Cambiar a la pestaña de registro
-            cambiarTab('registro', { currentTarget: document.querySelector('.tab-btn') });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function ejecutarVerificacion() {
-            const tipo = document.getElementById('tipoVerificacion').value;
-            if (tipo === 'poste') {
-                verificarPosteEnBase();
-            } else {
-                verificarGpsEnBase();
-            }
-        }
-
-        function verificarPosteEnBase() {
-            const query = document.getElementById('inputVerificarPoste').value.trim().toLowerCase();
-            const contenedor = document.getElementById('resultadoVerificacion');
-            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-
-            if (!query) {
-                contenedor.innerHTML = '<div class="no-records">Escribe el número del poste para consultar...</div>';
-                return;
-            }
-
-            if (registros.length === 0) {
-                contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales. Ve a la pestaña "Lista" para sincronizar la base de datos.</div>';
-                return;
-            }
-
-            const encontrados = registros.filter(reg => {
-                const posteReg = (reg.poste || "").toString().toLowerCase();
-                return posteReg.includes(query);
-            });
-
-            if (encontrados.length === 0) {
-                contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ El poste "<strong>${query}</strong>" NO está registrado en la base de datos. ¡Poste libre o nuevo!</div>`;
-                return;
-            }
-
-            const primerMatch = encontrados[0];
-            let botonMapa = '';
-            if (primerMatch.gps && primerMatch.gps !== 'Sin coordenadas' && primerMatch.gps.includes(',')) {
-                const coords = primerMatch.gps.replace(/\s+/g, '');
-                botonMapa = `<a href="https://www.google.com/maps/search/?api=1&query=${coords}" target="_blank" class="btn-mapa">📍 Ver Ubicación GPS del Poste</a>`;
-            }
-
-            contenedor.innerHTML = `
-                <div class="history-item" style="border-color: var(--success);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span class="badge-poste">POSTE REGISTRADO</span>
-                        <small style="color: var(--text-muted);">${primerMatch.fecha}</small>
-                    </div>
-                    <strong>Poste: ${primerMatch.poste}</strong>
-                    <p><strong>TAP:</strong> ${primerMatch.tap} | <strong>NAP:</strong> ${primerMatch.nap}</p>
-                    <p style="margin-top: 6px;"><strong>Clientes asociados:</strong></p>
-                    <p style="color: var(--text-main);">${encontrados.map(r => r.codigoCliente).join(', ')}</p>
-                    ${botonMapa}
-                </div>
-            `;
-        }
-
-        function verificarGpsEnBase() {
-            const query = document.getElementById('inputVerificarGps').value.trim();
-            const contenedor = document.getElementById('resultadoVerificacion');
-            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-
-            if (!query || !query.includes(',')) {
-                contenedor.innerHTML = '<div class="no-records">Introduce coordenadas válidas (Lat, Lon) o usa "Mi GPS".</div>';
-                return;
-            }
-
-            if (registros.length === 0) {
-                contenedor.innerHTML = '<div class="no-records">⚠️ No hay registros locales para comparar.</div>';
-                return;
-            }
-
-            const partes = query.split(',');
-            const targetLat = parseFloat(partes[0]);
-            const targetLon = parseFloat(partes[1]);
-
-            if (isNaN(targetLat) || isNaN(targetLon)) {
-                contenedor.innerHTML = '<div class="no-records" style="color: #ef4444;">❌ Formato de coordenadas inválido.</div>';
-                return;
-            }
-
-            const TOLERANCIA = 0.0003; 
-            const encontrados = registros.filter(reg => {
-                if (!reg.gps || !reg.gps.includes(',')) return false;
-                const pGps = reg.gps.split(',');
-                const regLat = parseFloat(pGps[0]);
-                const regLon = parseFloat(pGps[1]);
-                if (isNaN(regLat) || isNaN(regLon)) return false;
-
-                return Math.abs(regLat - targetLat) <= TOLERANCIA && Math.abs(regLon - targetLon) <= TOLERANCIA;
-            });
-
-            if (encontrados.length === 0) {
-                contenedor.innerHTML = `<div class="no-records" style="color: #ef4444;">❌ No se encontraron registros cercanos a estas coordenadas. ¡Zona libre!</div>`;
-                return;
-            }
-
-            let html = `<div style="color: var(--success); font-size: 0.8rem; margin-bottom: 8px; text-align: center;">✅ ¡Se encontraron ${encontrados.length} registro(s) en esta ubicación!</div>`;
-            encontrados.forEach((reg) => {
-                html += renderizarItem(reg);
-            });
-            contenedor.innerHTML = html;
-        }
-
-        function filtrarRegistros() {
-            const query = document.getElementById('inputBuscar').value.trim().toLowerCase();
-            const contenedor = document.getElementById('resultadoBusqueda');
-            let registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-
-            if (!query) {
-                contenedor.innerHTML = '<div class="no-records">Usa el buscador para filtrar registros.</div>';
-                return;
-            }
-
-            const encontrados = registros.filter(reg => {
-                const codigo = (reg.codigoCliente || "").toLowerCase();
-                const poste = (reg.poste || "").toLowerCase();
-                return codigo.includes(query) || poste.includes(query);
-            });
-
-            if (encontrados.length === 0) {
-                contenedor.innerHTML = '<div class="no-records">No se encontraron coincidencias.</div>';
-                return;
-            }
-
-            let html = '';
-            encontrados.forEach((reg) => {
-                html += renderizarItem(reg);
-            });
-            contenedor.innerHTML = html;
+            cambiarTab('registro', null);
         }
     </script>
 </body>

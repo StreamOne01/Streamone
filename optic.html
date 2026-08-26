@@ -116,7 +116,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px 14px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             font-size: 0.85rem;
         }
 
@@ -283,7 +283,6 @@
             background-color: var(--accent-hover);
         }
 
-        /* Estilo para los Contadores */
         .counter-badge {
             display: flex;
             justify-content: space-between;
@@ -359,11 +358,41 @@
             width: 100%;
         }
 
+        .btn-eliminar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+
         .no-records {
             text-align: center;
             color: var(--text-muted);
             font-size: 0.85rem;
             padding: 20px;
+        }
+
+        .btn-sync {
+            background-color: #1e293b;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -418,7 +447,10 @@
                 <button class="btn-switch" onclick="cambiarTecnico()">Cambiar</button>
             </div>
 
-            <!-- Pestañas actualizadas con la opción de Buscar -->
+            <!-- Botón de Sincronización con la Nube -->
+            <button type="button" class="btn-sync" onclick="sincronizarDatosNubeManual()">🔄 Sincronizar Base de Datos con la Nube</button>
+
+            <!-- Pestañas -->
             <div class="tabs">
                 <button class="tab-btn active" onclick="cambiarTab('registro', event)">Registrar</button>
                 <button class="tab-btn" onclick="cambiarTab('verificar', event)">Verificar</button>
@@ -445,7 +477,7 @@
 
                         <div class="form-group">
                             <label for="poste">Número de Poste</label>
-                            <input type="text" id="poste" placeholder="Ej. P-4052 (O dejar N/D si no tiene)">
+                            <input type="text" id="poste" placeholder="Ej. 3202305 (O dejar N/D si no tiene)">
                         </div>
 
                         <div class="form-group">
@@ -461,12 +493,11 @@
                         <div class="form-group">
                             <label for="gps">Coordenadas GPS</label>
                             <div class="gps-container">
-                                <input type="text" id="gps" placeholder="Lat, Lon" readonly>
+                                <input type="text" id="gps" placeholder="Lat, Lon">
                                 <button type="button" class="btn-gps" onclick="obtenerGPS()">Obtener GPS</button>
                             </div>
                         </div>
 
-                        <!-- CASILLA PARA FIJAR DATOS -->
                         <div class="lock-container" id="contenedorFijar">
                             <input type="checkbox" id="fijarPoste">
                             <label for="fijarPoste">📌 Mantener Poste, TAP, NAP y GPS para el siguiente registro</label>
@@ -477,7 +508,7 @@
                 </div>
             </div>
 
-            <!-- VERIFICAR -->
+            <!-- VERIFICAR (CON FUNCIÓN DE RESUMEN Y DESGLOSE INTEGRADA) -->
             <div id="tab-verificar" class="tab-content">
                 <div class="card">
                     <div class="form-group">
@@ -490,32 +521,31 @@
 
                     <div id="seccionVerificarPoste" class="form-group" style="margin-bottom: 0;">
                         <label for="inputVerificarPoste">Número de Poste a Consultar</label>
-                        <input type="text" id="inputVerificarPoste" placeholder="Ej. P-4052..." oninput="ejecutarVerificacion()">
+                        <input type="text" id="inputVerificarPoste" placeholder="Ej. 3202305..." oninput="ejecutarVerificacion()">
                     </div>
 
                     <div id="seccionVerificarGps" class="form-group" style="display: none; margin-bottom: 0;">
                         <label for="inputVerificarGps">Coordenadas GPS (Lat, Lon)</label>
                         <div class="gps-container">
-                            <input type="text" id="inputVerificarGps" placeholder="Ej. 15.758412, -86.791234" oninput="ejecutarVerificacion()">
+                            <input type="text" id="inputVerificarGps" placeholder="Ej. 15.7584, -86.7912" oninput="ejecutarVerificacion()">
                             <button type="button" class="btn-gps" onclick="obtenerGpsActualVerificacion()">Mi GPS</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="resultadoVerificacion" class="history-list">
-                    <div class="no-records">Selecciona el método de arriba para verificar la infraestructura.</div>
+                    <div class="no-records">Escribe el número del poste para consultar...</div>
                 </div>
             </div>
 
-            <!-- BUSCAR (Restaurado) -->
+            <!-- BUSCAR / FILTRAR -->
             <div id="tab-buscar" class="tab-content">
                 <div class="card">
-                    <div class="form-group">
-                        <label for="inputBuscar">Buscar por Código, Poste o Técnico</label>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="inputBuscar">Buscar por Código, Poste, TAP, NAP o Técnico</label>
                         <input type="text" id="inputBuscar" placeholder="Escribe para filtrar..." oninput="filtrarRegistros()">
                     </div>
                 </div>
-                <!-- Contador para la búsqueda -->
                 <div class="counter-badge">
                     <span>Resultados encontrados:</span>
                     <strong id="contadorBusqueda">0</strong>
@@ -527,20 +557,20 @@
 
             <!-- LISTA GENERAL -->
             <div id="tab-lista" class="tab-content">
-                <!-- Contador General de Registros -->
                 <div class="counter-badge">
                     <span>Total de registros guardados:</span>
                     <strong id="contadorTotalRegistros">0</strong>
                 </div>
                 <div id="historyList" class="history-list">
-                    <!-- Se llenará con la nube -->
+                    <!-- Se llenará dinámicamente con toda la base de datos -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwr7OxtJ5J9gPeGjc7r0TZmspvbBhHv-8gB7xJ3HK3R0gEpreyXJ_xGyncxzhTY_1Vv/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzN0DM2Lmsjlke-Sv6CdpgPK-diKQveDRYskUjSiN2BsnM69YlcvjN0G8-J93qGuCIv/exec';
+        const STORAGE_KEY = 'registros_fiber_dog';
 
         const CLAVES_TECNICOS = {
             "Carlos Muñoz": "94532043",    
@@ -552,6 +582,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             verificarSesion();
         });
+
+        function obtenerRegistrosLocales() {
+            let datos = localStorage.getItem(STORAGE_KEY);
+            if (!datos) {
+                datos = localStorage.getItem('registros_fiber') || localStorage.getItem('registros');
+            }
+            return datos ? JSON.parse(datos) : [];
+        }
+
+        function guardarRegistrosLocales(arrayRegistros) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(arrayRegistros));
+        }
 
         function verificarSesion() {
             const tecnicoGuardado = localStorage.getItem('tecnico_activo_fiber');
@@ -590,13 +632,42 @@
             activarApp(tecnicoSeleccionado);
         }
 
-        function activarApp(nombreTecnico) {
+        async function activarApp(nombreTecnico) {
             document.getElementById('lobbyScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('displayTecnicoActivo').textContent = nombreTecnico;
             document.getElementById('tecnico').value = nombreTecnico;
             
-            sincronizarDatosSilencioso();
+            await sincronizarDatosNube();
+        }
+
+        async function sincronizarDatosNube() {
+            try {
+                const respuesta = await fetch(WEB_APP_URL);
+                const resultado = await respuesta.json();
+                
+                if (Array.isArray(resultado) && resultado.length > 0) {
+                    guardarRegistrosLocales(resultado);
+                    console.log("✅ Base de datos sincronizada:", resultado.length, "registros cargados.");
+                }
+            } catch (err) {
+                console.warn("⚠️ No se pudo conectar a Google Sheets, usando datos locales.", err);
+            }
+            
+            actualizarVistaActual();
+        }
+
+        async function sincronizarDatosNubeManual() {
+            alert("🔄 Sincronizando con Google Sheets...");
+            await sincronizarDatosNube();
+            alert("✅ Sincronización completada desde la nube.");
+        }
+
+        function actualizarVistaActual() {
+            const tabActiva = document.querySelector('.tab-content.active');
+            if (tabActiva && tabActiva.id === 'tab-lista') {
+                cargarRegistrosDesdeNube();
+            }
         }
 
         function cambiarTecnico() {
@@ -675,8 +746,8 @@
             gpsInput.value = 'Buscando...';
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const lat = position.coords.latitude.toFixed(6);
-                    const lon = position.coords.longitude.toFixed(6);
+                    const lat = position.coords.latitude.toFixed(4);
+                    const lon = position.coords.longitude.toFixed(4);
                     gpsInput.value = `${lat}, ${lon}`;
                     ejecutarVerificacion();
                 },
@@ -688,10 +759,16 @@
             );
         }
 
+        // FUNCIÓN DE VERIFICACIÓN AVANZADA Y FLEXIBLE
         function ejecutarVerificacion() {
             const tipo = document.getElementById('tipoVerificacion').value;
             const contenedor = document.getElementById('resultadoVerificacion');
-            const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            const registrosLocales = obtenerRegistrosLocales();
+
+            if (registrosLocales.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">No hay registros guardados. Pulsa el botón "Sincronizar Base de Datos con la Nube".</div>';
+                return;
+            }
 
             if (tipo === 'poste') {
                 const query = document.getElementById('inputVerificarPoste').value.toLowerCase().trim();
@@ -699,61 +776,240 @@
                     contenedor.innerHTML = '<div class="no-records">Escribe el número del poste para consultar...</div>';
                     return;
                 }
-                const encontrados = registrosLocales.filter(r => r.poste && r.poste.toLowerCase().includes(query));
+                
+                const encontrados = registrosLocales.filter(r => {
+                    const valPoste = r.poste || r.Poste || r.numeroPoste || '';
+                    return valPoste.toString().toLowerCase().includes(query);
+                });
+
                 if (encontrados.length === 0) {
-                    contenedor.innerHTML = '<div class="no-records">No hay registros asociados a este poste.</div>';
+                    contenedor.innerHTML = '<div class="no-records">No hay registros asociados a este poste en la base de datos.</div>';
                     return;
                 }
-                let html = '';
-                encontrados.forEach(reg => html += renderizarItem(reg));
+
+                // Resumen agrupado + elementos individuales con opción de editar/eliminar
+                const primerReg = encontrados[0];
+                const totalClientes = encontrados.length;
+                const listaClientesStr = encontrados.map(r => r.codigoCliente || r.codigo || 'N/D').join(', ');
+                
+                const gpsVal = primerReg.gps || primerReg.GPS || '';
+                const linkMapa = gpsVal && gpsVal !== 'Sin coordenadas' 
+                    ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gpsVal)}" target="_blank" class="btn-mapa">📍 Abrir Ubicación en Google Maps</a>` 
+                    : '';
+
+                let html = `
+                    <div class="history-item" style="border: 2px solid var(--accent); margin-bottom: 16px;">
+                        <strong>📌 Resumen de Infraestructura</strong>
+                        <p><strong>Poste:</strong> ${primerReg.poste || primerReg.Poste || 'N/D'}</p>
+                        <p><strong>TAP:</strong> ${primerReg.tap || 'N/D'} | <strong>NAP:</strong> ${primerReg.nap || 'N/D'}</p>
+                        <p><strong>Total Clientes en este poste:</strong> <span style="color: var(--accent); font-weight: bold;">${totalClientes}</span></p>
+                        <p><strong>Códigos:</strong> ${listaClientesStr}</p>
+                        <p><strong>GPS:</strong> ${gpsVal}</p>
+                        ${linkMapa}
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Desglose de registros individuales:</p>
+                `;
+
+                encontrados.forEach((reg, idxReal) => {
+                    let indiceOriginal = registrosLocales.findIndex(r => r === reg);
+                    html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : idxReal);
+                });
                 contenedor.innerHTML = html;
+
             } else {
-                const query = document.getElementById('inputVerificarGps').value.trim();
-                if (!query.includes(',')) {
+                const queryInput = document.getElementById('inputVerificarGps').value.trim();
+                if (!queryInput.includes(',')) {
                     contenedor.innerHTML = '<div class="no-records">Introduce coordenadas válidas (Lat, Lon).</div>';
                     return;
                 }
-                const encontrados = registrosLocales.filter(r => r.gps && r.gps.replace(/\s+/g, '') === query.replace(/\s+/g, ''));
+
+                const limpiaQuery = queryInput.replace(/\s+/g, '');
+                const encontrados = registrosLocales.filter(r => {
+                    const gpsVal = r.gps || r.GPS || '';
+                    if (!gpsVal) return false;
+                    const limpiaRegGps = gpsVal.replace(/\s+/g, '');
+                    return limpiaRegGps.includes(limpiaQuery) || limpiaQuery.includes(limpiaRegGps);
+                });
+
                 if (encontrados.length === 0) {
-                    contenedor.innerHTML = '<div class="no-records">No se encontraron registros con estas coordenadas exactas.</div>';
+                    contenedor.innerHTML = '<div class="no-records">No se encontraron registros cercanos a estas coordenadas en la base de datos.</div>';
                     return;
                 }
+                
                 let html = '';
-                encontrados.forEach(reg => html += renderizarItem(reg));
+                encontrados.forEach((reg, idxReal) => {
+                    let indiceOriginal = registrosLocales.findIndex(r => r === reg);
+                    html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : idxReal);
+                });
                 contenedor.innerHTML = html;
             }
         }
 
+        // RENDERIZAR ITEM CON BOTONES DE MAPA, EDITAR Y ELIMINAR
+        function renderizarItem(reg, indexReal = null) {
+            const gpsVal = reg.gps || reg.GPS || '';
+            const linkMapa = gpsVal && gpsVal !== 'Sin coordenadas' 
+                ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gpsVal)}" target="_blank" class="btn-mapa">📍 Abrir en Google Maps</a>` 
+                : '';
+
+            const idBusqueda = reg.id !== undefined ? reg.id : indexReal;
+
+            return `
+                <div class="history-item">
+                    <strong>Cliente: ${reg.codigoCliente || reg.codigo || 'N/D'}</strong>
+                    <p><strong>Poste:</strong> ${reg.poste || reg.Poste || 'N/D'} | <strong>TAP:</strong> ${reg.tap || 'N/D'} | <strong>NAP:</strong> ${reg.nap || 'N/D'}</p>
+                    <p><strong>GPS:</strong> ${gpsVal}</p>
+                    <p><strong>Técnico:</strong> ${reg.tecnico || 'N/D'} (${reg.fecha || ''})</p>
+                    ${linkMapa}
+                    <button type="button" class="btn-editar" onclick="editarRegistro('${idBusqueda}')">✏️ Editar</button>
+                    <button type="button" class="btn-eliminar" onclick="eliminarRegistro('${idBusqueda}')">🗑️ Eliminar</button>
+                </div>
+            `;
+        }
+
+        function cargarRegistrosDesdeNube() {
+            const registros = obtenerRegistrosLocales();
+            const contenedor = document.getElementById('historyList');
+            document.getElementById('contadorTotalRegistros').textContent = registros.length;
+
+            if (registros.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">No hay registros en la base de datos.</div>';
+                return;
+            }
+
+            let html = '';
+            registros.slice().reverse().forEach((reg, idxInvertido) => {
+                const indiceReal = registros.length - 1 - idxInvertido;
+                html += renderizarItem(reg, indiceReal);
+            });
+            contenedor.innerHTML = html;
+        }
+
+        function filtrarRegistros() {
+            const query = document.getElementById('inputBuscar').value.toLowerCase().trim();
+            const registros = obtenerRegistrosLocales();
+            const contenedor = document.getElementById('resultadoBusqueda');
+
+            if (!query) {
+                document.getElementById('contadorBusqueda').textContent = '0';
+                contenedor.innerHTML = '<div class="no-records">Usa el buscador para filtrar registros.</div>';
+                return;
+            }
+
+            const encontrados = [];
+            registros.forEach((r, indiceReal) => {
+                const c = (r.codigoCliente || r.codigo || '').toLowerCase();
+                const p = (r.poste || r.Poste || '').toLowerCase();
+                const t = (r.tap || '').toLowerCase();
+                const n = (r.nap || '').toLowerCase();
+                const tec = (r.tecnico || '').toLowerCase();
+                if (c.includes(query) || p.includes(query) || t.includes(query) || n.includes(query) || tec.includes(query)) {
+                    encontrados.push({ reg: r, index: indiceReal });
+                }
+            });
+
+            document.getElementById('contadorBusqueda').textContent = encontrados.length;
+
+            if (encontrados.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">No se encontraron coincidencias.</div>';
+                return;
+            }
+
+            let html = '';
+            encontrados.slice().reverse().forEach(item => {
+                html += renderizarItem(item.reg, item.index);
+            });
+            contenedor.innerHTML = html;
+        }
+
+        // EDITAR REGISTRO
+        function editarRegistro(idOrIndex) {
+            let registros = obtenerRegistrosLocales();
+            let reg = registros.find(r => r.id == idOrIndex);
+            let index = registros.findIndex(r => r.id == idOrIndex);
+
+            if (!reg && !isNaN(idOrIndex)) {
+                index = idOrIndex;
+                reg = registros[index];
+            }
+
+            if (!reg) {
+                alert('No se encontró el registro.');
+                return;
+            }
+
+            // Cambiar a pestaña de registro
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-registro').classList.add('active');
+            document.querySelector('.tabs button').classList.add('active');
+
+            // Cargar datos en el formulario
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editIdUnico').value = reg.id || '';
+            document.getElementById('codigoCliente').value = reg.codigoCliente || reg.codigo || '';
+            document.getElementById('poste').value = reg.poste || reg.Poste || '';
+            document.getElementById('tap').value = reg.tap || '';
+            document.getElementById('nap').value = reg.nap || '';
+            document.getElementById('gps').value = reg.gps || reg.GPS || '';
+            
+            document.getElementById('btnGuardar').textContent = 'Actualizar Registro';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ELIMINAR REGISTRO
+        async function eliminarRegistro(idOrIndex) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) return;
+
+            let registros = obtenerRegistrosLocales();
+            let index = registros.findIndex(r => r.id == idOrIndex);
+            if (index === -1 && !isNaN(idOrIndex)) {
+                index = idOrIndex;
+            }
+
+            if (index !== -1) {
+                registros.splice(index, 1);
+                guardarRegistrosLocales(registros);
+                
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(registros)
+                    });
+                } catch (err) {
+                    console.warn("Actualizado localmente, pendiente sincronizar con nube.");
+                }
+
+                alert('🗑️ Registro eliminado correctamente.');
+                cargarRegistrosDesdeNube();
+                filtrarRegistros();
+            }
+        }
+
+        // GUARDAR / ACTUALIZAR FORMULARIO
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const editIndex = document.getElementById('editIndex').value;
             const editIdUnico = document.getElementById('editIdUnico').value;
             const tecnicoActual = localStorage.getItem('tecnico_activo_fiber') || 'Carlos Muñoz';
             const mantenerDatos = document.getElementById('fijarPoste').checked;
             
-            const rawInput = document.getElementById('codigoCliente').value;
-            const codigosArray = rawInput
-                .split(/[\n,]+/)
-                .map(c => c.trim())
-                .filter(c => c.length > 0);
-
-            if (codigosArray.length === 0) {
-                alert('Por favor ingresa al menos un código de cliente.');
-                return;
-            }
-
-            const btnGuardar = document.getElementById('btnGuardar');
-            let registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
+            let registrosLocales = obtenerRegistrosLocales();
             const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            if (editIdUnico !== "") {
-                btnGuardar.textContent = `Actualizando registro...`;
-                btnGuardar.disabled = true;
+            const btnGuardar = document.getElementById('btnGuardar');
+            btnGuardar.textContent = `Guardando...`;
+            btnGuardar.disabled = true;
 
-                const registroModificado = {
-                    id: Number(editIdUnico),
+            if (editIndex !== '' && !isNaN(editIndex)) {
+                // Modo Edición
+                registrosLocales[editIndex] = {
+                    id: editIdUnico || (Date.now() + Math.random()),
                     tecnico: tecnicoActual,
-                    codigoCliente: codigosArray[0],
+                    codigoCliente: document.getElementById('codigoCliente').value.trim(),
                     poste: document.getElementById('poste').value || 'N/D',
                     tap: document.getElementById('tap').value || 'N/D',
                     nap: document.getElementById('nap').value || 'N/D',
@@ -761,222 +1017,66 @@
                     fecha: fechaActual
                 };
 
-                registrosLocales = registrosLocales.map(r => r.id == editIdUnico ? registroModificado : r);
-                localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
+                document.getElementById('editIndex').value = '';
+                document.getElementById('editIdUnico').value = '';
+                btnGuardar.textContent = 'Guardar Lote de Registros';
+            } else {
+                // Modo Nuevo Lote
+                const rawInput = document.getElementById('codigoCliente').value;
+                const codigosArray = rawInput
+                    .split(/[\n,]+/)
+                    .map(c => c.trim())
+                    .filter(c => c.length > 0);
 
-                try {
-                    const datosFormulario = new URLSearchParams();
-                    datosFormulario.append('data', JSON.stringify(registroModificado));
-                    await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
-                    alert('¡Registro actualizado con éxito en la nube!');
-                } catch (err) {
-                    alert('⚠️ Actualizado localmente (se sincronizará al conectar).');
+                if (codigosArray.length === 0) {
+                    alert('Por favor ingresa al menos un código de cliente.');
+                    btnGuardar.textContent = 'Guardar Lote de Registros';
+                    btnGuardar.disabled = false;
+                    return;
                 }
 
-                finalizarGuardado(false, tecnicoActual);
-                return;
+                for (let codigo of codigosArray) {
+                    const nuevoRegistro = {
+                        id: Date.now() + Math.random(),
+                        tecnico: tecnicoActual,
+                        codigoCliente: codigo,
+                        poste: document.getElementById('poste').value || 'N/D',
+                        tap: document.getElementById('tap').value || 'N/D',
+                        nap: document.getElementById('nap').value || 'N/D',
+                        gps: document.getElementById('gps').value || 'Sin coordenadas',
+                        fecha: fechaActual
+                    };
+                    registrosLocales.push(nuevoRegistro);
+                }
+                btnGuardar.textContent = 'Guardar Lote de Registros';
             }
 
-            btnGuardar.textContent = `Guardando ${codigosArray.length} registro(s) en lote...`;
-            btnGuardar.disabled = true;
-
-            let nuevosRegistros = [];
-            codigosArray.forEach((codigo, idx) => {
-                nuevosRegistros.push({
-                    id: Date.now() + idx,
-                    tecnico: tecnicoActual,
-                    codigoCliente: codigo,
-                    poste: document.getElementById('poste').value || 'N/D',
-                    tap: document.getElementById('tap').value || 'N/D',
-                    nap: document.getElementById('nap').value || 'N/D',
-                    gps: document.getElementById('gps').value || 'Sin coordenadas',
-                    fecha: fechaActual
-                });
-            });
-
-            registrosLocales = [...nuevosRegistros, ...registrosLocales];
-            localStorage.setItem('registros_fiber_dog', JSON.stringify(registrosLocales));
-
-            try {
-                const datosFormulario = new URLSearchParams();
-                datosFormulario.append('data', JSON.stringify(nuevosRegistros));
-                await fetch(WEB_APP_URL, { method: 'POST', body: datosFormulario });
-                alert(`¡Se guardaron y sincronizarán ${nuevosRegistros.length} cliente(s) con éxito en la nube!`);
-            } catch (err) {
-                console.warn("Error de red:", err);
-                alert(`⚠️ Se guardaron ${nuevosRegistros.length} cliente(s) localmente.`);
-            }
-
-            finalizarGuardado(mantenerDatos, tecnicoActual);
-        });
-
-        function finalizarGuardado(mantenerDatos, tecnicoActual) {
-            document.getElementById('codigoCliente').value = '';
-            document.getElementById('editIdUnico').value = "";
-            document.getElementById('contenedorFijar').style.display = 'flex';
+            guardarRegistrosLocales(registrosLocales);
             
-            if (!mantenerDatos) {
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(registrosLocales)
+                });
+            } catch (err) {
+                console.warn("Guardado local exitoso, pendiente sincronizar con nube.");
+            }
+
+            btnGuardar.disabled = false;
+            document.getElementById('codigoCliente').value = '';
+            
+            if (!mantenerDatos && editIndex === '') {
                 document.getElementById('poste').value = '';
                 document.getElementById('tap').value = '';
                 document.getElementById('nap').value = '';
                 document.getElementById('gps').value = '';
             }
 
-            document.getElementById('tecnico').value = tecnicoActual;
-            const btnGuardar = document.getElementById('btnGuardar');
-            btnGuardar.textContent = "Guardar Lote de Registros";
-            btnGuardar.disabled = false;
-            
-            sincronizarDatosSilencioso();
-            cambiarTab('lista', null);
-        }
-
-        function sincronizarDatosSilencioso() {
-            const urlConAntiCache = `${WEB_APP_URL}?nocache=${new Date().getTime()}`;
-            fetch(urlConAntiCache)
-                .then(response => response.json())
-                .then(registros => {
-                    if (registros && Array.isArray(registros)) {
-                        localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
-                        actualizarContadoresUI();
-                    }
-                })
-                .catch(err => console.warn("Sincronización en segundo plano fallida."));
-        }
-
-        function cargarRegistrosDesdeNube() {
-            const contenedor = document.getElementById('historyList');
-            contenedor.innerHTML = '<div class="no-records">Actualizando registros...</div>';
-
-            const urlConAntiCache = `${WEB_APP_URL}?nocache=${new Date().getTime()}`;
-            fetch(urlConAntiCache)
-                .then(response => response.json())
-                .then(registros => {
-                    if (registros && Array.isArray(registros)) {
-                        localStorage.setItem('registros_fiber_dog', JSON.stringify(registros));
-                        mostrarListaRegistros(registros);
-                    } else {
-                        cargarRegistrosLocales();
-                    }
-                })
-                .catch(err => {
-                    console.warn("Error cargando de la nube, usando local:", err);
-                    cargarRegistrosLocales();
-                });
-        }
-
-        function cargarRegistrosLocales() {
-            const registros = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            mostrarListaRegistros(registros);
-        }
-
-        function mostrarListaRegistros(registros) {
-            const contenedor = document.getElementById('historyList');
-            
-            document.getElementById('contadorTotalRegistros').textContent = registros.length;
-
-            if (registros.length === 0) {
-                contenedor.innerHTML = '<div class="no-records">No hay registros guardados todavía.</div>';
-                return;
-            }
-
-            let html = '';
-            registros.forEach(reg => {
-                html += renderizarItem(reg);
-            });
-            contenedor.innerHTML = html;
-        }
-
-        function renderizarItem(reg) {
-            const coordsValidas = reg.gps && reg.gps.includes(',') && !reg.gps.includes('Sin');
-            const enlaceMapa = coordsValidas ? `<a href="https://www.google.com/maps?q=${reg.gps}" target="_blank" class="btn-mapa">📍 Ver en Google Maps</a>` : '';
-
-            return `
-                <div class="history-item">
-                    <strong>Cliente: ${reg.codigoCliente || 'N/D'}</strong>
-                    <p><strong>Poste:</strong> ${reg.poste || 'N/D'} | <strong>TAP:</strong> ${reg.tap || 'N/D'} | <strong>NAP:</strong> ${reg.nap || 'N/D'}</p>
-                    <p><strong>GPS:</strong> ${reg.gps || 'Sin coordenadas'}</p>
-                    <p><strong>Técnico:</strong> ${reg.tecnico || 'N/D'} (${reg.fecha || 'Sin fecha'})</p>
-                    ${enlaceMapa}
-                    <button type="button" class="btn-editar" onclick="cargarRegistroParaEditar('${reg.id}')">✏️ Editar Registro</button>
-                </div>
-            `;
-        }
-
-        function filtrarRegistros() {
-    const inputEl = document.getElementById('inputBuscar');
-    const contenedor = document.getElementById('resultadoBusqueda');
-    const contadorBusqueda = document.getElementById('contadorBusqueda');
-    
-    if (!inputEl || !contenedor || !contadorBusqueda) return;
-
-    const query = inputEl.value.toLowerCase().trim();
-    const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-
-    if (!query) {
-        contadorBusqueda.textContent = '0';
-        contenedor.innerHTML = '<div class="no-records">Usa el buscador para filtrar registros.</div>';
-        return;
-    }
-
-    const filtrados = registrosLocales.filter(r => {
-        const cliente = String(r.codigoCliente || '').toLowerCase();
-        const poste = String(r.poste || '').toLowerCase();
-        const tecnico = String(r.tecnico || '').toLowerCase();
-        const tap = String(r.tap || '').toLowerCase();
-        const nap = String(r.nap || '').toLowerCase();
-
-        return cliente.includes(query) || 
-               poste.includes(query) || 
-               tecnico.includes(query) || 
-               tap.includes(query) || 
-               nap.includes(query);
-    });
-
-    contadorBusqueda.textContent = filtrados.length;
-
-    if (filtrados.length === 0) {
-        contenedor.innerHTML = '<div class="no-records">No se encontraron coincidencias.</div>';
-        return;
-    }
-
-    let html = '';
-    filtrados.forEach(reg => {
-        html += renderizarItem(reg);
-    });
-    contenedor.innerHTML = html;
-}
-
-        function actualizarContadoresUI() {
-            const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            const contadorTotal = document.getElementById('contadorTotalRegistros');
-            if (contadorTotal) {
-                contadorTotal.textContent = registrosLocales.length;
-            }
-        }
-
-        function cargarRegistroParaEditar(id) {
-            const registrosLocales = JSON.parse(localStorage.getItem('registros_fiber_dog')) || [];
-            const reg = registrosLocales.find(r => r.id == id);
-
-            if (!reg) {
-                alert('No se encontró el registro.');
-                return;
-            }
-
-            document.getElementById('editIdUnico').value = reg.id;
-            document.getElementById('codigoCliente').value = reg.codigoCliente || '';
-            document.getElementById('poste').value = reg.poste || '';
-            document.getElementById('tap').value = reg.tap || '';
-            document.getElementById('nap').value = reg.nap || '';
-            document.getElementById('gps').value = reg.gps || '';
-            document.getElementById('tecnico').value = reg.tecnico || '';
-
-            document.getElementById('contenedorFijar').style.display = 'none';
-            document.getElementById('btnGuardar').textContent = 'Actualizar Registro Individual';
-
-            cambiarTab('registro', null);
-        }
+            alert('✅ Operación realizada con éxito.');
+            sincronizarDatosNube();
+        });
     </script>
 </body>
 </html>

@@ -461,7 +461,7 @@
             <!-- REGISTRO -->
             <div id="tab-registro" class="tab-content active">
                 <div class="card">
-                    <form id="registroForm">
+                    <form id="registroForm" onsubmit="guardarLoteRegistros(event)">
                         <input type="hidden" id="editIndex" value="">
                         <input type="hidden" id="editIdUnico" value="">
                         
@@ -508,7 +508,7 @@
                 </div>
             </div>
 
-            <!-- VERIFICAR (CON FUNCIÓN DE RESUMEN Y DESGLOSE INTEGRADA) -->
+            <!-- VERIFICAR -->
             <div id="tab-verificar" class="tab-content">
                 <div class="card">
                     <div class="form-group">
@@ -759,7 +759,31 @@
             );
         }
 
-        // FUNCIÓN DE VERIFICACIÓN AVANZADA Y FLEXIBLE
+        function renderizarItem(reg, indiceOriginal) {
+            const cliente = reg.codigoCliente || reg.codigo || reg['Codigo de Cliente'] || reg['codigo_cliente'] || 'N/D';
+            const poste = reg.poste || reg.Poste || reg['Numero de Poste'] || reg['poste'] || 'N/D';
+            const tap = reg.tap || reg.TAP || reg['TAP'] || 'N/D';
+            const nap = reg.nap || reg.NAP || reg['NAP'] || 'N/D';
+            const gps = reg.gps || reg.GPS || reg['Coordenadas GPS'] || 'N/D';
+            const tecnico = reg.tecnico || reg.Tecnico || reg['Tecnico Responsable'] || 'N/D';
+
+            const linkMapa = gps && gps !== 'Sin coordenadas' && gps !== 'N/D'
+                ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gps)}" target="_blank" class="btn-mapa">📍 Ver en Google Maps</a>`
+                : '';
+
+            return `
+                <div class="history-item">
+                    <strong>Cliente: ${cliente}</strong>
+                    <p><strong>Poste:</strong> ${poste} | <strong>TAP:</strong> ${tap} | <strong>NAP:</strong> ${nap}</p>
+                    <p><strong>GPS:</strong> ${gps}</p>
+                    <p><strong>Técnico:</strong> ${tecnico}</p>
+                    ${linkMapa}
+                    <button type="button" class="btn-editar" onclick="editarRegistro(${indiceOriginal})">✏️ Editar</button>
+                    <button type="button" class="btn-eliminar" onclick="eliminarRegistro(${indiceOriginal})">🗑️ Eliminar</button>
+                </div>
+            `;
+        }
+
         function ejecutarVerificacion() {
             const tipo = document.getElementById('tipoVerificacion').value;
             const contenedor = document.getElementById('resultadoVerificacion');
@@ -778,7 +802,7 @@
                 }
                 
                 const encontrados = registrosLocales.filter(r => {
-                    const valPoste = r.poste || r.Poste || r.numeroPoste || '';
+                    const valPoste = r.poste || r.Poste || r['Numero de Poste'] || r['poste'] || '';
                     return valPoste.toString().toLowerCase().includes(query);
                 });
 
@@ -787,12 +811,11 @@
                     return;
                 }
 
-                // Resumen agrupado + elementos individuales con opción de editar/eliminar
                 const primerReg = encontrados[0];
                 const totalClientes = encontrados.length;
-                const listaClientesStr = encontrados.map(r => r.codigoCliente || r.codigo || 'N/D').join(', ');
+                const listaClientesStr = encontrados.map(r => r.codigoCliente || r.codigo || r['Codigo de Cliente'] || 'N/D').join(', ');
                 
-                const gpsVal = primerReg.gps || primerReg.GPS || '';
+                const gpsVal = primerReg.gps || primerReg.GPS || primerReg['Coordenadas GPS'] || '';
                 const linkMapa = gpsVal && gpsVal !== 'Sin coordenadas' 
                     ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gpsVal)}" target="_blank" class="btn-mapa">📍 Abrir Ubicación en Google Maps</a>` 
                     : '';
@@ -800,8 +823,8 @@
                 let html = `
                     <div class="history-item" style="border: 2px solid var(--accent); margin-bottom: 16px;">
                         <strong>📌 Resumen de Infraestructura</strong>
-                        <p><strong>Poste:</strong> ${primerReg.poste || primerReg.Poste || 'N/D'}</p>
-                        <p><strong>TAP:</strong> ${primerReg.tap || 'N/D'} | <strong>NAP:</strong> ${primerReg.nap || 'N/D'}</p>
+                        <p><strong>Poste:</strong> ${primerReg.poste || primerReg.Poste || primerReg['Numero de Poste'] || 'N/D'}</p>
+                        <p><strong>TAP:</strong> ${primerReg.tap || primerReg.TAP || 'N/D'} | <strong>NAP:</strong> ${primerReg.nap || primerReg.NAP || 'N/D'}</p>
                         <p><strong>Total Clientes en este poste:</strong> <span style="color: var(--accent); font-weight: bold;">${totalClientes}</span></p>
                         <p><strong>Códigos:</strong> ${listaClientesStr}</p>
                         <p><strong>GPS:</strong> ${gpsVal}</p>
@@ -810,9 +833,9 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Desglose de registros individuales:</p>
                 `;
 
-                encontrados.forEach((reg, idxReal) => {
+                encontrados.forEach((reg) => {
                     let indiceOriginal = registrosLocales.findIndex(r => r === reg);
-                    html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : idxReal);
+                    html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : 0);
                 });
                 contenedor.innerHTML = html;
 
@@ -825,7 +848,7 @@
 
                 const limpiaQuery = queryInput.replace(/\s+/g, '');
                 const encontrados = registrosLocales.filter(r => {
-                    const gpsVal = r.gps || r.GPS || '';
+                    const gpsVal = r.gps || r.GPS || r['Coordenadas GPS'] || '';
                     if (!gpsVal) return false;
                     const limpiaRegGps = gpsVal.replace(/\s+/g, '');
                     return limpiaRegGps.includes(limpiaQuery) || limpiaQuery.includes(limpiaRegGps);
@@ -837,78 +860,37 @@
                 }
                 
                 let html = '';
-                encontrados.forEach((reg, idxReal) => {
+                encontrados.forEach((reg) => {
                     let indiceOriginal = registrosLocales.findIndex(r => r === reg);
-                    html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : idxReal);
+                    html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : 0);
                 });
                 contenedor.innerHTML = html;
             }
         }
 
-        // RENDERIZAR ITEM CON BOTONES DE MAPA, EDITAR Y ELIMINAR
-        function renderizarItem(reg, indexReal = null) {
-            const gpsVal = reg.gps || reg.GPS || '';
-            const linkMapa = gpsVal && gpsVal !== 'Sin coordenadas' 
-                ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gpsVal)}" target="_blank" class="btn-mapa">📍 Abrir en Google Maps</a>` 
-                : '';
-
-            const idBusqueda = reg.id !== undefined ? reg.id : indexReal;
-
-            return `
-                <div class="history-item">
-                    <strong>Cliente: ${reg.codigoCliente || reg.codigo || 'N/D'}</strong>
-                    <p><strong>Poste:</strong> ${reg.poste || reg.Poste || 'N/D'} | <strong>TAP:</strong> ${reg.tap || 'N/D'} | <strong>NAP:</strong> ${reg.nap || 'N/D'}</p>
-                    <p><strong>GPS:</strong> ${gpsVal}</p>
-                    <p><strong>Técnico:</strong> ${reg.tecnico || 'N/D'} (${reg.fecha || ''})</p>
-                    ${linkMapa}
-                    <button type="button" class="btn-editar" onclick="editarRegistro('${idBusqueda}')">✏️ Editar</button>
-                    <button type="button" class="btn-eliminar" onclick="eliminarRegistro('${idBusqueda}')">🗑️ Eliminar</button>
-                </div>
-            `;
-        }
-
-        function cargarRegistrosDesdeNube() {
-            const registros = obtenerRegistrosLocales();
-            const contenedor = document.getElementById('historyList');
-            document.getElementById('contadorTotalRegistros').textContent = registros.length;
-
-            if (registros.length === 0) {
-                contenedor.innerHTML = '<div class="no-records">No hay registros en la base de datos.</div>';
-                return;
-            }
-
-            let html = '';
-            registros.slice().reverse().forEach((reg, idxInvertido) => {
-                const indiceReal = registros.length - 1 - idxInvertido;
-                html += renderizarItem(reg, indiceReal);
-            });
-            contenedor.innerHTML = html;
-        }
-
         function filtrarRegistros() {
             const query = document.getElementById('inputBuscar').value.toLowerCase().trim();
-            const registros = obtenerRegistrosLocales();
             const contenedor = document.getElementById('resultadoBusqueda');
+            const contador = document.getElementById('contadorBusqueda');
+            const registrosLocales = obtenerRegistrosLocales();
 
             if (!query) {
-                document.getElementById('contadorBusqueda').textContent = '0';
                 contenedor.innerHTML = '<div class="no-records">Usa el buscador para filtrar registros.</div>';
+                contador.textContent = '0';
                 return;
             }
 
-            const encontrados = [];
-            registros.forEach((r, indiceReal) => {
-                const c = (r.codigoCliente || r.codigo || '').toLowerCase();
-                const p = (r.poste || r.Poste || '').toLowerCase();
-                const t = (r.tap || '').toLowerCase();
-                const n = (r.nap || '').toLowerCase();
-                const tec = (r.tecnico || '').toLowerCase();
-                if (c.includes(query) || p.includes(query) || t.includes(query) || n.includes(query) || tec.includes(query)) {
-                    encontrados.push({ reg: r, index: indiceReal });
-                }
+            const encontrados = registrosLocales.filter(r => {
+                const cliente = (r.codigoCliente || r.codigo || r['Codigo de Cliente'] || '').toString().toLowerCase();
+                const poste = (r.poste || r.Poste || r['Numero de Poste'] || '').toString().toLowerCase();
+                const tap = (r.tap || r.TAP || '').toString().toLowerCase();
+                const nap = (r.nap || r.NAP || '').toString().toLowerCase();
+                const tecnico = (r.tecnico || r.Tecnico || '').toString().toLowerCase();
+
+                return cliente.includes(query) || poste.includes(query) || tap.includes(query) || nap.includes(query) || tecnico.includes(query);
             });
 
-            document.getElementById('contadorBusqueda').textContent = encontrados.length;
+            contador.textContent = encontrados.length;
 
             if (encontrados.length === 0) {
                 contenedor.innerHTML = '<div class="no-records">No se encontraron coincidencias.</div>';
@@ -916,167 +898,126 @@
             }
 
             let html = '';
-            encontrados.slice().reverse().forEach(item => {
-                html += renderizarItem(item.reg, item.index);
+            encontrados.forEach((reg) => {
+                let indiceOriginal = registrosLocales.findIndex(r => r === reg);
+                html += renderizarItem(reg, indiceOriginal !== -1 ? indiceOriginal : 0);
             });
             contenedor.innerHTML = html;
         }
 
-        // EDITAR REGISTRO
-        function editarRegistro(idOrIndex) {
-            let registros = obtenerRegistrosLocales();
-            let reg = registros.find(r => r.id == idOrIndex);
-            let index = registros.findIndex(r => r.id == idOrIndex);
+        function cargarRegistrosDesdeNube() {
+            const contenedor = document.getElementById('historyList');
+            const contadorTotal = document.getElementById('contadorTotalRegistros');
+            const registrosLocales = obtenerRegistrosLocales();
 
-            if (!reg && !isNaN(idOrIndex)) {
-                index = idOrIndex;
-                reg = registros[index];
-            }
+            contadorTotal.textContent = registrosLocales.length;
 
-            if (!reg) {
-                alert('No se encontró el registro.');
+            if (registrosLocales.length === 0) {
+                contenedor.innerHTML = '<div class="no-records">No hay registros guardados todavía.</div>';
                 return;
             }
 
-            // Cambiar a pestaña de registro
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-registro').classList.add('active');
-            document.querySelector('.tabs button').classList.add('active');
-
-            // Cargar datos en el formulario
-            document.getElementById('editIndex').value = index;
-            document.getElementById('editIdUnico').value = reg.id || '';
-            document.getElementById('codigoCliente').value = reg.codigoCliente || reg.codigo || '';
-            document.getElementById('poste').value = reg.poste || reg.Poste || '';
-            document.getElementById('tap').value = reg.tap || '';
-            document.getElementById('nap').value = reg.nap || '';
-            document.getElementById('gps').value = reg.gps || reg.GPS || '';
-            
-            document.getElementById('btnGuardar').textContent = 'Actualizar Registro';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            let html = '';
+            registrosLocales.slice().reverse().forEach((reg, idxInvertido) => {
+                let indiceReal = registrosLocales.length - 1 - idxInvertido;
+                html += renderizarItem(reg, indiceReal);
+            });
+            contenedor.innerHTML = html;
         }
 
-        // ELIMINAR REGISTRO
-        async function eliminarRegistro(idOrIndex) {
-            if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) return;
-
-            let registros = obtenerRegistrosLocales();
-            let index = registros.findIndex(r => r.id == idOrIndex);
-            if (index === -1 && !isNaN(idOrIndex)) {
-                index = idOrIndex;
-            }
-
-            if (index !== -1) {
-                registros.splice(index, 1);
-                guardarRegistrosLocales(registros);
-                
-                try {
-                    await fetch(WEB_APP_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(registros)
-                    });
-                } catch (err) {
-                    console.warn("Actualizado localmente, pendiente sincronizar con nube.");
-                }
-
-                alert('🗑️ Registro eliminado correctamente.');
-                cargarRegistrosDesdeNube();
-                filtrarRegistros();
-            }
-        }
-
-        // GUARDAR / ACTUALIZAR FORMULARIO
-        document.getElementById('registroForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
+        function guardarLoteRegistros(event) {
+            event.preventDefault();
+            const tecnico = document.getElementById('tecnico').value;
+            const codigoRaw = document.getElementById('codigoCliente').value;
+            const poste = document.getElementById('poste').value.trim() || 'N/D';
+            const tap = document.getElementById('tap').value.trim() || 'N/D';
+            const nap = document.getElementById('nap').value.trim() || 'N/D';
+            const gps = document.getElementById('gps').value.trim() || 'Sin coordenadas';
             const editIndex = document.getElementById('editIndex').value;
-            const editIdUnico = document.getElementById('editIdUnico').value;
-            const tecnicoActual = localStorage.getItem('tecnico_activo_fiber') || 'Carlos Muñoz';
-            const mantenerDatos = document.getElementById('fijarPoste').checked;
-            
+
+            const codigosArray = codigoRaw.split(/[\n,]+/).map(c => c.trim()).filter(c => c.length > 0);
+
+            if (codigosArray.length === 0) {
+                alert('Por favor ingresa al menos un código de cliente.');
+                return;
+            }
+
             let registrosLocales = obtenerRegistrosLocales();
-            const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            const btnGuardar = document.getElementById('btnGuardar');
-            btnGuardar.textContent = `Guardando...`;
-            btnGuardar.disabled = true;
-
-            if (editIndex !== '' && !isNaN(editIndex)) {
-                // Modo Edición
-                registrosLocales[editIndex] = {
-                    id: editIdUnico || (Date.now() + Math.random()),
-                    tecnico: tecnicoActual,
-                    codigoCliente: document.getElementById('codigoCliente').value.trim(),
-                    poste: document.getElementById('poste').value || 'N/D',
-                    tap: document.getElementById('tap').value || 'N/D',
-                    nap: document.getElementById('nap').value || 'N/D',
-                    gps: document.getElementById('gps').value || 'Sin coordenadas',
-                    fecha: fechaActual
+            if (editIndex !== '') {
+                const idx = parseInt(editIndex);
+                registrosLocales[idx] = {
+                    tecnico,
+                    codigoCliente: codigosArray[0],
+                    poste,
+                    tap,
+                    nap,
+                    gps
                 };
-
                 document.getElementById('editIndex').value = '';
-                document.getElementById('editIdUnico').value = '';
-                btnGuardar.textContent = 'Guardar Lote de Registros';
+                document.getElementById('btnGuardar').textContent = 'Guardar Lote de Registros';
             } else {
-                // Modo Nuevo Lote
-                const rawInput = document.getElementById('codigoCliente').value;
-                const codigosArray = rawInput
-                    .split(/[\n,]+/)
-                    .map(c => c.trim())
-                    .filter(c => c.length > 0);
-
-                if (codigosArray.length === 0) {
-                    alert('Por favor ingresa al menos un código de cliente.');
-                    btnGuardar.textContent = 'Guardar Lote de Registros';
-                    btnGuardar.disabled = false;
-                    return;
-                }
-
-                for (let codigo of codigosArray) {
-                    const nuevoRegistro = {
-                        id: Date.now() + Math.random(),
-                        tecnico: tecnicoActual,
+                codigosArray.forEach(codigo => {
+                    registrosLocales.push({
+                        tecnico,
                         codigoCliente: codigo,
-                        poste: document.getElementById('poste').value || 'N/D',
-                        tap: document.getElementById('tap').value || 'N/D',
-                        nap: document.getElementById('nap').value || 'N/D',
-                        gps: document.getElementById('gps').value || 'Sin coordenadas',
-                        fecha: fechaActual
-                    };
-                    registrosLocales.push(nuevoRegistro);
-                }
-                btnGuardar.textContent = 'Guardar Lote de Registros';
+                        poste,
+                        tap,
+                        nap,
+                        gps
+                    });
+                });
             }
 
             guardarRegistrosLocales(registrosLocales);
-            
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(registrosLocales)
-                });
-            } catch (err) {
-                console.warn("Guardado local exitoso, pendiente sincronizar con nube.");
-            }
+            alert('✅ Registros guardados exitosamente.');
 
-            btnGuardar.disabled = false;
+            const fijar = document.getElementById('fijarPoste').checked;
             document.getElementById('codigoCliente').value = '';
-            
-            if (!mantenerDatos && editIndex === '') {
+            if (!fijar) {
                 document.getElementById('poste').value = '';
                 document.getElementById('tap').value = '';
                 document.getElementById('nap').value = '';
                 document.getElementById('gps').value = '';
             }
 
-            alert('✅ Operación realizada con éxito.');
-            sincronizarDatosNube();
-        });
+            actualizarVistaActual();
+        }
+
+        function editarRegistro(index) {
+            const registrosLocales = obtenerRegistrosLocales();
+            const reg = registrosLocales[index];
+            if (!reg) return;
+
+            document.getElementById('editIndex').value = index;
+            document.getElementById('codigoCliente').value = reg.codigoCliente || reg.codigo || reg['Codigo de Cliente'] || '';
+            document.getElementById('poste').value = reg.poste || reg.Poste || reg['Numero de Poste'] || '';
+            document.getElementById('tap').value = reg.tap || reg.TAP || '';
+            document.getElementById('nap').value = reg.nap || reg.NAP || '';
+            document.getElementById('gps').value = reg.gps || reg.GPS || reg['Coordenadas GPS'] || '';
+            document.getElementById('btnGuardar').textContent = 'Actualizar Registro';
+
+            cambiarTab('registro', null);
+        }
+
+        function eliminarRegistro(index) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) return;
+
+            let registrosLocales = obtenerRegistrosLocales();
+            registrosLocales.splice(index, 1);
+            guardarRegistrosLocales(registrosLocales);
+
+            actualizarVistaActual();
+            
+            const tabActiva = document.querySelector('.tab-content.active');
+            if (tabActiva && tabActiva.id === 'tab-buscar') {
+                filtrarRegistros();
+            } else if (tabActiva && tabActiva.id === 'tab-verificar') {
+                ejecutarVerificacion();
+            }
+
+            alert('🗑️ Registro eliminado.');
+        }
     </script>
 </body>
 </html>

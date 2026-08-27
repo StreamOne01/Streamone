@@ -675,7 +675,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwqcvuSuqCx7qSBVB-YJZhloFNAS2BmbRun5ZMYrPFzY1Hq3fqTz4R9895F6SiQ2YI/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCY_td4pKjTWP4TBqElfJzL4B2Jimc9CFl0B5xtQtgwIuQQFmbViP8vcctQrHzYXLX/exec';
         const STORAGE_KEY = 'registros_fiber_dog';
         const USERS_STORAGE_KEY = 'giga_node_claves_tecnicos';
 
@@ -1205,13 +1205,15 @@
 
             if (editIndex !== '') {
                 const idx = parseInt(editIndex);
-                registrosLocales[idx] = { tecnico, codigoCliente: codigosArray[0], poste, tap, nap, gps };
+                const idExistente = registrosLocales[idx].id || (Date.now().toString() + Math.floor(Math.random() * 1000));
+                registrosLocales[idx] = { id: idExistente, tecnico, codigoCliente: codigosArray[0], poste, tap, nap, gps };
                 nuevosRegistros.push(registrosLocales[idx]);
                 document.getElementById('editIndex').value = '';
                 document.getElementById('btnGuardar').textContent = 'Guardar Lote de Registros';
             } else {
                 codigosArray.forEach(codigo => {
-                    const nuevoReg = { tecnico, codigoCliente: codigo, poste, tap, nap, gps };
+                    const idUnico = Date.now().toString() + Math.floor(Math.random() * 1000);
+                    const nuevoReg = { id: idUnico, tecnico, codigoCliente: codigo, poste, tap, nap, gps };
                     registrosLocales.push(nuevoReg);
                     nuevosRegistros.push(nuevoReg);
                 });
@@ -1220,20 +1222,14 @@
             // 1. Guardar localmente en el móvil
             guardarRegistrosLocales(registrosLocales);
 
-            // 2. Enviar a la nube (Google Sheets) vía POST de manera segura para móviles
+            // 2. Enviar a la nube (Google Sheets) vía GET para evitar bloqueos móviles
             try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'data=' + encodeURIComponent(JSON.stringify(nuevosRegistros))
-                });
-                alert('✅ Registros guardados en el dispositivo y enviados a la nube.');
+                const urlEnvio = `${WEB_APP_URL}?action=guardar&data=${encodeURIComponent(JSON.stringify(nuevosRegistros))}`;
+                await fetch(urlEnvio, { method: 'GET' });
+                alert('✅ Registros guardados en el dispositivo y en la nube.');
             } catch (error) {
                 console.error("Error al sincronizar con la nube:", error);
-                alert('⚠️ Guardado localmente, pero falló el envío automático a la nube.');
+                alert('⚠️ Guardado localmente, pero falló el envío a la nube.');
             }
 
             const fijar = document.getElementById('fijarPoste').checked;
@@ -1264,19 +1260,34 @@
             cambiarTab('registro', null);
         }
 
-        function eliminarRegistro(index) {
+        async function eliminarRegistro(index) {
             if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) return;
 
             let registrosLocales = obtenerRegistrosLocales();
+            let regEliminado = registrosLocales[index];
+
+            if (!regEliminado) return;
+
+            // 1. Borrar localmente
             registrosLocales.splice(index, 1);
             guardarRegistrosLocales(registrosLocales);
+
+            // 2. Borrar en la nube de Google Sheets mediante GET utilizando su id único
+            if (regEliminado.id) {
+                try {
+                    const urlEliminar = `${WEB_APP_URL}?action=eliminar&id=${encodeURIComponent(regEliminado.id)}`;
+                    await fetch(urlEliminar, { method: 'GET' });
+                } catch (error) {
+                    console.error("No se pudo eliminar de la nube:", error);
+                }
+            }
 
             actualizarVistaActual();
             const tabActiva = document.querySelector('.tab-content.active');
             if (tabActiva && tabActiva.id === 'tab-buscar') filtrarRegistros();
             else if (tabActiva && tabActiva.id === 'tab-verificar') ejecutarVerificacion();
 
-            alert('🗑️ Registro eliminado.');
+            alert('🗑️ Registro eliminado del dispositivo y de la nube.');
         }
     </script>
 </body>

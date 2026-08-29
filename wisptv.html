@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Telecomunicaciones - CAMU</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: #131b2e;
+            --accent-blue: #0072d2;
+            --text-light: #ffffff;
+            --text-muted: #d0d7de;
+        }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        .card-custom {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+        .form-label {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        .form-control, .form-select {
+            background-color: #1a253f;
+            border: 1px solid #415a77;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+        .form-control::placeholder {
+            color: #8d99ae;
+            opacity: 1;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #1a253f;
+            border-color: #38bdf8;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25);
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+        .nav-pills .nav-link {
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+        .mobile-field-view {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary mb-4" style="background-color: var(--bg-card);">
+        <div class="container-fluid">
+            <a class="navbar-brand text-info fw-bold" href="#">⚡ Telecom ERP - CAMU</a>
+            <div class="d-flex align-items-center">
+                <span id="userBadge" class="badge bg-secondary text-light me-3 p-2">No autenticado</span>
+                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+
+        <!-- 1. SECCIÓN DE LOGIN -->
+        <div id="sectionLogin" class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card card-custom p-4">
+                    <h3 class="text-center mb-4 text-white fw-bold">Iniciar Sesión</h3>
+                    <div class="mb-3">
+                        <label class="form-label">Correo Electrónico:</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="carlos@empresa.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña:</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <button class="btn btn-primary w-100 py-2 fw-bold" onclick="ejecutarLogin()">Entrar al Sistema</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. VISTA EXCLUSIVA PARA TÉCNICOS EN CAMPO (MÓVIL) -->
+        <div id="viewTecnico" style="display: none;" class="mobile-field-view">
+            <!-- BUSCADOR DE CLIENTES -->
+            <div class="card card-custom p-4 mb-4">
+                <h4 class="mb-2 text-info text-center fw-bold">🔍 Buscar Cliente / Abonado</h4>
+                <p class="text-light text-center small mb-3 opacity-75">Busque por código o documento para verificar datos o gestionar traslados.</p>
+                <div class="input-group">
+                    <input type="text" id="inputBuscarCodigo" class="form-control" placeholder="Ej: CUST-010 o Cédula">
+                    <button type="button" class="btn btn-outline-info" onclick="buscarClientePorTecnico()">Buscar</button>
+                </div>
+            </div>
+
+            <!-- FORMULARIO DE CAMPO Y TRASLADOS (Oculto hasta buscar) -->
+            <div class="card card-custom p-4" id="cardFormularioCampo" style="display: none;">
+                <h4 class="mb-2 text-success text-center fw-bold">📱 Gestión de Instalación / Traslado</h4>
+                <p class="text-light text-center small mb-4 opacity-75">Actualice la nueva dirección si el cliente se mudó y verifique red y poste.</p>
+                
+                <form id="formCampo">
+                    <input type="hidden" id="editFilaCliente">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Cliente:</label>
+                        <input type="text" id="campoNombreCliente" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nueva Dirección (Traslado):</label>
+                        <input type="text" id="campoDireccionCliente" class="form-control" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Caja NAP:</label>
+                            <input type="text" id="campoCajaNap" class="form-control" placeholder="NAP-01" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">TAP:</label>
+                            <input type="text" id="campoTap" class="form-control" placeholder="TAP-12">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número de Poste (Verificación):</label>
+                        <input type="text" id="campoNumeroPoste" class="form-control" placeholder="POSTE-45" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Coordenadas GPS:</label>
+                        <div class="input-group">
+                            <input type="text" id="campoCoordenadas" class="form-control" placeholder="Lat, Long" required>
+                            <button type="button" class="btn btn-outline-info" onclick="obtenerGPS()">Obtener GPS</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning text-dark w-100 py-2 fw-bold" onclick="guardarTrasladoYInstalacion()">Actualizar Traslado y Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 3. VISTA EXCLUSIVA PARA OPERACIONES / ADMINISTRADOR (PC) -->
+        <div id="viewOperaciones" style="display: none;">
+            
+            <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pane-clientes" type="button">Gestión de Clientes</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-compras" type="button">Compras y Proveedores</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                
+                <!-- PESTAÑA A: NUEVO CLIENTE -->
+                <div class="tab-pane fade show active" id="pane-clientes" role="tabpanel">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card card-custom p-4">
+                                <h4 class="mb-3 text-info fw-bold">Registro de Abonados (Comercial)</h4>
+                                <form id="formCliente">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nombre Completo:</label>
+                                            <input type="text" id="cliNombre" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Documento / Identidad:</label>
+                                            <input type="text" id="cliDocumento" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Dirección:</label>
+                                        <input type="text" id="cliDireccion" class="form-control" required>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Teléfono:</label>
+                                            <input type="text" id="cliTelefono" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Correo Electrónico:</label>
+                                            <input type="email" id="cliEmail" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary w-100 fw-bold py-2" onclick="enviarNuevoCliente()">Registrar Cliente en Base de Datos</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA B: COMPRAS Y PROVEEDORES -->
+                <div class="tab-pane fade" id="pane-compras" role="tabpanel">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card card-custom p-4">
+                                <h4 class="mb-3 text-info fw-bold">Control de Compras y Cuentas por Pagar</h4>
+                                <form id="formCompra">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">ID del Proveedor:</label>
+                                            <input type="text" id="compraProveedor" class="form-control" placeholder="PROV-001" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nro. de Factura Proveedor:</label>
+                                            <input type="text" id="compraFactura" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Monto Total ($):</label>
+                                            <input type="number" step="0.01" id="compraMonto" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Fecha de Vencimiento:</label>
+                                            <input type="date" id="compraVencimiento" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-warning w-100 fw-bold text-dark py-2" onclick="enviarCompraProveedor()">Registrar Compra y Asiento Contable</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- LÓGICA DE ROLES Y CONEXIÓN INTEGRADA -->
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycby66VOdt7kXyJO4AZhDatS4996TNOruC12O0Z7Q0K4Mj9D11WqvElGpAM3gF5xKq7AD/exec";
+
+        window.onload = function() {
+            const nombre = localStorage.getItem("usuarioNombre");
+            const rol = localStorage.getItem("usuarioRol");
+            
+            if (nombre && rol) {
+                mostrarVistaSegunRol(nombre, rol);
+            }
+        };
+
+        function ejecutarLogin() {
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+            
+            if (!email || !password) {
+                alert("Por favor ingrese correo y contraseña.");
+                return;
+            }
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "login", email: email, password: password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    localStorage.setItem("usuarioNombre", data.user.nombre);
+                    localStorage.setItem("usuarioRol", data.user.rol);
+                    mostrarVistaSegunRol(data.user.nombre, data.user.rol);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("Error de conexión con el servidor.");
+            });
+        }
+
+        function mostrarVistaSegunRol(nombre, rol) {
+            document.getElementById("userBadge").innerText = `${nombre} (${rol})`;
+            document.getElementById("sectionLogin").style.display = "none";
+
+            if (rol.toLowerCase() === "tecnico") {
+                document.getElementById("viewTecnico").style.display = "block";
+                document.getElementById("viewOperaciones").style.display = "none";
+            } else {
+                document.getElementById("viewOperaciones").style.display = "block";
+                document.getElementById("viewTecnico").style.display = "none";
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function obtenerGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById("campoCoordenadas").value = `${lat}, ${lon}`;
+                }, function(error) {
+                    alert("No se pudo obtener la ubicación GPS.");
+                });
+            } else {
+                alert("El navegador no soporta geolocalización.");
+            }
+        }
+
+        function buscarClientePorTecnico() {
+            const codigo = document.getElementById("inputBuscarCodigo").value;
+            if(!codigo) {
+                alert("Ingrese un código o documento para buscar.");
+                return;
+            }
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "buscarCliente", codigoBusqueda: codigo })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    document.getElementById("editFilaCliente").value = data.cliente.fila;
+                    document.getElementById("campoNombreCliente").value = data.cliente.nombre;
+                    document.getElementById("campoDireccionCliente").value = data.cliente.direccion;
+                    document.getElementById("cardFormularioCampo").style.display = "block";
+                    alert("¡Cliente encontrado! Ya puede verificar sus datos o actualizar su traslado.");
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => alert("Error al buscar el cliente."));
+        }
+
+        function guardarTrasladoYInstalacion() {
+            const fila = document.getElementById("editFilaCliente").value;
+            const nuevaDireccion = document.getElementById("campoDireccionCliente").value;
+            const codigoCliente = document.getElementById("inputBuscarCodigo").value;
+            const poste = document.getElementById("campoNumeroPoste").value;
+            const coordenadas = document.getElementById("campoCoordenadas").value;
+            const cajaNap = document.getElementById("campoCajaNap").value;
+            const tap = document.getElementById("campoTap").value;
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "actualizarCliente",
+                    fila: fila,
+                    codigoCliente: codigoCliente,
+                    nuevaDireccion: nuevaDireccion,
+                    nuevoPoste: poste,
+                    coordenadas: coordenadas,
+                    cajaNap: cajaNap,
+                    tap: tap,
+                    tecnicoResponsable: localStorage.getItem("usuarioNombre") || "Técnico"
+                })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === "success") {
+                    alert("¡Traslado y datos de red actualizados correctamente!");
+                    document.getElementById("formCampo").reset();
+                    document.getElementById("cardFormularioCampo").style.display = "none";
+                    document.getElementById("inputBuscarCodigo").value = "";
+                } else {
+                    alert("Error al actualizar: " + result.message);
+                }
+            })
+            .catch(err => alert("Error de comunicación con el servidor."));
+        }
+
+        function enviarNuevoCliente() {
+            const datos = {
+                action: "addCliente",
+                nombre: document.getElementById("cliNombre").value,
+                documento: document.getElementById("cliDocumento").value,
+                direccion: document.getElementById("cliDireccion").value,
+                telefono: document.getElementById("cliTelefono").value,
+                email: document.getElementById("cliEmail").value
+            };
+
+            fetch(API_URL, { method: "POST", body: JSON.stringify(datos) })
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === "success") {
+                    alert("¡Cliente registrado con éxito!");
+                    document.getElementById("formCliente").reset();
+                } else {
+                    alert("Error al registrar.");
+                }
+            });
+        }
+
+        function enviarCompraProveedor() {
+            const datos = {
+                action: "registrarCompra",
+                idProveedor: document.getElementById("compraProveedor").value,
+                facturaProveedor: document.getElementById("compraFactura").value,
+                montoTotal: parseFloat(document.getElementById("compraMonto").value),
+                fechaVencimiento: document.getElementById("compraVencimiento").value
+            };
+
+            fetch(API_URL, { method: "POST", body: JSON.stringify(datos) })
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === "success") {
+                    alert("¡Compra y contabilidad procesadas correctamente!");
+                    document.getElementById("formCompra").reset();
+                } else {
+                    alert("Error al procesar la compra.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

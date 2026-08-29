@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIGA NODE - Panel Operativo y Admin</title>
     
+    <!-- 
+      ========================================================================
+      LICENCIA PROPIETARIA Y DE USO RESTRICTIVO
+      Proyecto: Giga Nodo
+      Autor: Carlos Muñoz
+      Copyright (c) 2026 Carlos Muñoz. Todos los derechos reservados.
+      
+      AVISO IMPORTANTE: Este software y la documentación asociada son propiedad 
+      intelectual exclusiva de Carlos Muñoz. Queda estrictamente prohibida la copia, 
+      reproducción, distribución, modificación o uso no autorizado de este código fuente, 
+      en todo o en parte, sin el consentimiento expreso, previo y por escrito del autor.
+      ========================================================================
+    -->
+
     <!-- Favicon SVG integrado -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230072d2'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E">
 
@@ -675,11 +689,19 @@
     </div>
 
     <script>
+        /**
+         * @file Giga Nodo
+         * @author Carlos Muñoz
+         * @copyright (c) 2026 Carlos Muñoz. Todos los derechos reservados.
+         * @description Aplicación de gestión para infraestructura de campo y redes.
+         * Queda estrictamente prohibida la reproducción, modificación o distribución 
+         * de este código fuente sin la autorización expresa del autor.
+         */
+
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCY_td4pKjTWP4TBqElfJzL4B2Jimc9CFl0B5xtQtgwIuQQFmbViP8vcctQrHzYXLX/exec';
         const STORAGE_KEY = 'registros_fiber_dog';
         const USERS_STORAGE_KEY = 'giga_node_claves_tecnicos';
 
-        // Base por defecto si no hay nada guardado en el navegador
         let CLAVES_TECNICOS_DEFECTO = {
             "Carlos Muñoz": "94532043",    
             "Jorge García": "94530917",  
@@ -713,14 +735,12 @@
             const selectLobby = document.getElementById('selectTecnicoLobby');
             const selectAdminFiltro = document.getElementById('adminFiltroTecnico');
 
-            // Rellenar select del Lobby
             let optionsLobby = '<option value="">Seleccione su nombre...</option>';
             for (let nombre of Object.keys(usuarios)) {
                 optionsLobby += `<option value="${nombre}">${nombre} ${ADMINS.includes(nombre) ? '(Admin)' : ''}</option>`;
             }
             selectLobby.innerHTML = optionsLobby;
 
-            // Rellenar select de filtro en Admin
             let optionsFiltro = '<option value="TODOS">Todos los técnicos</option>';
             for (let nombre of Object.keys(usuarios)) {
                 optionsFiltro += `<option value="${nombre}">${nombre}</option>`;
@@ -1117,7 +1137,6 @@
                 }
             });
 
-            // --- RENDERIZAR LISTA DE USUARIOS Y GESTIÓN ---
             let htmlUsuarios = '';
             for (let [nombre, pass] of Object.entries(usuarios)) {
                 htmlUsuarios += `
@@ -1219,10 +1238,8 @@
                 });
             }
 
-            // 1. Guardar localmente en el móvil
             guardarRegistrosLocales(registrosLocales);
 
-            // 2. Enviar a la nube (Google Sheets) vía GET para evitar bloqueos móviles
             try {
                 const urlEnvio = `${WEB_APP_URL}?action=guardar&data=${encodeURIComponent(JSON.stringify(nuevosRegistros))}`;
                 await fetch(urlEnvio, { method: 'GET' });
@@ -1268,11 +1285,9 @@
 
             if (!regEliminado) return;
 
-            // 1. Borrar localmente
             registrosLocales.splice(index, 1);
             guardarRegistrosLocales(registrosLocales);
 
-            // 2. Borrar en la nube de Google Sheets mediante GET utilizando su id único
             if (regEliminado.id) {
                 try {
                     const urlEliminar = `${WEB_APP_URL}?action=eliminar&id=${encodeURIComponent(regEliminado.id)}`;

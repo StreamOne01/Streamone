@@ -111,7 +111,7 @@
                 <div class="tab-pane fade show active" id="pane-tec-buscar" role="tabpanel">
                     <div class="card card-custom p-4 mb-4">
                         <h4 class="mb-2 text-info text-center fw-bold">Buscar Abonado</h4>
-                        <p class="text-light text-center small mb-3 opacity-75">Ingrese el código de cliente o cédula para verificar su estatus.</p>
+                        <p class="text-light text-center small mb-3 opacity-75">Ingrese el código de cliente o cédula para verificar su estatus[cite: 1].</p>
                         <div class="input-group">
                             <input type="text" id="inputBuscarCodigo" class="form-control" placeholder="Ej: CUST-010 o Cédula">
                             <button type="button" class="btn btn-outline-info" onclick="buscarClientePorTecnico()">Buscar</button>
@@ -188,6 +188,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-compras" type="button">Compras y Proveedores</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pane-usuarios" type="button">Gestión de Usuarios</button>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -258,6 +261,78 @@
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-warning w-100 fw-bold text-dark py-2" onclick="enviarCompraProveedor()">Registrar Compra y Asiento Contable</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA C: GESTIÓN DE USUARIOS Y CONTRASEÑAS (ADMIN) -->
+                <div class="tab-pane fade" id="pane-usuarios" role="tabpanel">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card card-custom p-4 mb-4">
+                                <h4 class="mb-3 text-info fw-bold">👥 Crear Nuevo Usuario / Técnico</h4>
+                                <form id="formCrearUsuario">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nombre Completo:</label>
+                                            <input type="text" id="adminNombreUsr" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Correo (Login):</label>
+                                            <input type="email" id="adminEmailUsr" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Contraseña:</label>
+                                            <input type="text" id="adminPassUsr" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Rol:</label>
+                                            <select id="adminRolUsr" class="form-select">
+                                                <option value="Tecnico">Tecnico</option>
+                                                <option value="Operaciones">Operaciones</option>
+                                                <option value="Administrador">Administrador</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success w-100 fw-bold py-2" onclick="crearNuevoUsuarioAdmin()">Registrar Usuario</button>
+                                </form>
+                            </div>
+
+                            <div class="card card-custom p-4">
+                                <h4 class="mb-3 text-warning fw-bold">✏️ Editar Usuario / Cambiar Contraseña</h4>
+                                <form id="formEditarUsuario">
+                                    <div class="mb-3">
+                                        <label class="form-label">Correo Actual del Usuario a Editar:</label>
+                                        <input type="email" id="editEmailOriginal" class="form-control" placeholder="correo@empresa.com" required>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nuevo Nombre:</label>
+                                            <input type="text" id="editNombreUsr" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nuevo Correo:</label>
+                                            <input type="email" id="editEmailUsr" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nueva Contraseña (Opcional):</label>
+                                            <input type="text" id="editPassUsr" class="form-control" placeholder="Dejar en blanco si no cambia">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Estado:</label>
+                                            <select id="editEstadoUsr" class="form-select">
+                                                <option value="Activo">Activo</option>
+                                                <option value="Inactivo">Inactivo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-warning text-dark w-100 fw-bold py-2" onclick="actualizarUsuarioAdmin()">Guardar Cambios de Usuario</button>
                                 </form>
                             </div>
                         </div>
@@ -468,6 +543,50 @@
                     document.getElementById("formCompra").reset();
                 } else {
                     alert("Error al procesar la compra.");
+                }
+            });
+        }
+
+        function crearNuevoUsuarioAdmin() {
+            const datos = {
+                action: "crearUsuario",
+                nombre: document.getElementById("adminNombreUsr").value,
+                email: document.getElementById("adminEmailUsr").value,
+                password: document.getElementById("adminPassUsr").value,
+                rol: document.getElementById("adminRolUsr").value
+            };
+
+            fetch(API_URL, { method: "POST", body: JSON.stringify(datos) })
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === "success") {
+                    alert("¡Usuario creado exitosamente!");
+                    document.getElementById("formCrearUsuario").reset();
+                } else {
+                    alert("Error al crear usuario.");
+                }
+            });
+        }
+
+        function actualizarUsuarioAdmin() {
+            const datos = {
+                action: "actualizarUsuarioAdmin",
+                emailOriginal: document.getElementById("editEmailOriginal").value,
+                nuevoNombre: document.getElementById("editNombreUsr").value,
+                nuevoEmail: document.getElementById("editEmailUsr").value,
+                nuevaPassword: document.getElementById("editPassUsr").value,
+                nuevoRol: "Tecnico",
+                nuevoEstado: document.getElementById("editEstadoUsr").value
+            };
+
+            fetch(API_URL, { method: "POST", body: JSON.stringify(datos) })
+            .then(res => res.json())
+            .then(result => {
+                if(result.status === "success") {
+                    alert("¡Credenciales y datos de usuario actualizados correctamente!");
+                    document.getElementById("formEditarUsuario").reset();
+                } else {
+                    alert("Error al actualizar: " + result.message);
                 }
             });
         }

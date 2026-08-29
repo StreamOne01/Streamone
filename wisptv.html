@@ -80,8 +80,8 @@
                 <div class="card card-custom p-4">
                     <h3 class="text-center mb-4 text-white fw-bold">Iniciar Sesión</h3>
                     <div class="mb-3">
-                        <label class="form-label">Correo Electrónico:</label>
-                        <input type="email" id="loginEmail" class="form-control" placeholder="carlos@empresa.com" required>
+                        <label class="form-label">Usuario:</label>
+                        <input type="text" id="loginEmail" class="form-control" placeholder="Ingrese su usuario" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Contraseña:</label>
@@ -92,10 +92,8 @@
             </div>
         </div>
 
-        <!-- 2. VISTA EXCLUSIVA PARA TÉCNICOS EN CAMPO (MÓVIL / TABLET) -->
+        <!-- 2. VISTA EXCLUSIVA PARA TÉCNICOS EN CAMPO -->
         <div id="viewTecnico" style="display: none;" class="mobile-field-view">
-            
-            <!-- Sub-pestañas para el Técnico -->
             <ul class="nav nav-pills mb-4 justify-content-center" id="tecnico-tabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pane-tec-buscar" type="button">🔍 Buscar y Traslados</button>
@@ -106,23 +104,18 @@
             </ul>
 
             <div class="tab-content">
-                
-                <!-- PESTAÑA TÉCNICO A: BÚSQUEDA Y TRASLADOS -->
                 <div class="tab-pane fade show active" id="pane-tec-buscar" role="tabpanel">
                     <div class="card card-custom p-4 mb-4">
                         <h4 class="mb-2 text-info text-center fw-bold">Buscar Abonado</h4>
-                        <p class="text-light text-center small mb-3 opacity-75">Ingrese el código de cliente o cédula para verificar su estatus[cite: 1].</p>
+                        <p class="text-light text-center small mb-3 opacity-75">Ingrese el código de cliente o cédula.</p>
                         <div class="input-group">
                             <input type="text" id="inputBuscarCodigo" class="form-control" placeholder="Ej: CUST-010 o Cédula">
                             <button type="button" class="btn btn-outline-info" onclick="buscarClientePorTecnico()">Buscar</button>
                         </div>
                     </div>
 
-                    <!-- Formulario de Actualización de Traslado (Se muestra al encontrar) -->
                     <div class="card card-custom p-4" id="cardFormularioTraslado" style="display: none;">
                         <h4 class="mb-2 text-success text-center fw-bold">Actualizar Traslado de Cliente</h4>
-                        <p class="text-light text-center small mb-4 opacity-75">Modifique la dirección actual en caso de mudanza[cite: 1].</p>
-                        
                         <form id="formTraslado">
                             <input type="hidden" id="editFilaCliente">
                             <div class="mb-3">
@@ -138,12 +131,9 @@
                     </div>
                 </div>
 
-                <!-- PESTAÑA TÉCNICO B: RED E INFRAESTRUCTURA (POSTE, NAP, GPS) -->
                 <div class="tab-pane fade" id="pane-tec-red" role="tabpanel">
                     <div class="card card-custom p-4">
                         <h4 class="mb-2 text-info text-center fw-bold">Verificación de Planta Externa</h4>
-                        <p class="text-light text-center small mb-4 opacity-75">Registre poste, caja NAP, TAP y coordenadas GPS de la acometida[cite: 1].</p>
-                        
                         <form id="formInfraestructura">
                             <div class="mb-3">
                                 <label class="form-label">Código / ID de Cliente Asociado:</label>
@@ -174,13 +164,11 @@
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- 3. VISTA EXCLUSIVA PARA OPERACIONES / ADMINISTRADOR (PC) -->
+        <!-- 3. VISTA EXCLUSIVA PARA OPERACIONES / ADMINISTRADOR -->
         <div id="viewOperaciones" style="display: none;">
-            
             <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pane-clientes" type="button">Gestión de Clientes</button>
@@ -194,13 +182,11 @@
             </ul>
 
             <div class="tab-content">
-                
-                <!-- PESTAÑA A: NUEVO CLIENTE -->
                 <div class="tab-pane fade show active" id="pane-clientes" role="tabpanel">
                     <div class="row justify-content-center">
                         <div class="col-md-8">
                             <div class="card card-custom p-4">
-                                <h4 class="mb-3 text-info fw-bold">Registro de Abonados (Comercial)</h4>
+                                <h4 class="mb-3 text-info fw-bold">Registro de Abonados</h4>
                                 <form id="formCliente">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
@@ -226,19 +212,18 @@
                                             <input type="email" id="cliEmail" class="form-control" required>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary w-100 fw-bold py-2" onclick="enviarNuevoCliente()">Registrar Cliente en Base de Datos</button>
+                                    <button type="button" class="btn btn-primary w-100 fw-bold py-2" onclick="enviarNuevoCliente()">Registrar Cliente</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- PESTAÑA B: COMPRAS Y PROVEEDORES -->
                 <div class="tab-pane fade" id="pane-compras" role="tabpanel">
                     <div class="row justify-content-center">
                         <div class="col-md-8">
                             <div class="card card-custom p-4">
-                                <h4 class="mb-3 text-info fw-bold">Control de Compras y Cuentas por Pagar</h4>
+                                <h4 class="mb-3 text-info fw-bold">Control de Compras</h4>
                                 <form id="formCompra">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
@@ -260,28 +245,28 @@
                                             <input type="date" id="compraVencimiento" class="form-control" required>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-warning w-100 fw-bold text-dark py-2" onclick="enviarCompraProveedor()">Registrar Compra y Asiento Contable</button>
+                                    <button type="button" class="btn btn-warning w-100 fw-bold text-dark py-2" onclick="enviarCompraProveedor()">Registrar Compra</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- PESTAÑA C: GESTIÓN DE USUARIOS Y CONTRASEÑAS (ADMIN) -->
+                <!-- GESTIÓN DE USUARIOS Y ROLES AMPLIADOS -->
                 <div class="tab-pane fade" id="pane-usuarios" role="tabpanel">
                     <div class="row justify-content-center">
                         <div class="col-md-8">
                             <div class="card card-custom p-4 mb-4">
-                                <h4 class="mb-3 text-info fw-bold">👥 Crear Nuevo Usuario / Técnico</h4>
+                                <h4 class="mb-3 text-info fw-bold">👥 Crear Nuevo Usuario</h4>
                                 <form id="formCrearUsuario">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label class="form-label">Nombre Completo:</label>
-                                            <input type="text" id="adminNombreUsr" class="form-control" required>
+                                            <label class="form-label">Nombre de Usuario:</label>
+                                            <input type="text" id="adminUsuarioUsr" class="form-control" placeholder="ej. carlos" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Correo (Login):</label>
-                                            <input type="email" id="adminEmailUsr" class="form-control" required>
+                                            <label class="form-label">Nombre Completo:</label>
+                                            <input type="text" id="adminNombreUsr" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -292,9 +277,14 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Rol:</label>
                                             <select id="adminRolUsr" class="form-select">
-                                                <option value="Tecnico">Tecnico</option>
-                                                <option value="Operaciones">Operaciones</option>
                                                 <option value="Administrador">Administrador</option>
+                                                <option value="Asistente de Gerencia">Asistente de Gerencia</option>
+                                                <option value="Operador">Operador</option>
+                                                <option value="Cajero">Cajero</option>
+                                                <option value="Contabilidad">Contabilidad</option>
+                                                <option value="Bodega">Bodega</option>
+                                                <option value="Tecnico">Técnico</option>
+                                                <option value="Planta Externa">Planta Externa</option>
                                             </select>
                                         </div>
                                     </div>
@@ -306,17 +296,17 @@
                                 <h4 class="mb-3 text-warning fw-bold">✏️ Editar Usuario / Cambiar Contraseña</h4>
                                 <form id="formEditarUsuario">
                                     <div class="mb-3">
-                                        <label class="form-label">Correo Actual del Usuario a Editar:</label>
-                                        <input type="email" id="editEmailOriginal" class="form-control" placeholder="correo@empresa.com" required>
+                                        <label class="form-label">Usuario Actual a Editar:</label>
+                                        <input type="text" id="editUsuarioOriginal" class="form-control" placeholder="usuario_actual" required>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label class="form-label">Nuevo Nombre:</label>
-                                            <input type="text" id="editNombreUsr" class="form-control" required>
+                                            <label class="form-label">Nuevo Usuario:</label>
+                                            <input type="text" id="editUsuarioNuevo" class="form-control" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Nuevo Correo:</label>
-                                            <input type="email" id="editEmailUsr" class="form-control" required>
+                                            <label class="form-label">Nuevo Nombre:</label>
+                                            <input type="text" id="editNombreUsr" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -347,9 +337,9 @@
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- LÓGICA DE ROLES Y CONEXIÓN INTEGRADA -->
+    <!-- LÓGICA DE JAVASCRIPT CON LA NUEVA URL -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycby66VOdt7kXyJO4AZhDatS4996TNOruC12O0Z7Q0K4Mj9D11WqvElGpAM3gF5xKq7AD/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbyKnAfVB9ezcvSLLpSMEGdON-BDqUy39OUqw_DcXl6siZxAFl-h9_XGR2c6a2tkYz5H/exec";
 
         window.onload = function() {
             const nombre = localStorage.getItem("usuarioNombre");
@@ -365,7 +355,7 @@
             const password = document.getElementById("loginPassword").value;
             
             if (!email || !password) {
-                alert("Por favor ingrese correo y contraseña.");
+                alert("Por favor ingrese usuario y contraseña.");
                 return;
             }
 
@@ -393,7 +383,8 @@
             document.getElementById("userBadge").innerText = `${nombre} (${rol})`;
             document.getElementById("sectionLogin").style.display = "none";
 
-            if (rol.toLowerCase() === "tecnico") {
+            const rolLower = rol.toLowerCase();
+            if (rolLower.includes("tecnico") || rolLower.includes("planta externa")) {
                 document.getElementById("viewTecnico").style.display = "block";
                 document.getElementById("viewOperaciones").style.display = "none";
             } else {
@@ -439,7 +430,7 @@
                     document.getElementById("campoNombreCliente").value = data.cliente.nombre;
                     document.getElementById("campoDireccionCliente").value = data.cliente.direccion;
                     document.getElementById("cardFormularioTraslado").style.display = "block";
-                    alert("¡Cliente encontrado! Ya puede gestionar su traslado.");
+                    alert("¡Cliente encontrado!");
                 } else {
                     alert(data.message);
                 }
@@ -468,12 +459,10 @@
                     alert("¡Dirección de traslado actualizada con éxito!");
                     document.getElementById("formTraslado").reset();
                     document.getElementById("cardFormularioTraslado").style.display = "none";
-                    document.getElementById("inputBuscarCodigo").value = "";
                 } else {
                     alert("Error al actualizar: " + result.message);
                 }
-            })
-            .catch(err => alert("Error de comunicación con el servidor."));
+            });
         }
 
         function registrarInstalacionCampo() {
@@ -488,20 +477,16 @@
                 tecnicoResponsable: localStorage.getItem("usuarioNombre") || "Técnico"
             };
 
-            fetch(API_URL, {
-                method: "POST",
-                body: JSON.stringify(datos)
-            })
+            fetch(API_URL, { method: "POST", body: JSON.stringify(datos) })
             .then(res => res.json())
             .then(result => {
                 if(result.status === "success") {
-                    alert("¡Datos de red y poste registrados correctamente en campo!");
+                    alert("¡Datos de red registrados correctamente!");
                     document.getElementById("formInfraestructura").reset();
                 } else {
-                    alert("Error al registrar: " + result.message);
+                    alert("Error al registrar.");
                 }
-            })
-            .catch(err => alert("Error de comunicación con el servidor."));
+            });
         }
 
         function enviarNuevoCliente() {
@@ -539,7 +524,7 @@
             .then(res => res.json())
             .then(result => {
                 if(result.status === "success") {
-                    alert("¡Compra y contabilidad procesadas correctamente!");
+                    alert("¡Compra procesada correctamente!");
                     document.getElementById("formCompra").reset();
                 } else {
                     alert("Error al procesar la compra.");
@@ -550,8 +535,8 @@
         function crearNuevoUsuarioAdmin() {
             const datos = {
                 action: "crearUsuario",
+                usuario: document.getElementById("adminUsuarioUsr").value,
                 nombre: document.getElementById("adminNombreUsr").value,
-                email: document.getElementById("adminEmailUsr").value,
                 password: document.getElementById("adminPassUsr").value,
                 rol: document.getElementById("adminRolUsr").value
             };
@@ -560,7 +545,7 @@
             .then(res => res.json())
             .then(result => {
                 if(result.status === "success") {
-                    alert("¡Usuario creado exitosamente!");
+                    alert("¡Usuario creado exitosamente en la hoja de cálculo!");
                     document.getElementById("formCrearUsuario").reset();
                 } else {
                     alert("Error al crear usuario.");
@@ -571,9 +556,9 @@
         function actualizarUsuarioAdmin() {
             const datos = {
                 action: "actualizarUsuarioAdmin",
-                emailOriginal: document.getElementById("editEmailOriginal").value,
+                usuarioOriginal: document.getElementById("editUsuarioOriginal").value,
+                nuevoUsuario: document.getElementById("editUsuarioNuevo").value,
                 nuevoNombre: document.getElementById("editNombreUsr").value,
-                nuevoEmail: document.getElementById("editEmailUsr").value,
                 nuevaPassword: document.getElementById("editPassUsr").value,
                 nuevoRol: "Tecnico",
                 nuevoEstado: document.getElementById("editEstadoUsr").value
@@ -583,7 +568,7 @@
             .then(res => res.json())
             .then(result => {
                 if(result.status === "success") {
-                    alert("¡Credenciales y datos de usuario actualizados correctamente!");
+                    alert("¡Credenciales actualizadas con éxito!");
                     document.getElementById("formEditarUsuario").reset();
                 } else {
                     alert("Error al actualizar: " + result.message);

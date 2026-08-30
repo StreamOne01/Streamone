@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barber Manager | Exclusive Studio</title>
+    <title>Admin Portal - Barbería Manager</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(19, 27, 46, 0.85); 
+            --bg-color: #0f172a;
+            --sidebar-bg: #1e293b;
+            --card-bg: #1e293b;
             --accent-gold: #d4af37;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --whatsapp: #25d366;
-            --border: rgba(212, 175, 55, 0.25);
-            --hover-gold: #e6c547;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --border: #334155;
+            --hover-bg: #334155;
         }
 
         * {
@@ -21,298 +24,212 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            scroll-behavior: smooth;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-            
-            background-image: linear-gradient(rgba(11, 15, 25, 0.9), rgba(11, 15, 25, 0.95)), 
-                              url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        /* --- NAVEGACIÓN SUPERIOR --- */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(11, 15, 25, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 100vh;
+            overflow: hidden;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            z-index: 100;
         }
 
-        .logo {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        /* --- CONTENEDOR PRINCIPAL DE LA APP (SIN LOGIN) --- */
+        #app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
         }
 
-        .nav-btn {
-            background-color: transparent;
-            border: 1px solid var(--accent-gold);
-            color: var(--accent-gold);
-            padding: 10px 22px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .nav-btn:hover {
-            background-color: var(--accent-gold);
-            color: var(--bg-color);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-        }
-
-        /* --- SECCIÓN HERO --- */
-        .hero {
-            height: 90vh;
+        /* Sidebar / Menú de Navegación */
+        aside {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            margin-top: 70px;
+            justify-content: space-between;
         }
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            color: var(--text-main);
-            margin-bottom: 15px;
-            font-weight: 300;
-            letter-spacing: -1px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
-
-        .hero h1 span {
-            color: var(--accent-gold);
-            font-weight: 600;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 35px;
-            line-height: 1.6;
-        }
-
-        .hero-cta {
-            background-color: var(--accent-gold);
-            color: var(--bg-color);
-            border: none;
-            padding: 16px 36px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .hero-cta:hover {
-            transform: translateY(-2px);
-            background-color: var(--hover-gold);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
-        }
-
-        /* --- SECCIÓN DE ESTILOS --- */
-        .gallery-section {
-            padding: 80px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .section-title h2 {
-            font-size: 2.2rem;
-            color: var(--text-main);
-            font-weight: 300;
-            margin-bottom: 10px;
-        }
-
-        .section-title span {
-            color: var(--accent-gold);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        .styles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .style-card {
-            background-color: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .style-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-gold);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .style-icon-container {
-            height: 140px;
-            background: linear-gradient(135deg, rgba(30,41,59,0.5), rgba(15,23,42,0.8));
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .sidebar-header {
+            padding: 20px;
             border-bottom: 1px solid var(--border);
         }
 
-        .style-icon-container svg {
-            width: 50px;
-            height: 50px;
-            stroke: var(--accent-gold);
-            fill: none;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: transform 0.3s ease;
+        .sidebar-header h2 {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
         }
 
-        .style-card:hover .style-icon-container svg {
-            transform: scale(1.1);
+        .sidebar-header span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
-        .style-info {
-            padding: 25px;
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-menu li.active a, .sidebar-menu li a:hover {
+            background-color: var(--hover-bg);
+            color: var(--accent-gold);
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Área de Contenido Principal */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            background-color: var(--sidebar-bg);
+            padding: 15px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-badge {
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .content-body {
+            padding: 30px;
+            display: none;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .content-body.active {
+            display: grid;
+        }
+
+        @media (min-width: 1024px) {
+            .content-body.active {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-body.active .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .kpi-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .kpi-box span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .kpi-box strong {
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .kpi-box.income strong { color: var(--success); }
+        .kpi-box.expense strong { color: var(--danger); }
+
+        form {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .style-info h3 {
-            font-size: 1.25rem;
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        .style-info p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* --- MODAL DE AGENDA TU CITA --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(11, 15, 25, 0.85);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-box {
-            background-color: #131b2e;
-            border: 1px solid var(--accent-gold);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 480px;
-            padding: 35px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-modal:hover {
-            color: var(--accent-gold);
-        }
-
-        .modal-box h2 {
-            font-size: 1.5rem;
-            color: var(--accent-gold);
-            margin-bottom: 5px;
-            font-weight: 400;
-        }
-
-        .modal-box p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 25px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
+            text-align: left;
         }
 
         label {
             font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 500;
         }
 
         input, select {
             background-color: var(--bg-color);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.95rem;
         }
 
         input:focus, select:focus {
@@ -320,233 +237,751 @@
             border-color: var(--accent-gold);
         }
 
-        .btn-whatsapp {
-            background-color: var(--whatsapp);
-            color: white;
+        button {
+            background-color: var(--accent-gold);
+            color: var(--bg-color);
             border: none;
-            padding: 14px;
+            padding: 12px;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
             transition: opacity 0.2s;
-            margin-top: 10px;
-            text-decoration: none;
-            text-align: center;
+            margin-top: 5px;
         }
 
-        .btn-whatsapp:hover {
+        button:hover {
             opacity: 0.9;
         }
 
-        footer {
+        .btn-pay, .btn-sell {
+            background-color: var(--success);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            margin-top: 0;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .badge.ingreso { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge.gasto { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge.planilla { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); }
+        .badge.activo { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge.inactivo { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge.stock-ok { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge.stock-low { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge.admin-rol { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+        .badge.supervisor-rol { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .badge.barbero-rol { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+        /* Estilos del Modal de Voucher */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .voucher-card {
+            background: #ffffff;
+            color: #1e293b;
+            width: 380px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .voucher-header {
             text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            background-color: rgba(11, 15, 25, 0.9);
-            color: var(--text-muted);
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .voucher-header h3 {
+            color: #0f172a;
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+        .voucher-header span {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .voucher-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .voucher-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .voucher-row span:last-child {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .voucher-total {
+            border-top: 1px solid #cbd5e1;
+            padding-top: 10px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #0f172a;
+        }
+        .voucher-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 12px;
+        }
+        .voucher-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .voucher-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
             font-size: 0.85rem;
+        }
+        .btn-print { background: #0f172a; color: #fff; }
+        .btn-close-modal { background: #cbd5e1; color: #1e293b; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #voucher-modal, #voucher-modal * { visibility: visible; }
+            #voucher-modal {
+                position: absolute; left: 0; top: 0; background: white; width: 100%; height: 100%;
+            }
+            .voucher-actions { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">Barber Manager</div>
-        <button class="nav-btn" onclick="openModal()">Agenda tu Cita</button>
-    </nav>
-
-    <section class="hero">
-        <h1>Elevando el arte de la <span>Cuchilla</span></h1>
-        <p>Una experiencia de estilo y precisión diseñada exclusivamente para quienes valoran su imagen personal.</p>
-        <button class="hero-cta" onclick="openModal()">Reservar Mi Espacio</button>
-    </section>
-
-    <section class="gallery-section">
-        <div class="section-title">
-            <span>Exclusividad y Detalle</span>
-            <h2>Nuestros Servicios Principales</h2>
-        </div>
-        <div class="styles-grid">
-            
-            <div class="style-card">
-                <div class="style-icon-container">
-                    <svg viewBox="0 0 24 24"><path d="M6 3L18 21M6 21L18 3M12 12H12.01" /></svg>
+    <!-- CONTENEDOR PRINCIPAL (Sin Login) -->
+    <div id="app-container">
+        <!-- Sidebar / Menú de Navegación -->
+        <aside>
+            <div>
+                <div class="sidebar-header">
+                    <h2>Barber Manager</h2>
+                    <span>Portal Administrativo</span>
                 </div>
-                <div class="style-info">
-                    <h3>Corte Clásico</h3>
-                    <p>Técnicas tradicionales ejecutadas con absoluta precisión, cuidando cada detalle en tijera y máquina.</p>
+                <ul class="sidebar-menu" id="sidebar-menu">
+                    <li class="active" onclick="switchSection('finanzas', event)">
+                        <a href="#">📊 Resumen Financiero</a>
+                    </li>
+                    <li onclick="switchSection('cortes', event)">
+                        <a href="#">✂️ Registro de Cortes</a>
+                    </li>
+                    <li onclick="switchSection('inventario', event)">
+                        <a href="#">📦 Inventario y Stock</a>
+                    </li>
+                    <li onclick="switchSection('nomina', event)">
+                        <a href="#">💵 Pago de Planilla</a>
+                    </li>
+                    <li onclick="switchSection('barberos', event)">
+                        <a href="#">👥 Control de Personal</a>
+                    </li>
+                    <li onclick="switchSection('config', event)">
+                        <a href="#">⚙️ Configuración</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <span>Admin v1.9</span>
+                <span id="system-status" style="color: var(--success);">● En Línea</span>
+            </div>
+        </aside>
+
+        <!-- Contenedor Principal -->
+        <main>
+            <header>
+                <h1 id="section-title">Resumen Financiero</h1>
+                <div class="header-actions">
+                    <span id="current-date" style="color: var(--text-muted); font-size: 0.85rem;"></span>
+                    <span class="user-badge" id="logged-user-badge">👤 Carlos Muñoz (Admin)</span>
+                </div>
+            </header>
+
+            <!-- SECCIÓN 1: FINANZAS -->
+            <div id="content-finanzas" class="content-body active">
+                <div class="card full-width">
+                    <h2>Indicadores Financieros (Ingresos vs Gastos & Planilla)</h2>
+                    <div class="kpi-grid">
+                        <div class="kpi-box income">
+                            <span>Ingresos Día</span>
+                            <strong id="kpi-inc-day">L 0.00</strong>
+                        </div>
+                        <div class="kpi-box expense">
+                            <span>Gastos/Planilla Día</span>
+                            <strong id="kpi-exp-day">L 0.00</strong>
+                        </div>
+                        <div class="kpi-box income">
+                            <span>Ingresos Semana</span>
+                            <strong id="kpi-inc-week">L 0.00</strong>
+                        </div>
+                        <div class="kpi-box expense">
+                            <span>Gastos/Planilla Semana</span>
+                            <strong id="kpi-exp-week">L 0.00</strong>
+                        </div>
+                        <div class="kpi-box income">
+                            <span>Ingresos Mes</span>
+                            <strong id="kpi-inc-month">L 0.00</strong>
+                        </div>
+                        <div class="kpi-box expense">
+                            <span>Gastos/Planilla Mes</span>
+                            <strong id="kpi-exp-month">L 0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="finance-register-card">
+                    <h2>Registrar Movimiento</h2>
+                    <form id="finance-form">
+                        <div class="form-group">
+                            <label>Tipo de Movimiento</label>
+                            <select id="mov-type" required>
+                                <option value="ingreso">Ingreso (Venta de Producto)</option>
+                                <option value="gasto">Gasto Operativo (Agua, Luz, Insumos)</option>
+                                <option value="planilla">Pago de Planilla / Comisiones</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Producto o Detalle</label>
+                            <select id="mov-product-select" required></select>
+                            <input type="text" id="mov-desc-custom" placeholder="Detalle del movimiento" style="display: none; margin-top: 5px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Monto (L. Lempiras)</label>
+                            <input type="number" step="0.01" id="mov-amount" placeholder="0.00" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" id="mov-date" required>
+                        </div>
+                        <button type="submit">Guardar Registro</button>
+                    </form>
+                </div>
+
+                <div class="card" id="finance-table-card">
+                    <h2>Últimos Movimientos</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Descripción</th>
+                                    <th>Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="style-card">
-                <div class="style-icon-container">
-                    <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h12" /></svg>
+            <!-- SECCIÓN 2: REGISTRO DE CORTES -->
+            <div id="content-cortes" class="content-body">
+                <div class="card">
+                    <h2>Registrar Servicio / Corte</h2>
+                    <form id="cut-form">
+                        <div class="form-group">
+                            <label>Seleccionar Personal</label>
+                            <select id="cut-barber" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Servicio</label>
+                            <select id="cut-service" required>
+                                <option value="Corte Clásico (L 250.00)" data-price="250.00">Corte Clásico (L 250.00)</option>
+                                <option value="Fade / Degradé (L 300.00)" data-price="300.00">Fade / Degradé (L 300.00)</option>
+                                <option value="Corte + Barba (L 400.00)" data-price="400.00">Corte + Barba (L 400.00)</option>
+                                <option value="Barba Completa (L 150.00)" data-price="150.00">Barba Completa (L 150.00)</option>
+                                <option value="Diseño / Cejas (L 100.00)" data-price="100.00">Diseño / Cejas (L 100.00)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Precio Cobrado (L.)</label>
+                            <input type="number" step="0.01" id="cut-price" placeholder="250.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" id="cut-date" required>
+                        </div>
+                        <button type="submit">Registrar Corte</button>
+                    </form>
                 </div>
-                <div class="style-info">
-                    <h3>Fade / Degradé</h3>
-                    <p>Difuminados limpios y modernos, perfectamente adaptados a la estructura de tu rostro y estilo personal.</p>
+
+                <div class="card">
+                    <h2>Corte de Caja Diario (Comisiones)</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Personal</th>
+                                    <th>Cortes</th>
+                                    <th>Total Generado</th>
+                                    <th>Comisión</th>
+                                </tr>
+                            </thead>
+                            <tbody id="daily-summary-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <h2>Historial Reciente de Servicios</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Personal</th>
+                                    <th>Servicio</th>
+                                    <th>Precio</th>
+                                    <th>Comisión</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuts-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="style-card">
-                <div class="style-icon-container">
-                    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-7.5 16.5c1 1.5 2 3.5 2 5.5h11c0-2 1-4 2-5.5A10 10 0 0 0 12 2z" /></svg>
-                </div>
-                <div class="style-info">
-                    <h3>Corte + Barba</h3>
-                    <p>La experiencia completa de arreglo capilar y ritual de perfilado con acabados profesionales impecables.</p>
+            <!-- SECCIÓN 3: INVENTARIO -->
+            <div id="content-inventario" class="content-body full-width" style="grid-template-columns: 1fr;">
+                <div class="card">
+                    <h2>Control de Stock</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-        </div>
-    </section>
-
-    <div id="booking-modal" class="modal-overlay">
-        <div class="modal-box">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
-            <h2>Agenda tu Cita</h2>
-            <p>Selecciona tus preferencias y asegura tu lugar vía WhatsApp.</p>
-            
-            <form id="booking-form">
-                <div class="form-group">
-                    <label>Tu Nombre Completo</label>
-                    <input type="text" id="client-name" placeholder="Ej. Juan Pérez" required>
+            <!-- SECCIÓN 4: PLANILLA -->
+            <div id="content-nomina" class="content-body full-width" style="grid-template-columns: 1fr;">
+                <div class="card">
+                    <h2>Liquidación de Comisiones</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Personal</th>
+                                    <th>Teléfono</th>
+                                    <th>Comisión (%)</th>
+                                    <th>Servicios</th>
+                                    <th>Acumulado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payroll-table"></tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>Selecciona el Servicio</label>
-                    <select id="client-service" required>
-                        <option value="Corte Clásico (L 250.00)">Corte Clásico - L 250.00</option>
-                        <option value="Fade / Degradé (L 300.00)">Fade / Degradé - L 300.00</option>
-                        <option value="Corte + Barba (L 400.00)">Corte + Barba - L 400.00</option>
-                        <option value="Barba Completa (L 150.00)">Barba Completa - L 150.00</option>
-                        <option value="Diseño / Cejas (L 100.00)">Diseño / Cejas - L 100.00</option>
-                    </select>
+            <!-- SECCIÓN 5: PERSONAL -->
+            <div id="content-barberos" class="content-body">
+                <div class="card">
+                    <h2>Registrar Miembro</h2>
+                    <form id="barber-form">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" id="barber-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Rol</label>
+                            <select id="barber-role" required>
+                                <option value="barbero">Barbero</option>
+                                <option value="supervisor">Supervisor</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" id="barber-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Especialidad</label>
+                            <input type="text" id="barber-spec" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Comisión (%)</label>
+                            <input type="number" id="barber-comm" required>
+                        </div>
+                        <button type="submit">Guardar</button>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label>Barbero Preferido</label>
-                    <select id="client-barber">
-                        <option value="Cualquier barbero disponible">Cualquiera disponible</option>
-                        <option value="Carlos Muñoz">Carlos Muñoz</option>
-                        <option value="Jorge García">Jorge García</option>
-                    </select>
+                <div class="card">
+                    <h2>Plantilla de Personal</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Rol</th>
+                                    <th>Especialidad</th>
+                                    <th>Comisión</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="barbers-table"></tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>Fecha de la Cita</label>
-                    <input type="date" id="client-date" required>
+            <!-- SECCIÓN 6: CONFIGURACIÓN -->
+            <div id="content-config" class="content-body">
+                <div class="card full-width">
+                    <h2>Configuración</h2>
+                    <p style="color: var(--text-muted);">Módulo preparado para el desarrollo web de reservas online.</p>
                 </div>
+            </div>
+        </main>
+    </div>
 
-                <div class="form-group">
-                    <label>Hora Estimada</label>
-                    <select id="client-time" required>
-                        <option value="">Selecciona una hora</option>
-                        <option value="09:00 AM">09:00 AM</option>
-                        <option value="10:00 AM">10:00 AM</option>
-                        <option value="11:00 AM">11:00 AM</option>
-                        <option value="01:00 PM">01:00 PM</option>
-                        <option value="02:00 PM">02:00 PM</option>
-                        <option value="03:00 PM">03:00 PM</option>
-                        <option value="04:00 PM">04:00 PM</option>
-                        <option value="05:00 PM">05:00 PM</option>
-                        <option value="06:00 PM">06:00 PM</option>
-                    </select>
-                </div>
-
-                <button type="button" class="btn-whatsapp" onclick="sendWhatsAppBooking()">
-                    💬 Reservar por WhatsApp
-                </button>
-            </form>
+    <!-- Modal de Voucher -->
+    <div id="voucher-modal" class="modal-overlay">
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <h3>BARBER MANAGER</h3>
+                <span>Comprobante de Pago</span>
+            </div>
+            <div class="voucher-body">
+                <div class="voucher-row"><span>N° Comprobante:</span><span id="v-id">-</span></div>
+                <div class="voucher-row"><span>Fecha:</span><span id="v-date">-</span></div>
+                <div class="voucher-row"><span>Beneficiario:</span><span id="v-name">-</span></div>
+                <div class="voucher-row"><span>Concepto:</span><span id="v-services">-</span></div>
+                <div class="voucher-row"><span>Comisión:</span><span id="v-comm-rate">-</span></div>
+                <div class="voucher-total"><span>Total Pagado:</span><span id="v-amount">-</span></div>
+            </div>
+            <div class="voucher-footer">
+                <p>Firma de recibido: ______________________</p>
+            </div>
+            <div class="voucher-actions">
+                <button class="btn-print" onclick="window.print()">Imprimir Voucher</button>
+                <button class="btn-close-modal" onclick="closeVoucherModal()">Cerrar</button>
+            </div>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Barber Manager. Todos los derechos reservados.</p>
-    </footer>
-
     <script>
-        document.getElementById('client-date').valueAsDate = new Date();
+        // --- LÓGICA GENERAL (Fechas, Navegación, Datos) ---
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('mov-date').valueAsDate = new Date();
+        document.getElementById('cut-date').valueAsDate = new Date();
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-        function openModal() {
-            document.getElementById('booking-modal').classList.add('active');
+        function switchSection(sectionId, event) {
+            if(event) event.preventDefault();
+            switchSectionDirect(sectionId);
         }
 
-        function closeModal() {
-            document.getElementById('booking-modal').classList.remove('active');
-        }
+        function switchSectionDirect(sectionId) {
+            document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+            
+            const menuItems = document.querySelectorAll('.sidebar-menu li');
+            const indexMap = { 'finanzas':0, 'cortes':1, 'inventario':2, 'nomina':3, 'barberos':4, 'config':5 };
+            if(menuItems[indexMap[sectionId]]) menuItems[indexMap[sectionId]].classList.add('active');
 
-        window.onclick = function(event) {
-            const modal = document.getElementById('booking-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
+            document.querySelectorAll('.content-body').forEach(content => content.classList.remove('active'));
+            document.getElementById(`content-${sectionId}`).classList.add('active');
 
-        function sendWhatsAppBooking() {
-            const name = document.getElementById('client-name').value.trim();
-            const service = document.getElementById('client-service').value;
-            const barber = document.getElementById('client-barber').value;
-            const date = document.getElementById('client-date').value;
-            const time = document.getElementById('client-time').value;
-
-            if (!name) {
-                alert('Por favor ingresa tu nombre.');
-                document.getElementById('client-name').focus();
-                return;
-            }
-
-            if (!time) {
-                alert('Por favor selecciona una hora para la cita.');
-                document.getElementById('client-time').focus();
-                return;
-            }
-
-            // Datos estructurados para la hoja de Google Sheets
-            const datosCita = {
-                cliente: name,
-                servicio: service,
-                barbero: barber,
-                fechaCita: date,
-                horaCita: time
+            const titles = {
+                'finanzas': 'Resumen Financiero', 'cortes': 'Registro de Cortes', 'inventario': 'Inventario y Stock',
+                'nomina': 'Pago de Planilla', 'barberos': 'Control de Personal', 'config': 'Configuración'
             };
+            document.getElementById('section-title').innerText = titles[sectionId];
+            
+            if(sectionId === 'cortes') { updateBarberSelect(); renderCuts(); }
+            if(sectionId === 'nomina') renderPayroll();
+            if(sectionId === 'inventario') renderInventory();
+            if(sectionId === 'finanzas') updateFinanceProductSelect();
+        }
 
-            // URL oficial de tu Web App de Google Apps Script
-            const webAppUrl = "https://script.google.com/macros/s/AKfycbzJhbT3Q5mPyOtdHQQAjN3V0uyOvQ4Ep73ZqEiz0ZbioRoZ8XUAgVgcJ1KTVwPdvd7ywg/exec";
+        let barbers = JSON.parse(localStorage.getItem('barber_staff')) || [
+            { id: 1, name: 'Carlos Muñoz', role: 'admin', phone: '+504 9123-4567', spec: 'Admin', comm: 10, status: 'activo' },
+            { id: 2, name: 'Jorge García', role: 'supervisor', phone: '+504 9876-5432', spec: 'Fade', comm: 50, status: 'activo' },
+            { id: 3, name: 'Kevin Orellana', role: 'barbero', phone: '+504 9541-2233', spec: 'Clásico y Barba', comm: 45, status: 'activo' },
+            { id: 4, name: 'Alejandro Pineda', role: 'barbero', phone: '+504 9332-1144', spec: 'Diseños y Freestyle', comm: 45, status: 'activo' },
+            { id: 5, name: 'Mario Valladares', role: 'barbero', phone: '+504 9778-8899', spec: 'Texturizados', comm: 40, status: 'activo' }
+        ];
 
-            // Envío en segundo plano hacia Google Sheets
-            if (webAppUrl !== "") {
-                fetch(webAppUrl, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(datosCita)
-                }).catch(error => console.error("Error al registrar cita en la nube:", error));
+        let inventory = JSON.parse(localStorage.getItem('barber_inventory')) || [
+            { id: 1, name: 'Pomada Mate', category: 'Cabello', price: 280.00, stock: 15 },
+            { id: 2, name: 'Minoxidil 5%', category: 'Tratamiento', price: 450.00, stock: 5 }
+        ];
+        let transactions = JSON.parse(localStorage.getItem('barber_transactions')) || [];
+        let cuts = JSON.parse(localStorage.getItem('barber_cuts')) || [];
+
+        // INVENTARIO
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-table');
+            tbody.innerHTML = '';
+            inventory.forEach(item => {
+                const badge = item.stock > 5 ? 'stock-ok' : 'stock-low';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.name}</strong></td>
+                        <td>${item.category}</td>
+                        <td style="color: var(--success);">L ${item.price.toFixed(2)}</td>
+                        <td>${item.stock} un.</td>
+                        <td><span class="badge ${badge}">${item.stock > 5 ? 'DISPONIBLE' : 'BAJO STOCK'}</span></td>
+                        <td><button class="btn-sell" onclick="sellItem(${item.id})">Vender (1)</button></td>
+                    </tr>`;
+            });
+        }
+
+        function sellItem(id) {
+            const product = inventory.find(p => p.id === id);
+            if (product.stock > 0 && confirm(`¿Vender "${product.name}" por L ${product.price}?`)) {
+                product.stock--;
+                localStorage.setItem('barber_inventory', JSON.stringify(inventory));
+                transactions.unshift({ id: Date.now(), type: 'ingreso', desc: `Venta: ${product.name}`, amount: product.price, date: todayStr });
+                localStorage.setItem('barber_transactions', JSON.stringify(transactions));
+                renderInventory(); renderFinance();
+            }
+        }
+
+        // FINANZAS
+        const movTypeSelect = document.getElementById('mov-type');
+        const movProductSelect = document.getElementById('mov-product-select');
+        const movDescCustom = document.getElementById('mov-desc-custom');
+        const movAmountInput = document.getElementById('mov-amount');
+
+        movTypeSelect.addEventListener('change', updateFinanceProductSelect);
+        movProductSelect.addEventListener('change', () => {
+            if (movTypeSelect.value === 'ingreso') movAmountInput.value = movProductSelect.options[movProductSelect.selectedIndex].dataset.price;
+        });
+
+        function updateFinanceProductSelect() {
+            movProductSelect.innerHTML = '';
+            if (movTypeSelect.value === 'ingreso') {
+                movProductSelect.style.display = 'block'; movDescCustom.style.display = 'none';
+                movAmountInput.readOnly = true;
+                inventory.forEach(i => movProductSelect.innerHTML += `<option data-id="${i.id}" data-price="${i.price}" value="${i.name}">${i.name} (L ${i.price})</option>`);
+                if(inventory.length) movAmountInput.value = inventory[0].price.toFixed(2);
+            } else {
+                movProductSelect.style.display = 'none'; movDescCustom.style.display = 'block';
+                movAmountInput.value = ''; movAmountInput.readOnly = false;
+            }
+        }
+
+        document.getElementById('finance-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const type = movTypeSelect.value;
+            let desc = movDescCustom.value;
+            let amount = parseFloat(movAmountInput.value);
+
+            if (type === 'ingreso') {
+                const id = parseInt(movProductSelect.options[movProductSelect.selectedIndex].dataset.id);
+                const prod = inventory.find(p => p.id === id);
+                if (prod.stock <= 0) return alert('Sin stock');
+                prod.stock--; localStorage.setItem('barber_inventory', JSON.stringify(inventory));
+                desc = `Venta: ${prod.name}`;
             }
 
-            const phoneNumber = "50491234567"; // Número de WhatsApp de destino
+            transactions.unshift({ id: Date.now(), type, desc, amount, date: document.getElementById('mov-date').value });
+            localStorage.setItem('barber_transactions', JSON.stringify(transactions));
+            e.target.reset(); document.getElementById('mov-date').valueAsDate = new Date();
+            updateFinanceProductSelect(); renderFinance();
+        });
 
-            const message = `¡Hola! 👋 Me gustaría reservar una cita en la barbería.\n\n` +
-                            `👤 *Cliente:* ${name}\n` +
-                            `✂️ *Servicio:* ${service}\n` +
-                            `👨‍🦱 *Barbero:* ${barber}\n` +
-                            `📅 *Fecha:* ${date}\n` +
-                            `⏰ *Hora:* ${time}\n\n` +
-                            `Quedo a la espera de su confirmación. ¡Gracias!`;
+        function renderFinance() {
+            const tbody = document.getElementById('transactions-table');
+            tbody.innerHTML = '';
+            transactions.slice(0, 10).forEach(tx => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${tx.date}</td>
+                        <td><span class="badge ${tx.type}">${tx.type.toUpperCase()}</span></td>
+                        <td>${tx.desc}</td>
+                        <td style="color: ${tx.type === 'ingreso' ? 'var(--success)' : 'var(--danger)'}">${tx.type === 'ingreso'?'+':'-'}L ${tx.amount.toFixed(2)}</td>
+                    </tr>`;
+            });
+            
+            let iday=0, eday=0, iw=0, ew=0, im=0, em=0;
+            const now = new Date();
+            const startWeek = new Date(now); startWeek.setDate(now.getDate() - now.getDay() + 1); startWeek.setHours(0,0,0,0);
+            
+            transactions.forEach(tx => {
+                const amt = tx.amount, isInc = tx.type === 'ingreso', d = new Date(tx.date + 'T00:00:00');
+                if (tx.date === todayStr) { isInc ? iday+=amt : eday+=amt; }
+                if (d >= startWeek) { isInc ? iw+=amt : ew+=amt; }
+                if (d.getMonth() === now.getMonth()) { isInc ? im+=amt : em+=amt; }
+            });
 
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-            window.open(whatsappURL, '_blank');
-            closeModal();
+            document.getElementById('kpi-inc-day').innerText = `L ${iday.toFixed(2)}`;
+            document.getElementById('kpi-exp-day').innerText = `L ${eday.toFixed(2)}`;
+            document.getElementById('kpi-inc-week').innerText = `L ${iw.toFixed(2)}`;
+            document.getElementById('kpi-exp-week').innerText = `L ${ew.toFixed(2)}`;
+            document.getElementById('kpi-inc-month').innerText = `L ${im.toFixed(2)}`;
+            document.getElementById('kpi-exp-month').innerText = `L ${em.toFixed(2)}`;
         }
+
+        // CORTES
+        document.getElementById('cut-service').addEventListener('change', (e) => {
+            document.getElementById('cut-price').value = e.target.options[e.target.selectedIndex].dataset.price;
+        });
+        document.getElementById('cut-price').value = "250.00";
+
+        document.getElementById('cut-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const sel = document.getElementById('cut-barber');
+            const name = sel.value, rate = parseFloat(sel.options[sel.selectedIndex].dataset.comm);
+            const serv = document.getElementById('cut-service').value, price = parseFloat(document.getElementById('cut-price').value);
+            const date = document.getElementById('cut-date').value;
+            const comm = price * (rate/100);
+            
+            cuts.unshift({ id: Date.now(), barber: name, service: serv, price, commRate: rate, commission: comm, date });
+            transactions.unshift({ id: Date.now()+1, type: 'ingreso', desc: `Corte: ${serv} (${name})`, amount: price, date });
+            
+            localStorage.setItem('barber_cuts', JSON.stringify(cuts));
+            localStorage.setItem('barber_transactions', JSON.stringify(transactions));
+            e.target.reset(); document.getElementById('cut-date').valueAsDate = new Date(); document.getElementById('cut-price').value = "250.00";
+            renderCuts(); renderFinance();
+        });
+
+        function renderCuts() {
+            const ctBody = document.getElementById('cuts-table'), dsBody = document.getElementById('daily-summary-table');
+            ctBody.innerHTML = ''; dsBody.innerHTML = '';
+            
+            cuts.slice(0, 15).forEach(c => {
+                ctBody.innerHTML += `<tr><td>${c.date}</td><td><strong>${c.barber}</strong></td><td>${c.service}</td>
+                <td style="color: var(--success);">+L ${c.price.toFixed(2)}</td><td style="color: var(--accent-gold);">L ${c.commission.toFixed(2)}</td></tr>`;
+            });
+
+            barbers.filter(b=>b.status==='activo').forEach(b => {
+                const tc = cuts.filter(c => c.barber === b.name && c.date === todayStr);
+                const rev = tc.reduce((a, c) => a + c.price, 0), com = tc.reduce((a, c) => a + c.commission, 0);
+                dsBody.innerHTML += `<tr><td><strong>${b.name}</strong></td><td>${tc.length} serv.</td>
+                <td style="color: var(--success);">L ${rev.toFixed(2)}</td><td style="color: var(--accent-gold); font-weight:bold;">L ${com.toFixed(2)}</td></tr>`;
+            });
+        }
+
+        // PERSONAL Y PLANILLA
+        function renderBarbers() {
+            const tbody = document.getElementById('barbers-table'); tbody.innerHTML = '';
+            barbers.forEach(b => {
+                let badgeClass = 'supervisor-rol';
+                if(b.role === 'admin') badgeClass = 'admin-rol';
+                if(b.role === 'barbero') badgeClass = 'barbero-rol';
+
+                tbody.innerHTML += `<tr><td><strong>${b.name}</strong></td><td><span class="badge ${badgeClass}">${b.role.toUpperCase()}</span></td>
+                <td>${b.spec}</td><td>${b.comm}%</td><td><span class="badge ${b.status}">${b.status.toUpperCase()}</span></td></tr>`;
+            });
+        }
+
+        function updateBarberSelect() {
+            const sel = document.getElementById('cut-barber'); sel.innerHTML = '';
+            barbers.filter(b=>b.status==='activo').forEach(b => {
+                sel.innerHTML += `<option value="${b.name}" data-comm="${b.comm}">${b.name} (${b.role} - ${b.comm}%)</option>`;
+            });
+        }
+
+        document.getElementById('barber-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            barbers.push({ id: Date.now(), name: document.getElementById('barber-name').value, role: document.getElementById('barber-role').value,
+                phone: document.getElementById('barber-phone').value, spec: document.getElementById('barber-spec').value,
+                comm: parseFloat(document.getElementById('barber-comm').value), status: 'activo' });
+            localStorage.setItem('barber_staff', JSON.stringify(barbers));
+            e.target.reset(); renderBarbers(); updateBarberSelect();
+        });
+
+        function renderPayroll() {
+            const tbody = document.getElementById('payroll-table'); tbody.innerHTML = '';
+            barbers.filter(b=>b.status==='activo').forEach(b => {
+                const sc = cuts.filter(c => c.barber === b.name);
+                const total = sc.reduce((a, c) => a + c.commission, 0);
+                tbody.innerHTML += `<tr><td><strong>${b.name}</strong></td><td>${b.phone}</td><td>${b.comm}%</td>
+                <td>${sc.length} serv.</td><td style="color: var(--accent-gold); font-weight:bold;">L ${total.toFixed(2)}</td>
+                <td><button class="btn-pay" onclick="payStaff('${b.name}', ${total})">Pagar</button></td></tr>`;
+            });
+        }
+
+        function payStaff(name, amount) {
+            if (amount <= 0) return alert('Sin montos por liquidar.');
+            if (confirm(`¿Liquidar L ${amount.toFixed(2)} para ${name}?`)) {
+                transactions.unshift({ id: Date.now(), type: 'planilla', desc: `Planilla: ${name}`, amount, date: todayStr });
+                localStorage.setItem('barber_transactions', JSON.stringify(transactions));
+                cuts = cuts.filter(c => c.barber !== name); localStorage.setItem('barber_cuts', JSON.stringify(cuts));
+                
+                // Mostrar Voucher
+                document.getElementById('v-id').innerText = 'VCH-'+Math.floor(100000+Math.random()*900000);
+                document.getElementById('v-date').innerText = new Date().toLocaleString();
+                document.getElementById('v-name').innerText = name;
+                document.getElementById('v-services').innerText = 'Pago de Servicios Acumulados';
+                document.getElementById('v-amount').innerText = 'L ' + amount.toFixed(2);
+                document.getElementById('voucher-modal').classList.add('active');
+
+                renderPayroll(); renderCuts(); renderFinance();
+            }
+        }
+
+        function closeVoucherModal() { document.getElementById('voucher-modal').classList.remove('active'); }
+
+        // Inicialización automática al cargar el script
+        renderBarbers();
+        renderCuts();
+        renderPayroll();
+        renderInventory();
+        updateFinanceProductSelect();
+        renderFinance();
     </script>
 </body>
 </html>

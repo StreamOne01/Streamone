@@ -359,7 +359,7 @@
         <div class="welcome-card">
             <div class="input-group">
                 <label>Enlace M3U (URL)</label>
-                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="">
+                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u">
             </div>
 
             <div class="file-upload-btn" onclick="document.getElementById('m3uFileInput').click()">
@@ -447,26 +447,34 @@
         }
 
         async function iniciarStreamOne() {
-            const rawUrl = m3uUrlInput.value.trim();
+            let rawUrl = m3uUrlInput.value.trim();
             if (!rawUrl) {
                 alert("Ingresa un enlace M3U válido");
                 return;
             }
 
-            // Uso de Proxy CORS para evitar bloqueos del servidor externo al leer el M3U
-            const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawUrl);
+            // Conversión inteligente de GitHub a jsDelivr CDN para evitar CORS de forma nativa
+            if (rawUrl.includes("raw.githubusercontent.com")) {
+                rawUrl = rawUrl
+                    .replace("raw.githubusercontent.com/", "cdn.jsdelivr.net/gh/")
+                    .replace("/refs/heads/", "@");
+            } else if (rawUrl.includes("github.com") && rawUrl.includes("/blob/")) {
+                rawUrl = rawUrl
+                    .replace("github.com", "cdn.jsdelivr.net/gh")
+                    .replace("/blob/", "@");
+            }
 
             try {
                 folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 5px; width: 100%; text-align: center;">Cargando lista...</div>';
                 welcomeScreen.style.display = 'none';
 
-                const respuesta = await fetch(url);
+                const respuesta = await fetch(rawUrl);
                 if (!respuesta.ok) throw new Error("Error de red");
                 const texto = await respuesta.text();
                 parsearM3UenCarpetas(texto);
             } catch (error) {
                 welcomeScreen.style.display = 'flex';
-                alert("No se pudo cargar la lista. Verifica la URL o las restricciones CORS del servidor.");
+                alert("No se pudo cargar la lista. Verifica la URL o usa un archivo local.");
             }
         }
 

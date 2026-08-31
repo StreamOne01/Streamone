@@ -597,10 +597,12 @@
 
             if (hls) hls.destroy();
 
-            // Enrutamiento mediante proxy HTTPS si la página se ejecuta desde GitHub Pages y el canal es HTTP
+            // ⚠️ NOTA: Si despliegas tu propio Cloudflare Worker, reemplaza la URL de ejemplo 
+            // de abajo ('https://tu-proxy.tu-usuario.workers.dev/?url=') por la tuya real.
             let urlReproduccion = url;
             if (location.protocol === 'https:' && url.startsWith('http://')) {
-                urlReproduccion = `https://corsproxy.io/?` + encodeURIComponent(url);
+                const proxyPersonal = "https://tu-proxy.tu-usuario.workers.dev/?url=";
+                urlReproduccion = proxyPersonal + encodeURIComponent(url);
             }
 
             if (url.includes('.m3u8')) {
@@ -610,10 +612,7 @@
                         liveSyncDurationCount: 3,
                         highBufferWatchdogPeriod: 1,
                         fragLoadingMaxRetry: 5,
-                        manifestLoadingMaxRetry: 5,
-                        xhrSetup: function (xhr, url) {
-                            xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
-                        }
+                        manifestLoadingMaxRetry: 5
                     });
                     
                     hls.loadSource(urlReproduccion);

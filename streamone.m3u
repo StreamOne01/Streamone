@@ -12,20 +12,7 @@
 # ==========================================
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",DIRECTV SPORTS FHD
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/214.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",DIRECTV SPORTS 2 FHD
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/215.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",DIRECTV SPORTS PLUS FHD
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/216.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 1
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/230.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 2
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/232.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 3
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/238.ts
-#EXTINF:-1 tvg-id="01" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES LIGA",OPCION 4
-https://regionales.saohgdasregions.fun:25463/StreamOne/J6jGM3dsEu/240.ts
+
 #EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM ONE",DRAGON BALL TV
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",El Chavo TV
@@ -298,6 +285,12 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # ==========================================
 # SECCIÓN: PELÍCULAS (VOD)
 # ==========================================
+
+#EXTINF:-1 tvg-logo="href="https://image.tmdb.org/t/p/w1280/5lB7yPaRhJHQ9dx7AnvPUi0GZDU.jpg"" group-title="Drama",El último amanecer 2026
+https://files.eintim.me/content/cdn/jyDuBeIeIWfJ.mp4
+
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/viZqGq9TNvQ5uXSD4ahg2RpRONT.jpg" group-title="Familiar",Coyote Acne 2026
+https://files.eintim.me/content/cdn/HjZKrxDqvhev.mp4
 
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/wENlYOyR10DZzkICmrGUQQX4Ih5.jpg" group-title="Familiar",Toy Story 5 2026
 https://files.eintim.me/content/cdn/afLLOYCkWGCN.mp4
@@ -740,6 +733,10 @@ https://files.eintim.me/content/cdn/monxvDPOdVBI.mp4
 https://files.eintim.me/content/cdn/csTVjoakaBxi.mp4
 #EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo39IJoikBIpYo55OHdZdWPpWKm1kzrixeuNaAwL_KYA&s=10" group-title="Lucky" tvg-name="Lucky S01E02",Lucky S01E02
 https://files.eintim.me/content/cdn/kRVBcjVJFHwg.mp4
+
+
+
+
 
 
 

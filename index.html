@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Stream One - Centro de Entretenimiento IPTV</title>
+    <!-- 
+        ==================================================
+        Desarrollado por: Carlos Muñoz
+        Proyecto: Stream One (Centro de Entretenimiento IPTV)
+        Derechos de Autor reservados © 2026
+        ==================================================
+    -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
@@ -17,7 +24,7 @@
             --text-muted: #94a3b8;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -233,12 +240,13 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.6);
         }
 
+        /* Optimización de nitidez y renderizado fluido en el video */
         video {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            image-rendering: -webkit-optimize-contrast;
-            transform: translateZ(0);
+            image-rendering: -webkit-optimize-contrast; /* Mejora contraste de imagen escalada */
+            transform: translateZ(0); /* Fuerza aceleración por hardware de la GPU */
         }
 
         .epg-bar {
@@ -256,7 +264,6 @@
             overflow-x: auto;
             padding: 5px 0;
             scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
         }
         .folders-scroll-container::-webkit-scrollbar { display: none; }
 
@@ -312,7 +319,6 @@
             align-items: center;
             gap: 8px;
             flex: 1;
-            -webkit-overflow-scrolling: touch;
         }
 
         .list-item {
@@ -343,7 +349,9 @@
 </head>
 <body>
 
+    <!-- Pantalla de Bienvenida (Lobby) -->
     <div id="welcomeScreen">
+        
         <div class="floating-brand-container">
             <h1 class="floating-logo">Stream One</h1>
             <div class="floating-subtitle">Centro de entretenimiento IPTV</div>
@@ -352,7 +360,7 @@
         <div class="welcome-card">
             <div class="input-group">
                 <label>Enlace M3U (URL)</label>
-                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u">
+                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="">
             </div>
 
             <div class="file-upload-btn" onclick="document.getElementById('m3uFileInput').click()">
@@ -373,19 +381,22 @@
         </div>
     </div>
 
+    <!-- Cabecera -->
     <header>
         <div class="brand-logo-header">📺 Stream One</div>
         <div class="header-right">
-            <button onclick="cambiarLista()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color:#fff; padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 11px;">🔄 Cambiar</button>
+            <button onclick="location.reload()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color:#fff; padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 11px;">🔄 Cambiar</button>
             <span id="reloj">11:46 PM</span>
         </div>
     </header>
 
+    <!-- Interfaz Estructurada -->
     <div class="app-container">
         
+        <!-- 1. Reproductor Arriba -->
         <div class="player-column">
             <div class="video-box">
-                <video id="videoPlayer" controls playsinline webkit-playsinline autoplay></video>
+                <video id="videoPlayer" controls playsinline autoplay></video>
             </div>
             <div class="epg-bar">
                 <div class="epg-info">
@@ -395,10 +406,12 @@
             </div>
         </div>
 
+        <!-- 2. Carpetas en Horizontal (Scroll) -->
         <div class="folders-scroll-container" id="folderList">
             <div style="color: var(--text-muted); font-size: 12px; padding: 5px; text-align: center; width: 100%;">Esperando lista...</div>
         </div>
 
+        <!-- 3. Elementos en Vertical (Centrados Perfectos) -->
         <div class="column-box">
             <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
             <div id="itemList" class="column-content">
@@ -423,14 +436,6 @@
 
         window.onload = function() {
             setInterval(actualizarReloj, 1000);
-            
-            const urlGuardada = localStorage.getItem('stream_one_m3u_url');
-            if (urlGuardada) {
-                m3uUrlInput.value = urlGuardada;
-                cargarListaDesdeUrl(urlGuardada);
-            } else {
-                m3uUrlInput.value = "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u";
-            }
         };
 
         function actualizarReloj() {
@@ -449,34 +454,17 @@
                 return;
             }
 
-            localStorage.setItem('stream_one_m3u_url', url);
-            cargarListaDesdeUrl(url);
-        }
-
-        async function cargarListaDesdeUrl(url) {
             try {
                 folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 5px; width: 100%; text-align: center;">Cargando lista...</div>';
                 welcomeScreen.style.display = 'none';
 
-                let texto = "";
-                try {
-                    const respuesta = await fetch(url);
-                    if (!respuesta.ok) throw new Error("Fallo directo");
-                    texto = await respuesta.text();
-                } catch (errDirecto) {
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-                    const respuestaProxy = await fetch(proxyUrl);
-                    if (!respuestaProxy.ok) throw new Error("Fallo de red total");
-                    texto = await respuestaProxy.text();
-                }
-
-                if (!texto || texto.trim() === "") throw new Error("Lista vacía");
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) throw new Error("Error de red");
+                const texto = await respuesta.text();
                 parsearM3UenCarpetas(texto);
-
             } catch (error) {
                 welcomeScreen.style.display = 'flex';
-                localStorage.removeItem('stream_one_m3u_url');
-                alert("No se pudo cargar la lista. Verifica que el enlace sea correcto y esté activo.");
+                alert("No se pudo cargar la lista. Verifica la URL.");
             }
         }
 
@@ -490,12 +478,6 @@
                 parsearM3UenCarpetas(e.target.result);
             };
             lector.readAsText(archivo);
-        }
-
-        function cambiarLista() {
-            localStorage.removeItem('stream_one_m3u_url');
-            m3uUrlInput.value = '';
-            welcomeScreen.style.display = 'flex';
         }
 
         function parsearM3UenCarpetas(contenido) {
@@ -548,109 +530,4 @@
             categorias.forEach((cat, index) => {
                 const div = document.createElement('div');
                 div.className = 'folder-chip';
-                div.id = `chip-${index}`;
-                div.textContent = `📁 ${cat} (${baseDatosCategorias[cat].length})`;
-                div.onclick = () => seleccionarCarpeta(cat, div);
-                folderList.appendChild(div);
-            });
 
-            if (categorias.length > 0) {
-                document.getElementById('chip-0').click();
-            }
-        }
-
-        function seleccionarCarpeta(nombreCarpeta, elementoDiv) {
-            document.querySelectorAll('.folder-chip').forEach(el => el.classList.remove('active'));
-            elementoDiv.classList.add('active');
-
-            elementoDiv.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-
-            itemsHeaderTitle.textContent = `📄 ${nombreCarpeta}`;
-            const elementos = baseDatosCategorias[nombreCarpeta] || [];
-            renderizarElementos(elementos);
-        }
-
-        function renderizarElementos(elementos) {
-            itemList.innerHTML = '';
-
-            if (elementos.length === 0) {
-                itemList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 13px;">Carpeta vacía</div>';
-                return;
-            }
-
-            elementos.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'list-item';
-                div.textContent = item.nombre;
-                div.title = item.nombre;
-                div.onclick = () => reproducirItem(item.url, item.nombre, div);
-                itemList.appendChild(div);
-            });
-        }
-
-        function reproducirItem(url, nombre, elementoDiv) {
-            document.querySelectorAll('#itemList .list-item').forEach(el => el.classList.remove('active'));
-            elementoDiv.classList.add('active');
-
-            currentTitle.textContent = nombre;
-            currentDesc.textContent = "Reproduciendo • Stream One";
-
-            if (hls) hls.destroy();
-
-            // ⚠️ NOTA: Si despliegas tu propio Cloudflare Worker, reemplaza la URL de ejemplo 
-            // de abajo ('https://tu-proxy.tu-usuario.workers.dev/?url=') por la tuya real.
-            let urlReproduccion = url;
-            if (location.protocol === 'https:' && url.startsWith('http://')) {
-                const proxyPersonal = "https://tu-proxy.tu-usuario.workers.dev/?url=";
-                urlReproduccion = proxyPersonal + encodeURIComponent(url);
-            }
-
-            if (url.includes('.m3u8')) {
-                if (Hls.isSupported()) {
-                    hls = new Hls({
-                        maxBufferLength: 30,
-                        liveSyncDurationCount: 3,
-                        highBufferWatchdogPeriod: 1,
-                        fragLoadingMaxRetry: 5,
-                        manifestLoadingMaxRetry: 5
-                    });
-                    
-                    hls.loadSource(urlReproduccion);
-                    hls.attachMedia(video);
-                    
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        video.play().catch(e => console.log("Reproducción pausada:", e));
-                    });
-                    
-                    hls.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal) {
-                            switch (data.type) {
-                                case Hls.ErrorTypes.NETWORK_ERROR:
-                                    hls.startLoad();
-                                    break;
-                                case Hls.ErrorTypes.MEDIA_ERROR:
-                                    hls.recoverMediaError();
-                                    break;
-                                default:
-                                    hls.destroy();
-                                    break;
-                            }
-                        }
-                    });
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = urlReproduccion;
-                    video.addEventListener('loadedmetadata', () => {
-                        video.play().catch(e => console.log(e));
-                    }, { once: true });
-                } else {
-                    alert('HLS no compatible');
-                }
-            } else {
-                video.src = urlReproduccion;
-                video.load();
-                video.play().catch(e => console.log(e));
-            }
-        }
-    </script>
-</body>
-</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stream One - Azul Pro</title>
+    <title>Stream One - Azul Pro Centrado</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
@@ -12,7 +12,6 @@
             --bg-card: rgba(26, 38, 67, 0.6);
             --bg-card-hover: rgba(0, 113, 227, 0.25);
             --accent: #0071e3;
-            --accent-gold: #ffb703;
             --text-main: #ffffff;
             --text-muted: #94a3b8;
         }
@@ -31,7 +30,7 @@
             overflow-x: hidden;
         }
 
-        /* Pantalla de Bienvenida (Sin lista precargada) */
+        /* Pantalla de Bienvenida */
         #welcomeScreen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -212,7 +211,7 @@
             box-shadow: 0 2px 10px rgba(0, 113, 227, 0.4);
         }
 
-        /* Sección de Elementos Vertical y Centrada */
+        /* Sección de Elementos Vertical Forzada al Centrado */
         .column-box {
             background: var(--bg-overlay);
             border-radius: 12px;
@@ -241,9 +240,9 @@
             padding: 12px;
             display: flex;
             flex-direction: column;
+            align-items: center; /* Centra estrictamente a los hijos horizontalmente */
             gap: 8px;
             flex: 1;
-            align-items: stretch; /* Se asegura de mantener orden simétrico */
         }
 
         .list-item {
@@ -254,7 +253,9 @@
             font-size: 13px;
             font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center; /* Contenido centrado dentro de cada elemento */
+            width: 100%; /* Ocupa el contenedor pero se alinea al centro */
+            max-width: 520px; /* Evita que se estiren demasiado en pantallas anchas */
+            text-align: center; /* Texto perfectamente centrado */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -321,7 +322,7 @@
             <div style="color: var(--text-muted); font-size: 12px; padding: 5px; text-align: center; width: 100%;">Esperando lista...</div>
         </div>
 
-        <!-- 3. Elementos en Vertical (Centrados) -->
+        <!-- 3. Elementos en Vertical (Centrados Forzados) -->
         <div class="column-box">
             <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
             <div id="itemList" class="column-content">

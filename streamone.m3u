@@ -18,9 +18,23 @@ https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",El Chavo TV
 https://live20.bozztv.com/giatvplayout7/giatv-211465/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Distrito Comedia
-http://177.234.249.135:8888/DistritoComedia/tracks-v1a1/mono.m3u8
+http://181.78.8.199:8000/play/a07i/index.m3u8
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Azteca Uno
+https://azt-oo.otteravision.com/out/v1/da53d7d388be437e92bf8f464018eb48/index.m3u8
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Multimedios CDMX
+https://mdstrm.com/live-stream-playlist/5f2d9d6ff17144074bd8a284.m3u8
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Azteca Internacional
+https://dujft6o2exhah.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-0lvc4h1b07aou/mun.m3u8
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Estrella TV
+https://estrellatv-oando.amagi.tv/playlistR720P.m3u8
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",ADN 40
+https://mdstrm.com/live-stream-playlist/60b578b060947317de7b57ac.m3u8?PlaylistM3UCL
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title=" Honduras",Canal 15 DTP
+https://vdo.tecnoservix.stream:3838/live/canal15dtplive.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES DE CINE",Golden Edge
 http://138.186.23.7:8082/GOLDENEDGE/tracks-v1a1/mono.ts.m3u8
+#EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES DE CINE",Click TV
+https://v2.tustreaming.cl/clicktv/playlist.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="TVE Internacional" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM UNO",TVE Internacional
 https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/tvei_ame_main_1080.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="TVE Star HD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES DE CINE",TVE Star HD
@@ -37,8 +51,6 @@ http://181.78.8.199:8000/play/a0cc/index.m3u8
 https://1199970269.rsc.cdn77.org/FTF/FTF_SCTE.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="03 ITV DEPORTES" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ITV DEPORTES
 https://thm-it-roku.otteravision.com/thm/it/it.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="04 TUDN USA" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",TUDN USA
-https://dcs3-live.mp.lura.live/server/play/08B9B4TW61Rdc58j/manifest.m3u8
 #EXTINF:-1 tvg-id="46" tvg-name="05 BEIN SPORTS ESPAÑOL" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",BEIN SPORTS ESPAÑOL
 https://bein-esp-xumo.amagi.tv:443/playlistR720P.m3u8
 #EXTINF:-1 tvg-id="46" tvg-name="06 ESPN 1" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 1
@@ -173,6 +185,8 @@ http://181.78.8.199:8000/play/a070/index.m3u8
 https://live20.bozztv.com/giatv/giatv-ZYOONTV/ZYOONTV/chunks.m3u8?WebM3UCL
 #EXTINF:-1 tvg-id="01" tvg-name="64 Infantiles JR" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES INFANTILES",Infantiles JR
 http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/universalcrime/playlist.m3u8
+#EXTINF:-1 tvg-id="01" tvg-name="64 Infantiles JR" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES INFANTILES",CN City
+https://envivo.cncity.live/hls/envivo.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="Telemundo Romance" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM UNO",Telemundo Romance
 https://xumo-drct-ch836-57aiq.fast.nbcuni.com/live/master.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="Canal Olanchano" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Canal Olanchano
@@ -747,6 +761,9 @@ https://files.eintim.me/content/cdn/monxvDPOdVBI.mp4
 https://files.eintim.me/content/cdn/csTVjoakaBxi.mp4
 #EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo39IJoikBIpYo55OHdZdWPpWKm1kzrixeuNaAwL_KYA&s=10" group-title="Lucky" tvg-name="Lucky S01E02",Lucky S01E02
 https://files.eintim.me/content/cdn/kRVBcjVJFHwg.mp4
+
+
+
 
 
 

@@ -211,7 +211,7 @@
             box-shadow: 0 2px 10px rgba(0, 113, 227, 0.4);
         }
 
-        /* Sección de Elementos Vertical Forzada al Centrado */
+        /* Sección de Elementos Vertical */
         .column-box {
             background: var(--bg-overlay);
             border-radius: 12px;
@@ -240,7 +240,7 @@
             padding: 12px;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centra estrictamente a los hijos horizontalmente */
+            align-items: center;
             gap: 8px;
             flex: 1;
         }
@@ -253,12 +253,13 @@
             font-size: 13px;
             font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            width: 100%; /* Ocupa el contenedor pero se alinea al centro */
-            max-width: 520px; /* Evita que se estiren demasiado en pantallas anchas */
-            text-align: center; /* Texto perfectamente centrado */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: break-word;
             transition: all 0.2s ease;
         }
         .list-item:hover { background: var(--bg-card-hover); border-color: var(--accent); }
@@ -322,7 +323,7 @@
             <div style="color: var(--text-muted); font-size: 12px; padding: 5px; text-align: center; width: 100%;">Esperando lista...</div>
         </div>
 
-        <!-- 3. Elementos en Vertical (Centrados Forzados) -->
+        <!-- 3. Elementos en Vertical (Centrados Perfectos) -->
         <div class="column-box">
             <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
             <div id="itemList" class="column-content">

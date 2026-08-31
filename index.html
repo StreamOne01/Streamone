@@ -595,11 +595,12 @@
 
             if (hls) hls.destroy();
 
+            // Enlaces HTTP directos o bloqueados se enrutan automáticamente por proxy seguro
             let urlReproduccion = url;
             const esEnlaceInseguro = url.startsWith('http://');
             
             if (esEnlaceInseguro && location.protocol === 'https:') {
-                urlReproduccion = `https://corsproxy.io/?` + encodeURIComponent(url);
+                urlReproduccion = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
             }
 
             if (url.includes('.m3u8')) {
@@ -607,39 +608,19 @@
                     hls = new Hls({
                         maxBufferLength: 30,
                         liveSyncDurationCount: 3,
-                        highBufferWatchdogPeriod: 1,
-                        fragLoadingMaxRetry: 3,
-                        manifestLoadingMaxRetry: 3
+                        highBufferWatchdogPeriod: 1
                     });
-                    
                     hls.loadSource(urlReproduccion);
                     hls.attachMedia(video);
-                    
                     hls.on(Hls.Events.MANIFEST_PARSED, () => {
                         video.play().catch(e => console.log("Reproducción pausada:", e));
                     });
                     
+                    // Si el reproductor HLS falla por restricciones del servidor, intenta con URL directa de respaldo
                     hls.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal) {
-                            switch (data.type) {
-                                case Hls.ErrorTypes.NETWORK_ERROR:
-                                    console.log("Error de red, intentando reconectar...");
-                                    hls.startLoad();
-                                    break;
-                                case Hls.ErrorTypes.MEDIA_ERROR:
-                                    console.log("Error de medios, intentando recuperar...");
-                                    hls.recoverMediaError();
-                                    break;
-                                default:
-                                    if (urlReproduccion !== url) {
-                                        console.log("Desactivando proxy y probando enlace directo...");
-                                        urlReproduccion = url;
-                                        hls.loadSource(url);
-                                    } else {
-                                        hls.destroy();
-                                    }
-                                    break;
-                            }
+                        if (data.fatal && urlReproduccion !== url) {
+                            console.log("Cambiando a enlace directo por fallo del proxy...");
+                            hls.loadSource(url);
                         }
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {

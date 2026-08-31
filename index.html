@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* Pantalla de Bienvenida (Lobby) */
         #welcomeScreen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -187,7 +186,6 @@
             text-align: center;
         }
 
-        /* Cabecera Principal */
         header {
             background: rgba(10, 15, 28, 0.95);
             padding: 10px 15px;
@@ -203,7 +201,6 @@
         .brand-logo-header { font-size: 13px; font-weight: 800; color: #fff; background: rgba(0, 113, 227, 0.2); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(0, 113, 227, 0.4); }
         .header-right { display: flex; align-items: center; gap: 10px; font-size: 12px; }
 
-        /* Contenedor Principal */
         .app-container {
             display: flex;
             flex-direction: column;
@@ -595,25 +592,43 @@
 
             if (hls) hls.destroy();
 
-            // Compatibilidad nativa estricta para Safari y dispositivos iOS (iPhone/iPad)
-            if (video.canPlayType('application/vnd.apple.mpegurl') || !Hls.isSupported()) {
-                video.src = url;
-                video.addEventListener('loadedmetadata', () => {
-                    video.play().catch(e => console.log("Reproducción pausada por políticas del navegador:", e));
-                }, { once: true });
-            } else if (Hls.isSupported()) {
-                hls = new Hls({
-                    maxBufferLength: 30,
-                    liveSyncDurationCount: 3,
-                    highBufferWatchdogPeriod: 1
-                });
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(e => console.log("Reproducción pausada por políticas del navegador:", e));
-                });
+            // Asignación directa e inteligente para evitar bloqueos por contenido mixto
+            let urlFinal = url;
+            if (location.protocol === 'https:' && url.startsWith('http://')) {
+                // Utiliza un servicio proxy alternativo tolerante a flujos de video continuos
+                urlFinal = `https://corsproxy.io/?` + encodeURIComponent(url);
+            }
+
+            if (url.includes('.m3u8')) {
+                if (Hls.isSupported()) {
+                    hls = new Hls({
+                        maxBufferLength: 30,
+                        liveSyncDurationCount: 3,
+                        highBufferWatchdogPeriod: 1
+                    });
+                    hls.loadSource(urlFinal);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        video.play().catch(e => console.log("Reproducción pausada:", e));
+                    });
+                    
+                    // Fallback automático si el proxy de streaming presenta intermitencia
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal && urlFinal !== url) {
+                            console.log("Intentando bypass directo por error de proxy...");
+                            hls.loadSource(url);
+                        }
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = urlFinal;
+                    video.addEventListener('loadedmetadata', () => {
+                        video.play().catch(e => console.log(e));
+                    }, { once: true });
+                } else {
+                    alert('HLS no compatible');
+                }
             } else {
-                video.src = url;
+                video.src = urlFinal;
                 video.load();
                 video.play().catch(e => console.log(e));
             }

@@ -429,7 +429,6 @@
                 m3uUrlInput.value = urlGuardada;
                 cargarListaDesdeUrl(urlGuardada);
             } else {
-                // Precarga por defecto el enlace de GitHub que mencionaste
                 m3uUrlInput.value = "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u";
             }
         };
@@ -598,10 +597,11 @@
 
             if (hls) hls.destroy();
 
-            // Estrategia dual inteligente para navegador: 
-            // Si el canal falla con proxy, intenta directo y viceversa.
-            let usarProxy = location.protocol === 'https:' && url.startsWith('http://');
-            let urlReproduccion = usarProxy ? `https://corsproxy.io/?` + encodeURIComponent(url) : url;
+            // Enrutamiento mediante proxy HTTPS si la página se ejecuta desde GitHub Pages y el canal es HTTP
+            let urlReproduccion = url;
+            if (location.protocol === 'https:' && url.startsWith('http://')) {
+                urlReproduccion = `https://corsproxy.io/?` + encodeURIComponent(url);
+            }
 
             if (url.includes('.m3u8')) {
                 if (Hls.isSupported()) {
@@ -609,8 +609,11 @@
                         maxBufferLength: 30,
                         liveSyncDurationCount: 3,
                         highBufferWatchdogPeriod: 1,
-                        fragLoadingMaxRetry: 4,
-                        manifestLoadingMaxRetry: 4
+                        fragLoadingMaxRetry: 5,
+                        manifestLoadingMaxRetry: 5,
+                        xhrSetup: function (xhr, url) {
+                            xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+                        }
                     });
                     
                     hls.loadSource(urlReproduccion);
@@ -620,26 +623,18 @@
                         video.play().catch(e => console.log("Reproducción pausada:", e));
                     });
                     
-                    // Mecanismo de reintento automático cruzado si el canal se bloquea en navegador
                     hls.on(Hls.Events.ERROR, function(event, data) {
                         if (data.fatal) {
-                            if (usarProxy) {
-                                console.log("Falló el proxy, intentando enlace directo sin proxy...");
-                                usarProxy = false;
-                                hls.loadSource(url);
-                                hls.startLoad();
-                            } else {
-                                switch (data.type) {
-                                    case Hls.ErrorTypes.NETWORK_ERROR:
-                                        hls.startLoad();
-                                        break;
-                                    case Hls.ErrorTypes.MEDIA_ERROR:
-                                        hls.recoverMediaError();
-                                        break;
-                                    default:
-                                        hls.destroy();
-                                        break;
-                                }
+                            switch (data.type) {
+                                case Hls.ErrorTypes.NETWORK_ERROR:
+                                    hls.startLoad();
+                                    break;
+                                case Hls.ErrorTypes.MEDIA_ERROR:
+                                    hls.recoverMediaError();
+                                    break;
+                                default:
+                                    hls.destroy();
+                                    break;
                             }
                         }
                     });

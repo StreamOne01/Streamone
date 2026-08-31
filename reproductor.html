@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stream One - Móvil y PC</title>
+    <title>Stream One - Móvil Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
@@ -27,6 +27,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         /* Pantalla de Bienvenida */
@@ -136,32 +137,79 @@
         .brand-logo-header { font-size: 13px; font-weight: 800; color: #fff; background: rgba(0, 0, 0, 0.4); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); }
         .header-right { display: flex; align-items: center; gap: 10px; font-size: 12px; }
 
-        /* Botón de retroceso para móviles (oculto en PC) */
-        .mobile-back-btn {
-            display: none;
-            background: rgba(255, 183, 3, 0.2);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        /* Contenedor Adaptable (Grid en PC, Flex/Paso a paso en Móvil) */
+        /* Contenedor Principal (Diseño Móvil Optimizado) */
         .app-container {
-            display: grid;
-            grid-template-columns: 280px 320px 1fr;
-            gap: 15px;
-            padding: 75px 15px 15px 15px;
-            max-width: 1600px;
-            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 60px 10px 10px 10px;
             width: 100%;
-            height: 100vh;
-            flex: 1;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
+        /* Reproductor Arriba */
+        .player-column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: transparent;
+            width: 100%;
+        }
+
+        .video-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        }
+        video { width: 100%; height: 100%; object-fit: contain; }
+
+        .epg-bar {
+            background: var(--bg-overlay);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .epg-info h2 { margin: 0 0 2px 0; font-size: 14px; color: #fff; font-weight: 700; }
+        .epg-info p { margin: 0; font-size: 11px; color: var(--text-muted); }
+
+        /* Carrusel Horizontal de Carpetas */
+        .folders-scroll-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 0;
+            scrollbar-width: none; /* Ocultar barra en Firefox */
+        }
+        .folders-scroll-container::-webkit-scrollbar { display: none; /* Ocultar barra en Chrome/Safari */ }
+
+        .folder-chip {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            color: var(--text-muted);
+        }
+        .folder-chip:hover { border-color: var(--accent); }
+        .folder-chip.active {
+            background: rgba(255, 183, 3, 0.25);
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255, 183, 3, 0.2);
+        }
+
+        /* Sección de Elementos Vertical (Entra por debajo con scroll propio) */
         .column-box {
             background: var(--bg-overlay);
             border-radius: 12px;
@@ -169,13 +217,13 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            height: calc(100vh - 90px);
+            height: 45vh; /* Altura controlada para deslizar arriba y abajo cómodamente */
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
         .column-header {
-            padding: 14px 16px;
-            font-size: 13px;
+            padding: 12px 15px;
+            font-size: 12px;
             font-weight: 700;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(0,0,0,0.4);
@@ -209,71 +257,15 @@
         .list-item:hover { background: var(--bg-card-hover); border-color: rgba(255, 183, 3, 0.3); }
         .list-item.active { background: rgba(255, 183, 3, 0.25); border-color: var(--accent); color: #fff; }
 
-        .player-column {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: transparent;
-            border: none;
-            height: auto;
-        }
-
-        .video-box {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-        }
-        video { width: 100%; height: 100%; object-fit: contain; }
-
-        .epg-bar {
-            background: var(--bg-overlay);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-        .epg-info h2 { margin: 0 0 4px 0; font-size: 15px; color: #fff; font-weight: 700; }
-        .epg-info p { margin: 0; font-size: 12px; color: var(--text-muted); }
-
-        /* ================= MEDIA QUERY PARA CELULARES ================= */
-        @media (max-width: 1024px) {
+        /* Estilo para PC (Opcional si se abre en computadora se mantiene ordenado) */
+        @media (min-width: 1025px) {
             .app-container {
-                display: block; /* Se desactiva el grid de PC */
-                padding: 65px 10px 10px 10px;
-                height: auto;
+                max-width: 900px;
             }
-
-            /* Por defecto en móvil solo mostramos la columna de carpetas */
             .column-box {
-                display: none;
-                height: calc(100vh - 80px);
-                width: 100%;
-            }
-
-            .column-box.mobile-active {
-                display: flex; /* Muestra solo la columna activa */
-            }
-
-            .player-column {
-                display: none;
-                width: 100%;
-            }
-
-            .player-column.mobile-active {
-                display: flex;
-            }
-
-            .mobile-back-btn {
-                display: inline-block; /* Aparece el botón de regresar en el celular */
+                height: 50vh;
             }
         }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -300,35 +292,18 @@
 
     <!-- Cabecera -->
     <header>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="backBtn" class="mobile-back-btn" onclick="volverPasoAnterior()">⬅ Volver</button>
-            <div class="brand-logo-header">📺 Stream One</div>
-        </div>
+        <div class="brand-logo-header">📺 Stream One</div>
         <div class="header-right">
             <button onclick="location.reload()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 11px;">🔄 Cambiar</button>
             <span id="reloj">11:46 PM</span>
         </div>
     </header>
 
-    <!-- Interfaz adaptable -->
+    <!-- Interfaz Estructurada -->
     <div class="app-container">
         
-        <!-- Columna 1: Carpetas -->
-        <div class="column-box mobile-active" id="colCarpetas">
-            <div class="column-header">📁 Carpetas</div>
-            <div id="folderList" class="column-content">
-                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Cargando...</div>
-            </div>
-        </div>
-
-        <!-- Columna 2: Elementos de la carpeta -->
-        <div class="column-box" id="colElementos">
-            <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
-            <div id="itemList" class="column-content"></div>
-        </div>
-
-        <!-- Columna 3: Reproductor -->
-        <div class="player-column" id="colReproductor">
+        <!-- 1. Reproductor Arriba -->
+        <div class="player-column">
             <div class="video-box">
                 <video id="videoPlayer" controls playsinline autoplay></video>
             </div>
@@ -337,6 +312,19 @@
                     <h2 id="currentTitle">Selecciona un archivo</h2>
                     <p id="currentDesc">Listo para reproducir</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- 2. Carpetas en Horizontal (Scroll) -->
+        <div class="folders-scroll-container" id="folderList">
+            <div style="color: var(--text-muted); font-size: 12px; padding: 5px;">Cargando carpetas...</div>
+        </div>
+
+        <!-- 3. Elementos en Vertical (Desplazamiento arriba y abajo por debajo) -->
+        <div class="column-box">
+            <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
+            <div id="itemList" class="column-content">
+                <div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 13px;">Selecciona una carpeta arriba</div>
             </div>
         </div>
 
@@ -351,15 +339,9 @@
         const welcomeScreen = document.getElementById('welcomeScreen');
         const m3uUrlInput = document.getElementById('m3uUrlInput');
         const itemsHeaderTitle = document.getElementById('itemsHeaderTitle');
-        const backBtn = document.getElementById('backBtn');
-
-        const colCarpetas = document.getElementById('colCarpetas');
-        const colElementos = document.getElementById('colElementos');
-        const colReproductor = document.getElementById('colReproductor');
 
         let hls = null;
         let baseDatosCategorias = {};
-        let pasoMovilActual = 1; // 1: Carpetas, 2: Elementos, 3: Reproductor
 
         window.onload = function() {
             setInterval(actualizarReloj, 1000);
@@ -382,7 +364,7 @@
             }
 
             try {
-                folderList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Cargando lista...</div>';
+                folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 5px;">Cargando lista...</div>';
                 welcomeScreen.style.display = 'none';
 
                 const respuesta = await fetch(url);
@@ -450,41 +432,42 @@
             const categorias = Object.keys(baseDatosCategorias);
 
             if (categorias.length === 0) {
-                folderList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Sin carpetas</div>';
+                folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px;">Sin carpetas</div>';
                 return;
             }
 
             categorias.forEach((cat, index) => {
                 const div = document.createElement('div');
-                div.className = 'list-item';
+                div.className = 'folder-chip';
+                div.id = `chip-${index}`;
                 div.textContent = `📁 ${cat} (${baseDatosCategorias[cat].length})`;
                 div.onclick = () => seleccionarCarpeta(cat, div);
                 folderList.appendChild(div);
             });
+
+            // Seleccionar automáticamente la primera carpeta por defecto
+            if (categorias.length > 0) {
+                document.getElementById('chip-0').click();
+            }
         }
 
         function seleccionarCarpeta(nombreCarpeta, elementoDiv) {
-            document.querySelectorAll('#folderList .list-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.folder-chip').forEach(el => el.classList.remove('active'));
             elementoDiv.classList.add('active');
+
+            // Hacer scroll horizontal automático para centrar el chip seleccionado
+            elementoDiv.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
             itemsHeaderTitle.textContent = `📄 ${nombreCarpeta}`;
             const elementos = baseDatosCategorias[nombreCarpeta] || [];
             renderizarElementos(elementos);
-
-            // Si estamos en teléfono, pasamos a la vista de elementos automáticamente
-            if (window.innerWidth <= 1024) {
-                colCarpetas.classList.remove('mobile-active');
-                colElementos.classList.add('mobile-active');
-                pasoMovilActual = 2;
-                backBtn.style.display = 'inline-block';
-            }
         }
 
         function renderizarElementos(elementos) {
             itemList.innerHTML = '';
 
             if (elementos.length === 0) {
-                itemList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Carpeta vacía</div>';
+                itemList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 13px;">Carpeta vacía</div>';
                 return;
             }
 
@@ -505,13 +488,6 @@
             currentTitle.textContent = nombre;
             currentDesc.textContent = "Reproduciendo • Stream One";
 
-            // Si estamos en teléfono, pasamos a la vista del reproductor automáticamente
-            if (window.innerWidth <= 1024) {
-                colElementos.classList.remove('mobile-active');
-                colReproductor.classList.add('mobile-active');
-                pasoMovilActual = 3;
-            }
-
             if (hls) hls.destroy();
 
             if (url.includes('.m3u8')) {
@@ -530,23 +506,6 @@
                 video.src = url;
                 video.load();
                 video.play().catch(e => console.log(e));
-            }
-        }
-
-        function volverPasoAnterior() {
-            if (window.innerWidth <= 1024) {
-                if (pasoMovilActual === 3) {
-                    // Del reproductor regresamos a la lista de elementos
-                    colReproductor.classList.remove('mobile-active');
-                    colElementos.classList.add('mobile-active');
-                    pasoMovilActual = 2;
-                } else if (pasoMovilActual === 2) {
-                    // De los elementos regresamos a las carpetas y ocultamos el botón de volver
-                    colElementos.classList.remove('mobile-active');
-                    colCarpetas.classList.add('mobile-active');
-                    pasoMovilActual = 1;
-                    backBtn.style.display = 'none';
-                }
             }
         }
     </script>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Stream One - Centro de Entretenimiento IPTV</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -17,7 +17,7 @@
             --text-muted: #94a3b8;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -256,6 +256,7 @@
             overflow-x: auto;
             padding: 5px 0;
             scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
         .folders-scroll-container::-webkit-scrollbar { display: none; }
 
@@ -311,6 +312,7 @@
             align-items: center;
             gap: 8px;
             flex: 1;
+            -webkit-overflow-scrolling: touch;
         }
 
         .list-item {
@@ -383,7 +385,7 @@
         
         <div class="player-column">
             <div class="video-box">
-                <video id="videoPlayer" controls playsinline autoplay></video>
+                <video id="videoPlayer" controls playsinline webkit-playsinline autoplay></video>
             </div>
             <div class="epg-bar">
                 <div class="epg-info">
@@ -422,11 +424,10 @@
         window.onload = function() {
             setInterval(actualizarReloj, 1000);
             
-            // Comprobar si ya hay un enlace guardado en la memoria del navegador
             const urlGuardada = localStorage.getItem('stream_one_m3u_url');
             if (urlGuardada) {
                 m3uUrlInput.value = urlGuardada;
-                cargarListaDesdeUrl(urlGuardada); // Carga directa sin mostrar lobby
+                cargarListaDesdeUrl(urlGuardada);
             }
         };
 
@@ -446,7 +447,6 @@
                 return;
             }
 
-            // Guardar el enlace en localStorage para futuras visitas
             localStorage.setItem('stream_one_m3u_url', url);
             cargarListaDesdeUrl(url);
         }
@@ -456,14 +456,25 @@
                 folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 5px; width: 100%; text-align: center;">Cargando lista...</div>';
                 welcomeScreen.style.display = 'none';
 
-                const respuesta = await fetch(url);
-                if (!respuesta.ok) throw new Error("Error de red");
-                const texto = await respuesta.text();
+                let texto = "";
+                try {
+                    const respuesta = await fetch(url);
+                    if (!respuesta.ok) throw new Error("Fallo directo");
+                    texto = await respuesta.text();
+                } catch (errDirecto) {
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                    const respuestaProxy = await fetch(proxyUrl);
+                    if (!respuestaProxy.ok) throw new Error("Fallo de red total");
+                    texto = await respuestaProxy.text();
+                }
+
+                if (!texto || texto.trim() === "") throw new Error("Lista vacía");
                 parsearM3UenCarpetas(texto);
+
             } catch (error) {
                 welcomeScreen.style.display = 'flex';
-                localStorage.removeItem('stream_one_m3u_url'); // Limpiar si falló
-                alert("No se pudo cargar la lista. Verifica la URL.");
+                localStorage.removeItem('stream_one_m3u_url');
+                alert("No se pudo cargar la lista. Verifica que el enlace sea correcto y esté activo.");
             }
         }
 
@@ -479,7 +490,6 @@
             lector.readAsText(archivo);
         }
 
-        // Función para cambiar de lista borrando la memoria y mostrando el lobby de nuevo
         function cambiarLista() {
             localStorage.removeItem('stream_one_m3u_url');
             m3uUrlInput.value = '';
@@ -525,4 +535,89 @@
         }
 
         function renderizarCarpetas() {
-            folder
+            folderList.innerHTML = '';
+            const categorias = Object.keys(baseDatosCategorias);
+
+            if (categorias.length === 0) {
+                folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; text-align: center; width: 100%;">Sin carpetas</div>';
+                return;
+            }
+
+            categorias.forEach((cat, index) => {
+                const div = document.createElement('div');
+                div.className = 'folder-chip';
+                div.id = `chip-${index}`;
+                div.textContent = `📁 ${cat} (${baseDatosCategorias[cat].length})`;
+                div.onclick = () => seleccionarCarpeta(cat, div);
+                folderList.appendChild(div);
+            });
+
+            if (categorias.length > 0) {
+                document.getElementById('chip-0').click();
+            }
+        }
+
+        function seleccionarCarpeta(nombreCarpeta, elementoDiv) {
+            document.querySelectorAll('.folder-chip').forEach(el => el.classList.remove('active'));
+            elementoDiv.classList.add('active');
+
+            elementoDiv.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+            itemsHeaderTitle.textContent = `📄 ${nombreCarpeta}`;
+            const elementos = baseDatosCategorias[nombreCarpeta] || [];
+            renderizarElementos(elementos);
+        }
+
+        function renderizarElementos(elementos) {
+            itemList.innerHTML = '';
+
+            if (elementos.length === 0) {
+                itemList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 13px;">Carpeta vacía</div>';
+                return;
+            }
+
+            elementos.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'list-item';
+                div.textContent = item.nombre;
+                div.title = item.nombre;
+                div.onclick = () => reproducirItem(item.url, item.nombre, div);
+                itemList.appendChild(div);
+            });
+        }
+
+        function reproducirItem(url, nombre, elementoDiv) {
+            document.querySelectorAll('#itemList .list-item').forEach(el => el.classList.remove('active'));
+            elementoDiv.classList.add('active');
+
+            currentTitle.textContent = nombre;
+            currentDesc.textContent = "Reproduciendo • Stream One";
+
+            if (hls) hls.destroy();
+
+            // Compatibilidad nativa estricta para Safari y dispositivos iOS (iPhone/iPad)
+            if (video.canPlayType('application/vnd.apple.mpegurl') || !Hls.isSupported()) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', () => {
+                    video.play().catch(e => console.log("Reproducción pausada por políticas del navegador:", e));
+                }, { once: true });
+            } else if (Hls.isSupported()) {
+                hls = new Hls({
+                    maxBufferLength: 30,
+                    liveSyncDurationCount: 3,
+                    highBufferWatchdogPeriod: 1
+                });
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(e => console.log("Reproducción pausada por políticas del navegador:", e));
+                });
+            } else {
+                video.src = url;
+                video.load();
+                video.play().catch(e => console.log(e));
+            }
+        }
+    </script>
+</body>
+</html>

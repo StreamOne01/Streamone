@@ -438,9 +438,9 @@
         };
 
         function actualizarReloj() {
-            const ahora = new Date();
-            let horas = ahora.getHours();
-            const minutos = ahora.getMinutes().toString().padStart(2, '0');
+            const alta = new Date();
+            let horas = alta.getHours();
+            const minutos = alta.getMinutes().toString().padStart(2, '0');
             const ampm = horas >= 12 ? 'PM' : 'AM';
             horas = horas % 12 || 12;
             document.getElementById('reloj').textContent = `${horas}:${minutos} ${ampm}`;
@@ -453,7 +453,6 @@
                 return;
             }
 
-            // Conversión inteligente de GitHub a jsDelivr CDN para evitar CORS de forma nativa
             if (rawUrl.includes("raw.githubusercontent.com")) {
                 rawUrl = rawUrl
                     .replace("raw.githubusercontent.com/", "cdn.jsdelivr.net/gh/")
@@ -516,9 +515,16 @@
                         baseDatosCategorias[categoriaActual] = [];
                     }
 
+                    // Forzar HTTPS opcionalmente si el navegador bloquea contenido mixto
+                    let urlCanal = linea;
+                    if (urlCanal.startsWith('http://')) {
+                        // Opcional: Reemplazar http por https si el servidor lo soporta
+                        // urlCanal = urlCanal.replace('http://', 'https://');
+                    }
+
                     baseDatosCategorias[categoriaActual].push({
                         nombre: nombreActual,
-                        url: linea
+                        url: urlCanal
                     });
 
                     nombreActual = "Sin nombre";

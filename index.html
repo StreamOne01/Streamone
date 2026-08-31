@@ -352,7 +352,7 @@
         <div class="welcome-card">
             <div class="input-group">
                 <label>Enlace M3U (URL)</label>
-                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="">
+                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u">
             </div>
 
             <div class="file-upload-btn" onclick="document.getElementById('m3uFileInput').click()">
@@ -428,6 +428,9 @@
             if (urlGuardada) {
                 m3uUrlInput.value = urlGuardada;
                 cargarListaDesdeUrl(urlGuardada);
+            } else {
+                // Precarga por defecto el enlace de GitHub que mencionaste
+                m3uUrlInput.value = "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u";
             }
         };
 
@@ -595,32 +598,49 @@
 
             if (hls) hls.destroy();
 
-            // Enlaces HTTP directos o bloqueados se enrutan automáticamente por proxy seguro
-            let urlReproduccion = url;
-            const esEnlaceInseguro = url.startsWith('http://');
-            
-            if (esEnlaceInseguro && location.protocol === 'https:') {
-                urlReproduccion = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-            }
+            // Estrategia dual inteligente para navegador: 
+            // Si el canal falla con proxy, intenta directo y viceversa.
+            let usarProxy = location.protocol === 'https:' && url.startsWith('http://');
+            let urlReproduccion = usarProxy ? `https://corsproxy.io/?` + encodeURIComponent(url) : url;
 
             if (url.includes('.m3u8')) {
                 if (Hls.isSupported()) {
                     hls = new Hls({
                         maxBufferLength: 30,
                         liveSyncDurationCount: 3,
-                        highBufferWatchdogPeriod: 1
+                        highBufferWatchdogPeriod: 1,
+                        fragLoadingMaxRetry: 4,
+                        manifestLoadingMaxRetry: 4
                     });
+                    
                     hls.loadSource(urlReproduccion);
                     hls.attachMedia(video);
+                    
                     hls.on(Hls.Events.MANIFEST_PARSED, () => {
                         video.play().catch(e => console.log("Reproducción pausada:", e));
                     });
                     
-                    // Si el reproductor HLS falla por restricciones del servidor, intenta con URL directa de respaldo
+                    // Mecanismo de reintento automático cruzado si el canal se bloquea en navegador
                     hls.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal && urlReproduccion !== url) {
-                            console.log("Cambiando a enlace directo por fallo del proxy...");
-                            hls.loadSource(url);
+                        if (data.fatal) {
+                            if (usarProxy) {
+                                console.log("Falló el proxy, intentando enlace directo sin proxy...");
+                                usarProxy = false;
+                                hls.loadSource(url);
+                                hls.startLoad();
+                            } else {
+                                switch (data.type) {
+                                    case Hls.ErrorTypes.NETWORK_ERROR:
+                                        hls.startLoad();
+                                        break;
+                                    case Hls.ErrorTypes.MEDIA_ERROR:
+                                        hls.recoverMediaError();
+                                        break;
+                                    default:
+                                        hls.destroy();
+                                        break;
+                                }
+                            }
                         }
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {

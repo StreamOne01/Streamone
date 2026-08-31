@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stream One - 3 Columnas Centrado</title>
+    <title>Stream One - Móvil y PC</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --bg-base: #8b0000;
-            --bg-overlay: rgba(20, 0, 0, 0.9);
-            --bg-card: rgba(50, 0, 0, 0.5);
-            --bg-card-hover: rgba(255, 183, 3, 0.15);
+            --bg-overlay: rgba(20, 0, 0, 0.95);
+            --bg-card: rgba(50, 0, 0, 0.6);
+            --bg-card-hover: rgba(255, 183, 3, 0.2);
             --accent: #ffb703;
             --text-main: #ffffff;
             --text-muted: #d0d0d0;
@@ -33,8 +33,8 @@
         #welcomeScreen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(10, 0, 0, 0.95);
-            z-index: 2000;
+            background: rgba(10, 0, 0, 0.98);
+            z-index: 3000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -44,19 +44,19 @@
         .welcome-card {
             background: rgba(30, 0, 0, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 40px;
+            padding: 30px 25px;
             border-radius: 16px;
             width: 100%;
-            max-width: 480px;
+            max-width: 420px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
         }
 
         .welcome-logo {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 900;
             color: #fff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -64,19 +64,19 @@
 
         .welcome-card p {
             color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 25px;
+            font-size: 13px;
+            margin-bottom: 20px;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             text-align: left;
         }
 
         .input-group label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             color: var(--accent);
@@ -84,8 +84,8 @@
 
         .input-group input[type="text"] {
             width: 100%;
-            padding: 12px 15px;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             color: #fff;
@@ -103,9 +103,8 @@
             cursor: pointer;
             font-size: 13px;
             color: #fff;
-            margin-top: 15px;
+            margin-top: 12px;
         }
-        .file-upload-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
         .btn-start {
             background: var(--accent);
@@ -114,18 +113,17 @@
             padding: 14px;
             border-radius: 8px;
             font-weight: 800;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             text-transform: uppercase;
-            margin-top: 20px;
+            margin-top: 15px;
             width: 100%;
         }
-        .btn-start:hover { opacity: 0.9; }
 
         /* Cabecera Principal */
         header {
             background: rgba(25, 0, 0, 0.95);
-            padding: 12px 25px;
+            padding: 10px 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -135,64 +133,70 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .brand-logo-header { font-size: 14px; font-weight: 800; color: #fff; background: rgba(0, 0, 0, 0.4); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); }
-        .header-right { display: flex; align-items: center; gap: 15px; font-size: 13px; }
+        .brand-logo-header { font-size: 13px; font-weight: 800; color: #fff; background: rgba(0, 0, 0, 0.4); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); }
+        .header-right { display: flex; align-items: center; gap: 10px; font-size: 12px; }
 
-        /* Contenedor de 3 Columnas */
+        /* Botón de retroceso para móviles (oculto en PC) */
+        .mobile-back-btn {
+            display: none;
+            background: rgba(255, 183, 3, 0.2);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Contenedor Adaptable (Grid en PC, Flex/Paso a paso en Móvil) */
         .app-container {
             display: grid;
-            grid-template-columns: 290px 330px 1fr;
-            gap: 20px;
-            padding: 85px 20px 20px 20px;
-            max-width: 1650px;
+            grid-template-columns: 280px 320px 1fr;
+            gap: 15px;
+            padding: 75px 15px 15px 15px;
+            max-width: 1600px;
             margin: 0 auto;
             width: 100%;
             height: 100vh;
             flex: 1;
         }
 
-        @media (max-width: 1024px) {
-            .app-container { grid-template-columns: 1fr; height: auto; }
-        }
-
         .column-box {
             background: var(--bg-overlay);
-            border-radius: 14px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            height: calc(100vh - 105px);
+            height: calc(100vh - 90px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
         .column-header {
-            padding: 16px 20px;
-            font-size: 14px;
+            padding: 14px 16px;
+            font-size: 13px;
             font-weight: 700;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(0,0,0,0.4);
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--accent);
-            text-align: center;
         }
 
         .column-content {
             overflow-y: auto;
-            padding: 16px; /* Mejor margen interno general */
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Mayor separación entre filas para que respiren mejor */
+            gap: 8px;
             flex: 1;
-            justify-content: flex-start;
         }
 
-        /* Elementos de lista centrados y mejor distribuidos */
         .list-item {
             background: var(--bg-card);
-            padding: 14px 18px;
-            border-radius: 10px;
+            padding: 12px 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
@@ -201,26 +205,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
         }
-        .list-item:hover { 
-            background: var(--bg-card-hover); 
-            border-color: rgba(255, 183, 3, 0.3);
-            transform: translateX(3px);
-        }
-        .list-item.active { 
-            background: rgba(255, 183, 3, 0.25); 
-            border-color: var(--accent); 
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(255, 183, 3, 0.15);
-        }
+        .list-item:hover { background: var(--bg-card-hover); border-color: rgba(255, 183, 3, 0.3); }
+        .list-item.active { background: rgba(255, 183, 3, 0.25); border-color: var(--accent); color: #fff; }
 
-        /* Columna Derecha: Reproductor */
         .player-column {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             background: transparent;
             border: none;
             height: auto;
@@ -231,26 +223,57 @@
             width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
-            border-radius: 14px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
         }
         video { width: 100%; height: 100%; object-fit: contain; }
 
         .epg-bar {
             background: var(--bg-overlay);
-            padding: 20px;
-            border-radius: 14px;
+            padding: 15px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
-        .epg-info h2 { margin: 0 0 6px 0; font-size: 16px; color: #fff; font-weight: 700; }
-        .epg-info p { margin: 0; font-size: 13px; color: var(--text-muted); }
+        .epg-info h2 { margin: 0 0 4px 0; font-size: 15px; color: #fff; font-weight: 700; }
+        .epg-info p { margin: 0; font-size: 12px; color: var(--text-muted); }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        /* ================= MEDIA QUERY PARA CELULARES ================= */
+        @media (max-width: 1024px) {
+            .app-container {
+                display: block; /* Se desactiva el grid de PC */
+                padding: 65px 10px 10px 10px;
+                height: auto;
+            }
+
+            /* Por defecto en móvil solo mostramos la columna de carpetas */
+            .column-box {
+                display: none;
+                height: calc(100vh - 80px);
+                width: 100%;
+            }
+
+            .column-box.mobile-active {
+                display: flex; /* Muestra solo la columna activa */
+            }
+
+            .player-column {
+                display: none;
+                width: 100%;
+            }
+
+            .player-column.mobile-active {
+                display: flex;
+            }
+
+            .mobile-back-btn {
+                display: inline-block; /* Aparece el botón de regresar en el celular */
+            }
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -259,7 +282,7 @@
     <div id="welcomeScreen">
         <div class="welcome-card">
             <div class="welcome-logo">Stream <span>One</span></div>
-            <p>Ingresa tu enlace M3U para explorar el contenido</p>
+            <p>Ingresa tu enlace M3U para comenzar</p>
             
             <div class="input-group">
                 <label>Enlace M3U (URL)</label>
@@ -271,41 +294,41 @@
             </div>
             <input type="file" id="m3uFileInput" accept=".m3u" style="display: none;" onchange="cargarArchivoLocal(this)">
 
-            <button class="btn-start" onclick="iniciarStreamOne()">Iniciar Explorador</button>
+            <button class="btn-start" onclick="iniciarStreamOne()">Iniciar Aplicación</button>
         </div>
     </div>
 
     <!-- Cabecera -->
     <header>
-        <div class="brand-logo-header">📺 Stream One - Explorador</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="backBtn" class="mobile-back-btn" onclick="volverPasoAnterior()">⬅ Volver</button>
+            <div class="brand-logo-header">📺 Stream One</div>
+        </div>
         <div class="header-right">
-            <span>👤 Carlos Muñoz</span>
-            <button onclick="location.reload()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">🔄 Cambiar Lista</button>
+            <button onclick="location.reload()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color:#fff; padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 11px;">🔄 Cambiar</button>
             <span id="reloj">11:46 PM</span>
         </div>
     </header>
 
-    <!-- Interfaz de 3 Columnas -->
+    <!-- Interfaz adaptable -->
     <div class="app-container">
         
-        <!-- Columna 1: Carpetas / Categorías -->
-        <div class="column-box">
+        <!-- Columna 1: Carpetas -->
+        <div class="column-box mobile-active" id="colCarpetas">
             <div class="column-header">📁 Carpetas</div>
             <div id="folderList" class="column-content">
-                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Esperando lista...</div>
+                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Cargando...</div>
             </div>
         </div>
 
-        <!-- Columna 2: Contenido de la Carpeta Seleccionada -->
-        <div class="column-box">
+        <!-- Columna 2: Elementos de la carpeta -->
+        <div class="column-box" id="colElementos">
             <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
-            <div id="itemList" class="column-content">
-                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Selecciona una carpeta</div>
-            </div>
+            <div id="itemList" class="column-content"></div>
         </div>
 
-        <!-- Columna 3: Reproductor y EPG -->
-        <div class="player-column">
+        <!-- Columna 3: Reproductor -->
+        <div class="player-column" id="colReproductor">
             <div class="video-box">
                 <video id="videoPlayer" controls playsinline autoplay></video>
             </div>
@@ -328,9 +351,15 @@
         const welcomeScreen = document.getElementById('welcomeScreen');
         const m3uUrlInput = document.getElementById('m3uUrlInput');
         const itemsHeaderTitle = document.getElementById('itemsHeaderTitle');
+        const backBtn = document.getElementById('backBtn');
+
+        const colCarpetas = document.getElementById('colCarpetas');
+        const colElementos = document.getElementById('colElementos');
+        const colReproductor = document.getElementById('colReproductor');
 
         let hls = null;
         let baseDatosCategorias = {};
+        let pasoMovilActual = 1; // 1: Carpetas, 2: Elementos, 3: Reproductor
 
         window.onload = function() {
             setInterval(actualizarReloj, 1000);
@@ -348,16 +377,16 @@
         async function iniciarStreamOne() {
             const url = m3uUrlInput.value.trim();
             if (!url) {
-                alert("Por favor ingresa un enlace M3U válido");
+                alert("Ingresa un enlace M3U válido");
                 return;
             }
 
             try {
-                folderList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Cargando...</div>';
+                folderList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Cargando lista...</div>';
                 welcomeScreen.style.display = 'none';
 
                 const respuesta = await fetch(url);
-                if (!respuesta.ok) throw new Error("Error de conexión");
+                if (!respuesta.ok) throw new Error("Error de red");
                 const texto = await respuesta.text();
                 parsearM3UenCarpetas(texto);
             } catch (error) {
@@ -421,22 +450,17 @@
             const categorias = Object.keys(baseDatosCategorias);
 
             if (categorias.length === 0) {
-                folderList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">No se encontraron carpetas</div>';
+                folderList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Sin carpetas</div>';
                 return;
             }
 
             categorias.forEach((cat, index) => {
                 const div = document.createElement('div');
                 div.className = 'list-item';
-                div.id = `folder-${index}`;
                 div.textContent = `📁 ${cat} (${baseDatosCategorias[cat].length})`;
                 div.onclick = () => seleccionarCarpeta(cat, div);
                 folderList.appendChild(div);
             });
-
-            if (categorias.length > 0) {
-                document.getElementById('folder-0').click();
-            }
         }
 
         function seleccionarCarpeta(nombreCarpeta, elementoDiv) {
@@ -446,6 +470,14 @@
             itemsHeaderTitle.textContent = `📄 ${nombreCarpeta}`;
             const elementos = baseDatosCategorias[nombreCarpeta] || [];
             renderizarElementos(elementos);
+
+            // Si estamos en teléfono, pasamos a la vista de elementos automáticamente
+            if (window.innerWidth <= 1024) {
+                colCarpetas.classList.remove('mobile-active');
+                colElementos.classList.add('mobile-active');
+                pasoMovilActual = 2;
+                backBtn.style.display = 'inline-block';
+            }
         }
 
         function renderizarElementos(elementos) {
@@ -459,7 +491,6 @@
             elementos.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'list-item';
-                div.id = `item-${index}`;
                 div.textContent = item.nombre;
                 div.title = item.nombre;
                 div.onclick = () => reproducirItem(item.url, item.nombre, div);
@@ -474,6 +505,13 @@
             currentTitle.textContent = nombre;
             currentDesc.textContent = "Reproduciendo • Stream One";
 
+            // Si estamos en teléfono, pasamos a la vista del reproductor automáticamente
+            if (window.innerWidth <= 1024) {
+                colElementos.classList.remove('mobile-active');
+                colReproductor.classList.add('mobile-active');
+                pasoMovilActual = 3;
+            }
+
             if (hls) hls.destroy();
 
             if (url.includes('.m3u8')) {
@@ -486,12 +524,29 @@
                     video.src = url;
                     video.addEventListener('loadedmetadata', () => video.play().catch(e => console.log(e)));
                 } else {
-                    alert('HLS no compatible en este navegador');
+                    alert('HLS no compatible');
                 }
             } else {
                 video.src = url;
                 video.load();
                 video.play().catch(e => console.log(e));
+            }
+        }
+
+        function volverPasoAnterior() {
+            if (window.innerWidth <= 1024) {
+                if (pasoMovilActual === 3) {
+                    // Del reproductor regresamos a la lista de elementos
+                    colReproductor.classList.remove('mobile-active');
+                    colElementos.classList.add('mobile-active');
+                    pasoMovilActual = 2;
+                } else if (pasoMovilActual === 2) {
+                    // De los elementos regresamos a las carpetas y ocultamos el botón de volver
+                    colElementos.classList.remove('mobile-active');
+                    colCarpetas.classList.add('mobile-active');
+                    pasoMovilActual = 1;
+                    backBtn.style.display = 'none';
+                }
             }
         }
     </script>

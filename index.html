@@ -31,6 +31,7 @@
             overflow-x: hidden;
         }
 
+        /* Pantalla de Bienvenida (Lobby) */
         #welcomeScreen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -186,6 +187,7 @@
             text-align: center;
         }
 
+        /* Cabecera Principal */
         header {
             background: rgba(10, 15, 28, 0.95);
             padding: 10px 15px;
@@ -201,6 +203,7 @@
         .brand-logo-header { font-size: 13px; font-weight: 800; color: #fff; background: rgba(0, 113, 227, 0.2); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(0, 113, 227, 0.4); }
         .header-right { display: flex; align-items: center; gap: 10px; font-size: 12px; }
 
+        /* Contenedor Principal */
         .app-container {
             display: flex;
             flex-direction: column;
@@ -592,11 +595,12 @@
 
             if (hls) hls.destroy();
 
-            // Asignación directa e inteligente para evitar bloqueos por contenido mixto
-            let urlFinal = url;
-            if (location.protocol === 'https:' && url.startsWith('http://')) {
-                // Utiliza un servicio proxy alternativo tolerante a flujos de video continuos
-                urlFinal = `https://corsproxy.io/?` + encodeURIComponent(url);
+            // Enlaces HTTP directos o bloqueados se enrutan automáticamente por proxy seguro
+            let urlReproduccion = url;
+            const esEnlaceInseguro = url.startsWith('http://');
+            
+            if (esEnlaceInseguro && location.protocol === 'https:') {
+                urlReproduccion = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
             }
 
             if (url.includes('.m3u8')) {
@@ -606,21 +610,21 @@
                         liveSyncDurationCount: 3,
                         highBufferWatchdogPeriod: 1
                     });
-                    hls.loadSource(urlFinal);
+                    hls.loadSource(urlReproduccion);
                     hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => {
                         video.play().catch(e => console.log("Reproducción pausada:", e));
                     });
                     
-                    // Fallback automático si el proxy de streaming presenta intermitencia
+                    // Si el reproductor HLS falla por restricciones del servidor, intenta con URL directa de respaldo
                     hls.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal && urlFinal !== url) {
-                            console.log("Intentando bypass directo por error de proxy...");
+                        if (data.fatal && urlReproduccion !== url) {
+                            console.log("Cambiando a enlace directo por fallo del proxy...");
                             hls.loadSource(url);
                         }
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = urlFinal;
+                    video.src = urlReproduccion;
                     video.addEventListener('loadedmetadata', () => {
                         video.play().catch(e => console.log(e));
                     }, { once: true });
@@ -628,7 +632,7 @@
                     alert('HLS no compatible');
                 }
             } else {
-                video.src = urlFinal;
+                video.src = urlReproduccion;
                 video.load();
                 video.play().catch(e => console.log(e));
             }

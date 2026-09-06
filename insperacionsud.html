@@ -61,7 +61,7 @@
         }
 
         .card {
-            background-color: rgba(15, 23, 42, 0.55);
+            background-color: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
@@ -88,7 +88,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             background: rgba(255, 255, 255, 0.1);
             padding: 8px 12px;
             border-radius: 12px;
@@ -98,10 +98,10 @@
         .badge {
             background-color: var(--badge-bg);
             color: #ffffff;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: 20px;
             font-weight: bold;
         }
@@ -109,14 +109,14 @@
         .music-control {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .music-info {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #93c5fd;
             text-align: right;
-            max-width: 140px;
+            max-width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -126,14 +126,14 @@
             background-color: #3b82f6;
             color: white;
             border: none;
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
@@ -143,22 +143,21 @@
             transform: scale(1.08);
         }
 
-        /* Reproductor de YouTube oculto */
         .hidden-player {
             display: none;
         }
 
         .content-text {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            margin: 15px 0;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin: 12px 0;
             color: #f8fafc;
             font-style: italic;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
         }
 
         .content-reference {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: #93c5fd;
             margin-bottom: 4px;
@@ -166,26 +165,27 @@
         }
 
         .content-source-detail {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #cbd5e1;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
         }
 
         .btn {
             background-color: rgba(59, 130, 246, 0.85);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 18px;
+            padding: 8px 14px;
             border-radius: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
@@ -205,18 +205,30 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
 
+        .btn-link {
+            background-color: rgba(16, 185, 129, 0.85);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-link:hover {
+            background-color: rgba(5, 150, 105, 0.95);
+        }
+
         .footer-note {
-            margin-top: 15px;
-            font-size: 0.7rem;
+            margin-top: 12px;
+            font-size: 0.65rem;
             color: #cbd5e1;
             letter-spacing: 0.5px;
             border-top: 1px solid rgba(255, 255, 255, 0.15);
-            padding-top: 10px;
+            padding-top: 8px;
         }
 
         .creator-credits {
-            margin-top: 6px;
-            font-size: 0.75rem;
+            margin-top: 4px;
+            font-size: 0.7rem;
             color: #93c5fd;
             letter-spacing: 0.5px;
         }
@@ -229,14 +241,14 @@
 </head>
 <body>
 
-    <!-- Fondo dinámico con imágenes de templos/paisajes -->
+    <!-- Fondo dinámico con imágenes de templos y naturaleza -->
     <div class="bg-slider" id="bg-slider">
         <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1920&auto=format&fit=crop');"></div>
         <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1920&auto=format&fit=crop');"></div>
         <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&auto=format&fit=crop');"></div>
     </div>
 
-    <!-- Contenedor oculto para la música de YouTube -->
+    <!-- Reproductor de YouTube oculto -->
     <div class="hidden-player" id="youtube-container"></div>
 
     <div class="container">
@@ -258,6 +270,7 @@
             <div class="btn-group">
                 <button class="btn" onclick="getRandomItem()">Otra vitamina</button>
                 <button class="btn btn-secondary" onclick="getDailyItem()">Volver a hoy</button>
+                <a id="i-gospel-link" href="#" target="_blank" class="btn btn-link">📖 Ver en Biblioteca</a>
             </div>
 
             <div class="footer-note">Iglesia de Jesucristo de los Santos de los Últimos Días</div>
@@ -279,48 +292,70 @@
         }
         setInterval(nextSlide, 6000);
 
-        // Vitamina espiritual
+        // Base de datos integrada con las obras estándar y la Liahona
         const spiritualVitamins = [
             {
                 type: "📖 Libro de Mormón",
                 text: "Y ocurrió que yo, Nefi, dije a mi padre: Iré y haré lo que el Señor ha mandado, porque sé que el Señor nunca da mandamientos a los hijos de los hombres sin prepararles una vía para que puedan cumplir lo que les ha mandado.",
                 ref: "1 Nefi 3:7",
-                detail: "",
-                hymnName: "Melodía Sagrada"
-            },
-            {
-                type: "💬 Mensaje de la Liahona",
-                text: "El Señor bendice a los que tienen el deseo de mejorar, que aceptan las normas solemnes y tratan de cumplirlas, que paso a paso se esfuerzan por vivir como el Salvador.",
-                ref: "Presidente Russell M. Nelson",
-                detail: "Liahona, mayo de 2019, página 6",
+                detail: "Estudio del Libro de Mormón",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/bofm/1-ne/3?lang=spa",
                 hymnName: "Melodía Sagrada"
             },
             {
                 type: "📖 Libro de Mormón",
                 text: "Adán cayó para que los hombres fuesen; y existen los hombres para que tengan gozo.",
                 ref: "2 Nefi 2:25",
-                detail: "",
+                detail: "El gran plan de felicidad",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/2?lang=spa",
                 hymnName: "Melodía Sagrada"
             },
             {
-                type: "💬 Mensaje de la Liahona",
-                text: "Cuando comprendemos nuestro potencial divino, el miedo se disipa y la esperanza llena nuestras almas a través del poder de Jesucristo.",
-                ref: "Presidente Dallin H. Oaks",
-                detail: "Liahona, noviembre de 2021, página 24",
+                type: "📖 La Biblia",
+                text: "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas.",
+                ref: "Proverbios 3:5-6",
+                detail: "Antiguo Testamento",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/ot/prov/3?lang=spa",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "📖 La Biblia",
+                text: "Lámpara es a mis pies tu palabra, y lumbrera a mi camino.",
+                ref: "Salmos 119:105",
+                detail: "Antiguo Testamento",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/ot/ps/119?lang=spa",
                 hymnName: "Melodía Sagrada"
             },
             {
                 type: "📖 Doctrina y Convenios",
-                text: "Y mirad que hagáis todas las cosas con prontitud y diligencia; por tanto, si laboráis con vuestras fuerzas en mi viña, no os cansaréis.",
-                ref: "Doctrina y Convenios 84:106",
-                detail: "",
+                text: "Si tenéis deseos de servir a Dios, sois llamados a la obra; porque he aquí, el campo blanco está ya para la siega.",
+                ref: "Doctrina y Convenios 4:3-4",
+                detail: "Sección Misional",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/4?lang=spa",
                 hymnName: "Melodía Sagrada"
             },
             {
-                type: "💬 Mensaje de la Liahona",
-                text: "La fe en Jesucristo no es solo un sentimiento; es una acción que cambia nuestra vida y nos impulsa a seguir adelante a pesar de las pruebas.",
-                ref: "Élder Dieter F. Uchtdorf",
-                detail: "Liahona, noviembre de 2020, página 70",
+                type: "📖 Doctrina y Convenios",
+                text: "Y si guardáis mis mandamientos y perseveráis hasta el fin, tendréis la vida eterna, el cual don es el mayor de todos los dones de Dios.",
+                ref: "Doctrina y Convenios 14:7",
+                detail: "Revelación a David Whitmer",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/14?lang=spa",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "📖 Perla de Gran Precio",
+                text: "Porque he aquí, esta es mi obra y mi gloria: Llevar a cabo la inmortalidad y la vida eterna del hombre.",
+                ref: "Moisés 1:39",
+                detail: "Visiones de Moisés",
+                url: "https://www.churchofjesuschrist.org/study/scriptures/pgp/moses/1?lang=spa",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "💬 Revista Liahona",
+                text: "El Señor bendice a los que tienen el deseo de mejorar, que aceptan las normas solemnes y tratan de cumplirlas, que paso a paso se esfuerzan por vivir como el Salvador.",
+                ref: "Presidente Russell M. Nelson",
+                detail: "Liahona, mayo de 2019",
+                url: "https://www.churchofjesuschrist.org/study/general-conference/2019/04/46nelson?lang=spa",
                 hymnName: "Melodía Sagrada"
             }
         ];
@@ -329,7 +364,7 @@
         let isPlaying = false;
         const playBtn = document.getElementById("playBtn");
         const musicTitle = document.getElementById("music-title");
-        const videoId = "FcyfyVJmuqQ"; // ID de YouTube configurado
+        const videoId = "FcyfyVJmuqQ"; // Tu enlace de YouTube configurado
 
         // Cargar la API oficial de YouTube Iframe
         const tag = document.createElement('script');
@@ -392,6 +427,9 @@
             } else {
                 detailElem.style.display = "none";
             }
+
+            // Asignar el enlace directo a la Biblioteca del Evangelio oficial
+            document.getElementById("i-gospel-link").href = item.url;
 
             musicTitle.innerText = `🎵 ${item.hymnName}`;
         }

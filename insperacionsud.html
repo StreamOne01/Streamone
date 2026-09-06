@@ -282,7 +282,7 @@
     <div class="container">
         <div class="card">
             <div class="top-bar">
-                <div class="badge" id="content-type">📖 Versículo Diario</div>
+                <div class="badge" id="content-type">📖 Cargando...</div>
                 <div class="music-control">
                     <div class="music-info" id="music-title">🎵 Melodía Sagrada</div>
                     <button class="play-music-btn" id="playBtn" onclick="toggleAudio()" title="Reproducir / Pausar">▶</button>
@@ -290,7 +290,7 @@
             </div>
             
             <div id="item-container">
-                <p class="content-text" id="i-text">Cargando contenido...</p>
+                <p class="content-text" id="i-text">Sincronizando con la nube...</p>
                 <h3 class="content-reference" id="i-ref"></h3>
                 <div class="content-source-detail" id="i-source-detail"></div>
             </div>
@@ -300,9 +300,9 @@
                 <button class="btn btn-secondary" onclick="getDailyItem()">Volver a hoy</button>
             </div>
 
-            <!-- Panel de Administración Oculto con la Biblioteca exclusiva para el admin -->
+            <!-- Panel de Administración Oculto -->
             <div class="admin-panel" id="adminPanel">
-                <div style="font-size: 0.75rem; font-weight: bold; color: #93c5fd; margin-bottom: 6px;">⚙️ Panel de Gestión de Contenido</div>
+                <div style="font-size: 0.75rem; font-weight: bold; color: #93c5fd; margin-bottom: 6px;">⚙️ Panel Cloud (Google Sheets)</div>
                 
                 <label>Tipo de Escrito / Fuente:</label>
                 <select id="newType">
@@ -322,7 +322,7 @@
                 <label>Enlace de Biblioteca (URL):</label>
                 <input type="text" id="newUrl" placeholder="https://www.churchofjesuschrist.org/...">
                 
-                <button class="btn" style="width: 100%; margin-top: 5px;" onclick="addNewVerse()">Guardar Contenido</button>
+                <button class="btn" style="width: 100%; margin-top: 5px;" onclick="addNewVerse()">Guardar en la Nube</button>
             </div>
 
             <!-- Nota al pie con la "J" secreta interactiva -->
@@ -334,6 +334,9 @@
     </div>
 
     <script>
+        // URL de tu API de Google Apps Script ya integrada
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyd6knK-Cgn_2zIzHM2_Kpdq3nyBYB8yyfnxDfwrrJ79j1TvYUAgqbm36VHUIVXnsg29Q/exec";
+
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         
@@ -344,17 +347,23 @@
         }
         setInterval(nextSlide, 6000);
 
-        const defaultVitamins = [
-            { type: "📖 Libro de Mormón", text: "Y ocurrió que yo, Nefi, dije a mi padre: Iré y haré lo que el Señor ha mandado, porque sé que el Señor nunca da mandamientos a los hijos de los hombres sin prepararles una vía para que puedan cumplir lo que les ha mandado.", ref: "1 Nefi 3:7", url: "https://www.churchofjesuschrist.org/study/scriptures/bofm/1-ne/3?lang=spa" },
-            { type: "📖 Libro de Mormón", text: "Adán cayó para que los hombres fuesen; y existen los hombres para que tengan gozo.", ref: "2 Nefi 2:25", url: "https://www.churchofjesuschrist.org/study/scriptures/bofm/2-ne/2?lang=spa" },
-            { type: "📖 La Biblia", text: "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas.", ref: "Proverbios 3:5-6", url: "https://www.churchofjesuschrist.org/study/scriptures/ot/prov/3?lang=spa" },
-            { type: "📖 La Biblia", text: "Todo lo puedo en Cristo que me fortalece.", ref: "Filipenses 4:13", url: "https://www.churchofjesuschrist.org/study/scriptures/nt/philip/4?lang=spa" },
-            { type: "📖 Doctrina y Convenios", text: "Si tenéis deseos de servir a Dios, sois llamados a la obra; porque he aquí, el campo blanco está ya para la siega.", ref: "Doctrina y Convenios 4:3-4", url: "https://www.churchofjesuschrist.org/study/scriptures/dc-testament/dc/4?lang=spa" },
-            { type: "📖 Perla de Gran Precio", text: "Porque he aquí, esta es mi obra y mi gloria: Llevar a cabo la inmortalidad y la vida eterna del hombre.", ref: "Moisés 1:39", url: "https://www.churchofjesuschrist.org/study/scriptures/pgp/moses/1?lang=spa" },
-            { type: "📖 Revista Liahona", text: "El gozo que sentimos tiene poco que ver con las circunstancias de nuestra vida y tiene todo que ver con el enfoque de nuestra vida.", ref: "Presidente Russell M. Nelson", url: "https://www.churchofjesuschrist.org/study/liahona?lang=spa" }
+        let spiritualVitamins = [
+            { type: "📖 Libro de Mormón", text: "Y ocurrió que yo, Nefi, dije a mi padre: Iré y haré lo que el Señor ha mandado...", ref: "1 Nefi 3:7", url: "https://www.churchofjesuschrist.org/study/scriptures/bofm/1-ne/3?lang=spa" }
         ];
 
-        let spiritualVitamins = JSON.parse(localStorage.getItem('sud_custom_verses')) || defaultVitamins;
+        async function loadContentFromCloud() {
+            try {
+                const response = await fetch(WEB_APP_URL);
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    spiritualVitamins = data;
+                    getDailyItem();
+                }
+            } catch (error) {
+                console.error("Error al cargar datos de la nube:", error);
+                getDailyItem();
+            }
+        }
 
         let player;
         let isPlaying = false;
@@ -372,14 +381,8 @@
                 height: '0',
                 width: '0',
                 videoId: videoId,
-                playerVars: {
-                    'autoplay': 0,
-                    'loop': 1,
-                    'playlist': videoId
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
+                playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': videoId },
+                events: { 'onStateChange': onPlayerStateChange }
             });
         }
 
@@ -420,11 +423,7 @@
 
         function toggleAudio() {
             if (!player) return;
-            if (isPlaying) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
-            }
+            if (isPlaying) { player.pauseVideo(); } else { player.playVideo(); }
         }
 
         function toggleAdminPanel() {
@@ -432,7 +431,7 @@
             panel.style.display = panel.style.display === "block" ? "none" : "block";
         }
 
-        function addNewVerse() {
+        async function addNewVerse() {
             const type = document.getElementById("newType").value;
             const text = document.getElementById("newText").value.trim();
             const ref = document.getElementById("newRef").value.trim();
@@ -449,26 +448,33 @@
                     : "https://www.churchofjesuschrist.org/study/scriptures?lang=spa";
             }
 
-            const newEntry = {
-                type: type,
-                text: text,
-                ref: ref,
-                url: url
-            };
+            const newEntry = { type: type, text: text, ref: ref, url: url };
 
-            spiritualVitamins.push(newEntry);
-            localStorage.setItem('sud_custom_verses', JSON.stringify(spiritualVitamins));
+            alert("Guardando en la nube, por favor espera...");
 
-            document.getElementById("newText").value = "";
-            document.getElementById("newRef").value = "";
-            document.getElementById("newUrl").value = "";
-            document.getElementById("adminPanel").style.display = "none";
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newEntry)
+                });
 
-            alert("¡Contenido agregado con éxito!");
-            displayItem(spiritualVitamins.length - 1);
+                spiritualVitamins.push(newEntry);
+                document.getElementById("newText").value = "";
+                document.getElementById("newRef").value = "";
+                document.getElementById("newUrl").value = "";
+                document.getElementById("adminPanel").style.display = "none";
+
+                alert("¡Contenido guardado en la nube con éxito! Todos podrán verlo.");
+                displayItem(spiritualVitamins.length - 1);
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Hubo un error al guardar en la nube.");
+            }
         }
 
-        window.onload = getDailyItem;
+        window.onload = loadContentFromCloud;
     </script>
 </body>
 </html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamina Espiritual SUD</title>
+    <style>
+        :root {
+            --text-color: #ffffff;
+            --badge-bg: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bg-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: brightness(0.5);
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            z-index: 1;
+        }
+
+        .card {
+            background-color: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .badge {
+            background-color: var(--badge-bg);
+            color: #ffffff;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .music-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-info {
+            font-size: 0.75rem;
+            color: #93c5fd;
+            text-align: right;
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .play-music-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .play-music-btn:hover {
+            background-color: #2563eb;
+            transform: scale(1.08);
+        }
+
+        /* Reproductor de YouTube oculto */
+        .hidden-player {
+            display: none;
+        }
+
+        .content-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin: 15px 0;
+            color: #f8fafc;
+            font-style: italic;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .content-reference {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #93c5fd;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .content-source-detail {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background-color: rgba(59, 130, 246, 0.85);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background-color: rgba(37, 99, 235, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-note {
+            margin-top: 15px;
+            font-size: 0.7rem;
+            color: #cbd5e1;
+            letter-spacing: 0.5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 10px;
+        }
+
+        .creator-credits {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: #93c5fd;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo dinámico con imágenes de templos/paisajes -->
+    <div class="bg-slider" id="bg-slider">
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1920&auto=format&fit=crop');"></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920&auto=format&fit=crop');"></div>
+    </div>
+
+    <!-- Contenedor oculto para la música de YouTube -->
+    <div class="hidden-player" id="youtube-container"></div>
+
+    <div class="container">
+        <div class="card">
+            <div class="top-bar">
+                <div class="badge" id="content-type">🌿 Vitamina Espiritual</div>
+                <div class="music-control">
+                    <div class="music-info" id="music-title">🎵 Melodía Sagrada</div>
+                    <button class="play-music-btn" id="playBtn" onclick="toggleAudio()" title="Reproducir / Pausar Música">▶</button>
+                </div>
+            </div>
+            
+            <div id="item-container">
+                <p class="content-text" id="i-text">Cargando tu porción diaria de inspiración...</p>
+                <h3 class="content-reference" id="i-ref"></h3>
+                <div class="content-source-detail" id="i-source-detail"></div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="getRandomItem()">Otra vitamina</button>
+                <button class="btn btn-secondary" onclick="getDailyItem()">Volver a hoy</button>
+            </div>
+
+            <div class="footer-note">Iglesia de Jesucristo de los Santos de los Últimos Días</div>
+            <div class="creator-credits">
+                Creado con inspiración por <strong>Carlos Muñoz</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carrusel de fondo
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        setInterval(nextSlide, 6000);
+
+        // Vitamina espiritual
+        const spiritualVitamins = [
+            {
+                type: "📖 Libro de Mormón",
+                text: "Y ocurrió que yo, Nefi, dije a mi padre: Iré y haré lo que el Señor ha mandado, porque sé que el Señor nunca da mandamientos a los hijos de los hombres sin prepararles una vía para que puedan cumplir lo que les ha mandado.",
+                ref: "1 Nefi 3:7",
+                detail: "",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "💬 Mensaje de la Liahona",
+                text: "El Señor bendice a los que tienen el deseo de mejorar, que aceptan las normas solemnes y tratan de cumplirlas, que paso a paso se esfuerzan por vivir como el Salvador.",
+                ref: "Presidente Russell M. Nelson",
+                detail: "Liahona, mayo de 2019, página 6",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "📖 Libro de Mormón",
+                text: "Adán cayó para que los hombres fuesen; y existen los hombres para que tengan gozo.",
+                ref: "2 Nefi 2:25",
+                detail: "",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "💬 Mensaje de la Liahona",
+                text: "Cuando comprendemos nuestro potencial divino, el miedo se disipa y la esperanza llena nuestras almas a través del poder de Jesucristo.",
+                ref: "Presidente Dallin H. Oaks",
+                detail: "Liahona, noviembre de 2021, página 24",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "📖 Doctrina y Convenios",
+                text: "Y mirad que hagáis todas las cosas con prontitud y diligencia; por tanto, si laboráis con vuestras fuerzas en mi viña, no os cansaréis.",
+                ref: "Doctrina y Convenios 84:106",
+                detail: "",
+                hymnName: "Melodía Sagrada"
+            },
+            {
+                type: "💬 Mensaje de la Liahona",
+                text: "La fe en Jesucristo no es solo un sentimiento; es una acción que cambia nuestra vida y nos impulsa a seguir adelante a pesar de las pruebas.",
+                ref: "Élder Dieter F. Uchtdorf",
+                detail: "Liahona, noviembre de 2020, página 70",
+                hymnName: "Melodía Sagrada"
+            }
+        ];
+
+        let player;
+        let isPlaying = false;
+        const playBtn = document.getElementById("playBtn");
+        const musicTitle = document.getElementById("music-title");
+        const videoId = "FcyfyVJmuqQ"; // ID de YouTube configurado
+
+        // Cargar la API oficial de YouTube Iframe
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-container', {
+                height: '0',
+                width: '0',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'loop': 1,
+                    'playlist': videoId
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                playBtn.innerText = "⏸";
+                isPlaying = true;
+            } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+                playBtn.innerText = "▶";
+                isPlaying = false;
+            }
+        }
+
+        function getDailyItem() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            
+            const index = dayOfYear % spiritualVitamins.length;
+            displayItem(index);
+        }
+
+        function getRandomItem() {
+            const randomIndex = Math.floor(Math.random() * spiritualVitamins.length);
+            displayItem(randomIndex);
+        }
+
+        function displayItem(index) {
+            const item = spiritualVitamins[index];
+            document.getElementById("content-type").innerText = item.type;
+            document.getElementById("i-text").innerText = `"${item.text}"`;
+            document.getElementById("i-ref").innerText = item.ref;
+            
+            const detailElem = document.getElementById("i-source-detail");
+            if (item.detail) {
+                detailElem.innerText = item.detail;
+                detailElem.style.display = "block";
+            } else {
+                detailElem.style.display = "none";
+            }
+
+            musicTitle.innerText = `🎵 ${item.hymnName}`;
+        }
+
+        function toggleAudio() {
+            if (!player) return;
+            
+            if (isPlaying) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+
+        window.onload = getDailyItem;
+    </script>
+</body>
+</html>

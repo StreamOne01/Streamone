@@ -470,7 +470,7 @@
         <div id="lobbyScreen">
             <header>
                 <div class="app-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg>
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
@@ -499,7 +499,7 @@
         <div id="mainApp" style="display: none;">
             <header>
                 <div class="app-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg>
                 </div>
                 <h1>GIGA NODE</h1>
                 <p>Control de Infraestructura y GPS en Poste</p>
@@ -698,8 +698,18 @@
          * de este código fuente sin la autorización expresa del autor.
          */
 
+        // Registrar Service Worker automáticamente para modo Offline
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
+                    .catch(err => console.log('Service Worker no disponible o en entorno local sin soporte:', err));
+            });
+        }
+
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCY_td4pKjTWP4TBqElfJzL4B2Jimc9CFl0B5xtQtgwIuQQFmbViP8vcctQrHzYXLX/exec';
         const STORAGE_KEY = 'registros_fiber_dog';
+        const PENDIENTES_KEY = 'giga_node_pendientes_sync';
         const USERS_STORAGE_KEY = 'giga_node_claves_tecnicos';
 
         let CLAVES_TECNICOS_DEFECTO = {
@@ -761,6 +771,15 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(arrayRegistros));
         }
 
+        function obtenerPendientes() {
+            let pendientes = localStorage.getItem(PENDIENTES_KEY);
+            return pendientes ? JSON.parse(pendientes) : [];
+        }
+
+        function guardarPendientes(pendientes) {
+            localStorage.setItem(PENDIENTES_KEY, JSON.stringify(pendientes));
+        }
+
         function verificarSesion() {
             const tecnicoGuardado = localStorage.getItem('tecnico_activo_fiber');
             const usuarios = obtenerUsuariosLocales();
@@ -820,6 +839,9 @@
 
         async function sincronizarDatosNube() {
             try {
+                // Primero intentar enviar cambios pendientes si los hay
+                await enviarColaPendientes();
+
                 const respuesta = await fetch(WEB_APP_URL);
                 const resultado = await respuesta.json();
                 
@@ -827,16 +849,42 @@
                     guardarRegistrosLocales(resultado);
                 }
             } catch (err) {
-                console.warn("⚠️ No se pudo conectar a Google Sheets, usando datos locales.", err);
+                console.warn("⚠️ Sin conexión a la nube o red inestable. Trabajando con datos locales en modo offline.", err);
             }
             
             actualizarVistaActual();
         }
 
+        async function enviarColaPendientes() {
+            let pendientes = obtenerPendientes();
+            if (pendientes.length === 0) return;
+
+            let nuevosPendientes = [];
+            for (let item of pendientes) {
+                try {
+                    let urlEnvio = '';
+                    if (item.action === 'guardar') {
+                        urlEnvio = `${WEB_APP_URL}?action=guardar&data=${encodeURIComponent(JSON.stringify(item.data))}`;
+                    } else if (item.action === 'eliminar') {
+                        urlEnvio = `${WEB_APP_URL}?action=eliminar&id=${encodeURIComponent(item.id)}`;
+                    }
+                    await fetch(urlEnvio, { method: 'GET' });
+                } catch (e) {
+                    nuevosPendientes.push(item); // Si falla de nuevo, se mantiene en la cola
+                }
+            }
+            guardarPendientes(nuevosPendientes);
+        }
+
         async function sincronizarDatosNubeManual() {
-            alert("🔄 Sincronizando con Google Sheets...");
+            alert("🔄 Intentando sincronizar con la nube...");
             await sincronizarDatosNube();
-            alert("✅ Sincronización completada desde la nube.");
+            let pendientesRestantes = obtenerPendientes().length;
+            if (pendientesRestantes === 0) {
+                alert("✅ Sincronización completada con éxito.");
+            } else {
+                alert(`⚠️ Se sincronizó lo posible, pero aún quedan ${pendientesRestantes} elementos pendientes por falta de internet.`);
+            }
         }
 
         function actualizarVistaActual() {
@@ -1091,7 +1139,6 @@
         function renderizarPanelAdmin() {
             const registrosLocales = obtenerRegistrosLocales();
             const usuarios = obtenerUsuariosLocales();
-            const filtroTecnico = document.getElementById('adminFiltroTecnico').value;
             
             document.getElementById('adminTotalReg').textContent = registrosLocales.length;
 
@@ -1240,13 +1287,17 @@
 
             guardarRegistrosLocales(registrosLocales);
 
+            // Intentar enviar a Google Sheets con manejo offline
             try {
                 const urlEnvio = `${WEB_APP_URL}?action=guardar&data=${encodeURIComponent(JSON.stringify(nuevosRegistros))}`;
                 await fetch(urlEnvio, { method: 'GET' });
-                alert('✅ Registros guardados en el dispositivo y en la nube.');
+                alert('✅ Registros guardados localmente y sincronizados con la nube.');
             } catch (error) {
-                console.error("Error al sincronizar con la nube:", error);
-                alert('⚠️ Guardado localmente, pero falló el envío a la nube.');
+                console.warn("⚠️ Sin internet. Guardado localmente. Se sincronizará al recuperar conexión.", error);
+                let pendientes = obtenerPendientes();
+                pendientes.push({ action: 'guardar', data: nuevosRegistros });
+                guardarPendientes(pendientes);
+                alert('⚠️ Estás sin conexión: El registro se guardó de forma local en tu dispositivo y se enviará a la nube al sincronizar con internet.');
             }
 
             const fijar = document.getElementById('fijarPoste').checked;
@@ -1292,8 +1343,13 @@
                 try {
                     const urlEliminar = `${WEB_APP_URL}?action=eliminar&id=${encodeURIComponent(regEliminado.id)}`;
                     await fetch(urlEliminar, { method: 'GET' });
+                    alert('🗑️ Registro eliminado del dispositivo y de la nube.');
                 } catch (error) {
-                    console.error("No se pudo eliminar de la nube:", error);
+                    console.warn("⚠️ Sin internet al eliminar. Se pondrá en cola para sincronizar.", error);
+                    let pendientes = obtenerPendientes();
+                    pendientes.push({ action: 'eliminar', id: regEliminado.id });
+                    guardarPendientes(pendientes);
+                    alert('🗑️ Eliminado localmente. Se actualizará en la nube al sincronizar.');
                 }
             }
 
@@ -1301,8 +1357,6 @@
             const tabActiva = document.querySelector('.tab-content.active');
             if (tabActiva && tabActiva.id === 'tab-buscar') filtrarRegistros();
             else if (tabActiva && tabActiva.id === 'tab-verificar') ejecutarVerificacion();
-
-            alert('🗑️ Registro eliminado del dispositivo y de la nube.');
         }
     </script>
 </body>

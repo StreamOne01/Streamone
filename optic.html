@@ -707,7 +707,7 @@
             });
         }
 
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCY_td4pKjTWP4TBqElfJzL4B2Jimc9CFl0B5xtQtgwIuQQFmbViP8vcctQrHzYXLX/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwS-6zbMqgg5LH8rSW10w47gTg7KN-0Zlu2zeBvYh5xc_hg9468xEvhnNccAHmwgJHN/exec';
         const STORAGE_KEY = 'registros_fiber_dog';
         const PENDIENTES_KEY = 'giga_node_pendientes_sync';
         const USERS_STORAGE_KEY = 'giga_node_claves_tecnicos';
@@ -740,8 +740,20 @@
             localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usuariosObj));
         }
 
-        function inicializarUsuarios() {
-            const usuarios = obtenerUsuariosLocales();
+        async function inicializarUsuarios() {
+            let usuarios = obtenerUsuariosLocales();
+
+            try {
+                const respuesta = await fetch(`${WEB_APP_URL}?action=obtenerUsuarios`);
+                const resultado = await respuesta.json();
+                if (resultado && Object.keys(resultado).length > 0) {
+                    usuarios = resultado;
+                    guardarUsuariosLocales(usuarios);
+                }
+            } catch (err) {
+                console.warn("⚠️ Usando usuarios locales (offline).", err);
+            }
+
             const selectLobby = document.getElementById('selectTecnicoLobby');
             const selectAdminFiltro = document.getElementById('adminFiltroTecnico');
 
@@ -1197,7 +1209,7 @@
             document.getElementById('listaControlUsuarios').innerHTML = htmlUsuarios;
         }
 
-        function guardarUsuarioAdmin() {
+        async function guardarUsuarioAdmin() {
             const nombre = document.getElementById('adminNombreUsuario').value.trim();
             const pass = document.getElementById('adminPasswordUsuario').value.trim();
 
@@ -1206,6 +1218,7 @@
                 return;
             }
 
+            // 1. Guardar localmente
             let usuarios = obtenerUsuariosLocales();
             usuarios[nombre] = pass;
             guardarUsuariosLocales(usuarios);
@@ -1213,9 +1226,18 @@
             document.getElementById('adminNombreUsuario').value = '';
             document.getElementById('adminPasswordUsuario').value = '';
 
+            // 2. Enviar a Google Sheets (Nube)
+            try {
+                const urlEnvio = `${WEB_APP_URL}?action=guardarUsuario&nombre=${encodeURIComponent(nombre)}&pass=${encodeURIComponent(pass)}`;
+                await fetch(urlEnvio, { method: 'GET' });
+                alert(`✅ Técnico "${nombre}" guardado y sincronizado en la nube.`);
+            } catch (error) {
+                console.warn("⚠️ Sin conexión. Se guardó localmente.", error);
+                alert(`⚠️ Técnico guardado localmente (sin conexión a internet).`);
+            }
+
             inicializarUsuarios();
             renderizarPanelAdmin();
-            alert(`✅ Técnico "${nombre}" guardado/actualizado con éxito.`);
         }
 
         function eliminarUsuarioAdmin(nombre) {

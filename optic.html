@@ -905,6 +905,8 @@
                 cargarRegistrosDesdeNube();
             } else if (tabActiva && tabActiva.id === 'tab-admin') {
                 renderizarPanelAdmin();
+            } else if (tabActiva && tabActiva.id === 'tab-verificar') {
+                ejecutarVerificacion();
             }
         }
 
@@ -1013,7 +1015,7 @@
                     <p><strong>GPS:</strong> ${gps}</p>
                     <p><strong>Técnico:</strong> ${tecnico}</p>
                     ${linkMapa}
-                    <button type="button" class="btn-editar" onclick="editarRegistro(${indiceOriginal})">✏️ Editar</button>
+                    <button type="button" class="btn-editar" onclick="editarRegistro(${indiceOriginal})">✏️ Editar Cuenta</button>
                     <button type="button" class="btn-eliminar" onclick="eliminarRegistro(${indiceOriginal})">🗑️ Eliminar</button>
                 </div>
             `;
@@ -1049,15 +1051,19 @@
                     ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gpsVal)}" target="_blank" class="btn-mapa">📍 Abrir Ubicación en Google Maps</a>` 
                     : '';
 
+                const posteIdStr = (primerReg.poste || primerReg.Poste || primerReg['Numero de Poste'] || '').toString();
+
                 let html = `
                     <div class="history-item" style="border: 2px solid var(--accent); margin-bottom: 16px;">
                         <strong>📌 Resumen de Infraestructura</strong>
-                        <p><strong>Poste:</strong> ${primerReg.poste || primerReg.Poste || primerReg['Numero de Poste'] || 'N/D'}</p>
+                        <p><strong>Poste:</strong> ${posteIdStr || 'N/D'}</p>
                         <p><strong>TAP:</strong> ${primerReg.tap || primerReg.TAP || 'N/D'} | <strong>NAP:</strong> ${primerReg.nap || primerReg.NAP || 'N/D'}</p>
                         <p><strong>Total Clientes en este poste:</strong> <span style="color: var(--accent); font-weight: bold;">${totalClientes}</span></p>
                         <p><strong>Códigos:</strong> ${listaClientesStr}</p>
                         <p><strong>GPS:</strong> ${gpsVal}</p>
                         ${linkMapa}
+                        <button type="button" class="btn-editar" style="background-color: var(--accent);" onclick="editarInfraestructuraPoste('${posteIdStr}')">✏️ Editar Códigos e Infraestructura de este Poste</button>
+                        <button type="button" class="btn-editar" style="background-color: var(--success); margin-top: 6px;" onclick="agregarCuentaAPoste('${posteIdStr}', '${primerReg.tap || primerReg.TAP || ''}', '${primerReg.nap || primerReg.NAP || ''}', '${gpsVal}')">➕ Agregar Cuenta a este Poste</button>
                     </div>
                 `;
 
@@ -1092,6 +1098,47 @@
                 });
                 contenedor.innerHTML = html;
             }
+        }
+
+        function editarInfraestructuraPoste(posteBuscado) {
+            const registrosLocales = obtenerRegistrosLocales();
+            
+            const encontrados = registrosLocales.filter(r => {
+                const valPoste = r.poste || r.Poste || r['Numero de Poste'] || r['poste'] || '';
+                return valPoste.toString().toLowerCase() === posteBuscado.toLowerCase();
+            });
+
+            if (encontrados.length === 0) {
+                alert("No se encontraron registros para este poste.");
+                return;
+            }
+
+            const primerReg = encontrados[0];
+            const codigosActuales = encontrados.map(r => r.codigoCliente || r.codigo || r['Codigo de Cliente'] || '').join(', ');
+
+            document.getElementById('editIndex').value = 'GRUPO_POSTE:' + posteBuscado;
+            document.getElementById('codigoCliente').value = codigosActuales;
+            document.getElementById('poste').value = posteBuscado !== 'N/D' ? posteBuscado : '';
+            document.getElementById('tap').value = primerReg.tap || primerReg.TAP || '';
+            document.getElementById('nap').value = primerReg.nap || primerReg.NAP || '';
+            document.getElementById('gps').value = (primerReg.gps || primerReg.GPS || '') !== 'Sin coordenadas' ? (primerReg.gps || primerReg.GPS || '') : '';
+            document.getElementById('btnGuardar').textContent = 'Actualizar Infraestructura del Poste';
+
+            cambiarTab('registro', null);
+            document.querySelector('.tab-btn[onclick*="registro"]').classList.add('active');
+        }
+
+        function agregarCuentaAPoste(poste, tap, nap, gps) {
+            document.getElementById('editIndex').value = '';
+            document.getElementById('codigoCliente').value = '';
+            document.getElementById('poste').value = poste !== 'N/D' ? poste : '';
+            document.getElementById('tap').value = tap !== 'N/D' ? tap : '';
+            document.getElementById('nap').value = nap !== 'N/D' ? nap : '';
+            document.getElementById('gps').value = gps !== 'Sin coordenadas' ? gps : '';
+            document.getElementById('btnGuardar').textContent = 'Guardar Lote de Registros';
+
+            cambiarTab('registro', null);
+            document.querySelector('.tab-btn[onclick*="registro"]').classList.add('active');
         }
 
         function filtrarRegistros() {
@@ -1218,7 +1265,6 @@
                 return;
             }
 
-            // 1. Guardar localmente
             let usuarios = obtenerUsuariosLocales();
             usuarios[nombre] = pass;
             guardarUsuariosLocales(usuarios);
@@ -1226,7 +1272,6 @@
             document.getElementById('adminNombreUsuario').value = '';
             document.getElementById('adminPasswordUsuario').value = '';
 
-            // 2. Enviar a Google Sheets (Nube)
             try {
                 const urlEnvio = `${WEB_APP_URL}?action=guardarUsuario&nombre=${encodeURIComponent(nombre)}&pass=${encodeURIComponent(pass)}`;
                 await fetch(urlEnvio, { method: 'GET' });
@@ -1291,7 +1336,26 @@
             let registrosLocales = obtenerRegistrosLocales();
             let nuevosRegistros = [];
 
-            if (editIndex !== '') {
+            if (editIndex.startsWith('GRUPO_POSTE:')) {
+                const posteAEditar = editIndex.replace('GRUPO_POSTE:', '');
+                
+                // Limpiar registros previos de este poste específico
+                registrosLocales = registrosLocales.filter(r => {
+                    const valPoste = r.poste || r.Poste || r['Numero de Poste'] || '';
+                    return valPoste.toString().toLowerCase() !== posteAEditar.toLowerCase();
+                });
+
+                // Crear los nuevos registros actualizados
+                codigosArray.forEach(codigo => {
+                    const idUnico = Date.now().toString() + Math.floor(Math.random() * 1000);
+                    const nuevoReg = { id: idUnico, tecnico, codigoCliente: codigo, poste, tap, nap, gps };
+                    registrosLocales.push(nuevoReg);
+                    nuevosRegistros.push(nuevoReg);
+                });
+
+                document.getElementById('editIndex').value = '';
+                document.getElementById('btnGuardar').textContent = 'Guardar Lote de Registros';
+            } else if (editIndex !== '') {
                 const idx = parseInt(editIndex);
                 const idExistente = registrosLocales[idx].id || (Date.now().toString() + Math.floor(Math.random() * 1000));
                 registrosLocales[idx] = { id: idExistente, tecnico, codigoCliente: codigosArray[0], poste, tap, nap, gps };
@@ -1309,7 +1373,6 @@
 
             guardarRegistrosLocales(registrosLocales);
 
-            // Intentar enviar a Google Sheets con manejo offline
             try {
                 const urlEnvio = `${WEB_APP_URL}?action=guardar&data=${encodeURIComponent(JSON.stringify(nuevosRegistros))}`;
                 await fetch(urlEnvio, { method: 'GET' });
@@ -1348,6 +1411,7 @@
             document.getElementById('btnGuardar').textContent = 'Actualizar Registro';
 
             cambiarTab('registro', null);
+            document.querySelector('.tab-btn[onclick*="registro"]').classList.add('active');
         }
 
         async function eliminarRegistro(index) {

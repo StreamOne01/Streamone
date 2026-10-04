@@ -300,6 +300,12 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # SECCIÓN: PELÍCULAS (VOD)
 # ==========================================
 
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/4YyuSadBoc5k6krj0REcYH15DXG.jpg" group-title="Accion",El hombre que desafió al rey 2026
+https://files.eintim.me/content/cdn/kOYErkAiUmIp.mp4
+
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/b9q9VmbXDvJmTziRqkwdEmFdwhr.jpg" group-title="Accion",El final de la calle Oak 2026
+https://files.eintim.me/content/cdn/OOBTzGgNhjOa.mp4
+
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/c6BPbkO5Npt1OdwttAxCFo06wtH.jpg" group-title="Familiar",Mohana 2026
 https://files.eintim.me/content/cdn/NPpSVQvYfjtt.mp4
 

@@ -298,6 +298,10 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # ==========================================
 # SECCIÓN: PELÍCULAS (VOD)
 # ==========================================
+
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/c6BPbkO5Npt1OdwttAxCFo06wtH.jpg" group-title="Familiar",Mohana 2026
+https://files.eintim.me/content/cdn/NPpSVQvYfjtt.mp4
+
  
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/wENlYOyR10DZzkICmrGUQQX4Ih5.jpg" group-title="Familiar",Toy Story 5 2026
 https://files.eintim.me/content/cdn/afLLOYCkWGCN.mp4

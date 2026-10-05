@@ -9,7 +9,7 @@
     {
       "username": "heysel",
       "password": "123456789",
-      "status": "activo",
+      "status": "active",
       "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     }
   ]

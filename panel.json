@@ -1,0 +1,16 @@
+{
+  "usuarios_panel": [
+    {
+      "username": "carlos01",
+      "password": "123",
+      "status": "active",
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+    },
+    {
+      "username": "cliente_suspendido",
+      "password": "456",
+      "status": "blocked",
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+    }
+  ]
+}

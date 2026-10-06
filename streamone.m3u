@@ -13,7 +13,7 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 
-#EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="INFANTILES",DRAGON BALL TV
+#EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM UNO",DRAGON BALL TV
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",El Chavo TV
 https://live20.bozztv.com/giatvplayout7/giatv-211465/tracks-v1a1/mono.ts.m3u8
@@ -155,32 +155,25 @@ https://envivo.cncity.live/hls/envivo.m3u8
 https://xumo-drct-ch836-57aiq.fast.nbcuni.com/live/master.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="Canal Olanchano" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Canal Olanchano
 https://viewhn.com/canal30/live/chunks.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="Canal 10" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Canal 10
-https://live.eu-north-1a.cf.dmcdn.net/sec2(sEajqW0bOofOA-u00v_2vGwzQm5uwhDygSLCUrJMULjtvES3g_MAb3kqJXqlb5_7j2qJ1ORBMeU442Ve1PvXYkJLxugM6v6_qyahPvttY9Il86E2zctYmmdZul6Nrz-G)/dm/3/x8uk5ou/d/live-480.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="Suyapa TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Suyapa TV
-https://5f2c1b0d880e5.streamlock.net/siyapa2/videosiyapa2/chunklist_w713628529.m3u8
+
+
 #EXTINF:-1 tvg-id="01" tvg-name="76 HCH" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",HCH
 https://live.streamhch.com/live/streams/hch1.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="77 LITORAL ATLANTICO" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",LITORAL ATLANTICO
 https://cdn4.streamgato.us:3595/live/litoralhdlive.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="78 Canal 11 Honduras" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Canal 11 Honduras
-https://redirector.rudo.video/hls-video/c54ac2799874375c81c1672abb700870537c5223/canal11hn/canal11hn.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="80 Lenca TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Lenca TV
 https://lencatelevision.com/hls/0/stream.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="81 TSI HN SD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",TSI HN SD
 https://mdstrm.com/live-stream-playlist/6287fda8ea3b8b397d1ca2ed.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="82 TSI HN" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",ETI HN
 https://mdstrm.com/live-stream-playlist/6287fda8ea3b8b397d1ca2ed.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="83 UNE TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",UNE TV
-https://stream.radiosmundiales.com/hls/globotvhonduras/globotvhonduras.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="84 Telecadena HD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Telecadena HD
 http://45.167.2.101:8000/play/a07n/index.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="85 Q.Hubo tv" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Q.Hubo tv
-https://amixtv.com:8081/qhubotv/tracks-a1/index.fmp4.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="86 Teleceiba HD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Teleceiba HD
 https://teleceiba.com/stream/tlcb720.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="87 Canal 9 Danlí" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",Canal 9 Danlí
-https://live20.bozztv.com/giatv/giatv-canal9/canal9/chunks.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="Canal 26" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES DE NOTICIAS",Canal 26
 https://stream-gtlc.telecentro.net.ar/hls/canal26hls/0/playlist.m3u8?uid=79df6e2a7737c320a4e0df9d0bd87cf6
 #EXTINF:-1 tvg-id="01" tvg-name="90 Azteca Internacional" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM UNO",Azteca Internacional

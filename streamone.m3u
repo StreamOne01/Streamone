@@ -300,6 +300,10 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # SECCIÓN: PELÍCULAS (VOD)
 # ==========================================
 
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/mDu3nkdjzkJ9loy3QyppGcLjaI7.jpg" group-title="Drama",Siete almas 2008
+https://files.eintim.me/content/cdn/gVoyWuVMcnps.mp4
+
+
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/hD8y787ciNWQ2bn396YrSsOIzdN.jpg" group-title="Terror",La Noche Del Demonio 2026
 https://files.eintim.me/content/cdn/AVZFWNQdDtlL.mp4
 

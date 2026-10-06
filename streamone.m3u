@@ -13,11 +13,11 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 
-#EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM ONE",DRAGON BALL TV
+#EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="TV EN VIVO",01
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",El Chavo TV
+#EXTINF:-1 tvg-id="01" tvg-name="El Chavo TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="TV EN VIVO",El Chavo TV
 https://live20.bozztv.com/giatvplayout7/giatv-211465/tracks-v1a1/mono.ts.m3u8
-#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Distrito Comedia
+#EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="TV EN VIVO",Distrito Comedia
 http://181.78.8.199:8000/play/a07i/index.m3u8
 #EXTINF:-1 tvg-id="Distrito Comedia" tvg-name="Distrito Comedia" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",Azteca Uno
 https://azt-oo.otteravision.com/out/v1/da53d7d388be437e92bf8f464018eb48/index.m3u8

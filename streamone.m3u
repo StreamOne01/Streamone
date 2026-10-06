@@ -41,8 +41,7 @@ https://rtvelivestream-rtveplayplus.rtve.es/rtvesec/int/star_main_dvr_1080.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="TNT NOVELAS" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES DE NOVELAS",TNT NOVELAS
 http://15.204.246.24:8080/TNTNovelasHD/index.m3u8
 
-#EXTINF:-1 tvg-id="01" tvg-name="001 ESPN Deportes" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN Deportes
-http://40.160.24.58/ESPN_DEPORTES/tracks-v1a1/mono.ts.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="01 WINSPORT" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",WINSPORT
 http://181.78.8.199:8000/play/a0cc/index.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="02 FTF Sports" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",FTF Sports
@@ -53,30 +52,21 @@ https://thm-it-roku.otteravision.com/thm/it/it.m3u8
 https://bein-esp-xumo.amagi.tv:443/playlistR720P.m3u8
 #EXTINF:-1 tvg-id="46" tvg-name="06 ESPN 1" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 1
 http://181.78.8.199:8000/play/a0b1/index.m3u8
-#EXTINF:-1 tvg-id="46" tvg-name="006 ESPN 1 MX" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 1 MX
-http://181.78.197.59:8000/play/a07z/index.m3u8
+
 #EXTINF:-1 tvg-id="47" tvg-name="07 ESPN 2" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 2
 http://181.78.8.199:8000/play/a0b2/index.m3u8
 #EXTINF:-1 tvg-id="47" tvg-name="08 ESPN 3" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 3
 http://181.78.8.199:8000/play/a0b3/index.m3u8
-#EXTINF:-1 tvg-id="47" tvg-name="008 ESPN 3 MX" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 3 MX
-http://181.78.197.59:8000/play/a081/index.m3u8
+
 #EXTINF:-1 tvg-id="47" tvg-name="09 ESPN 4" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 4
 http://181.78.8.199:8000/play/a0do/index.m3u8
-#EXTINF:-1 tvg-id="47" tvg-name="009 ESPN 4 MX" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 4 MX
-http://181.78.197.59:8000/play/a07n/index.m3u8
-#EXTINF:-1 tvg-id="47" tvg-name="10 ESPN 5" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 5
-http://45.181.122.46:8090/play/a01i
-#EXTINF:-1 tvg-id="47" tvg-name="11 ESPN 6" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 6
-http://45.181.122.46:8090/play/a01u
+
+
 #EXTINF:-1 tvg-id="47" tvg-name="12 ESPN 7" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN 7
 http://181.78.8.199:8000/play/a08o/index.m3u8
-#EXTINF:-1 tvg-id="47" tvg-name="13 ESPN Preemium HD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN Preemium HD
-http://45.181.122.46:8090/play/a015
-#EXTINF:-1 tvg-id="47" tvg-name="14 ESPN Preemium" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",ESPN Preemium
-http://45.181.122.46:8090/play/a01m
-#EXTINF:-1 tvg-id="47" tvg-name="TNT Sports Premium" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",TNT Sports Premium
-http://45.181.122.46:8090/play/a00i
+
+
+
 #EXTINF:-1 tvg-id="47" tvg-name="16 Fox Sports" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Fox Sports
 http://23.237.104.106:8080/USA_FOX_DEPORTES/index.m3u8
 #EXTINF:-1 tvg-id="47" tvg-name="17 FIFA plus" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpgg" group-title="DEPORTES",FIFA plus
@@ -85,8 +75,7 @@ https://a62dad94.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdX
 https://amg17560-fcb-amg17560c2-rakuten-es-4889.playouts.now.amagi.tv/playlist/amg17560-fcbarcelona-topbarcaspanish-rakutenes/playlist.m3u8
 #EXTINF:-1 tvg-id="47" tvg-name="19 REAL MADRID TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",REAL MADRID TV
 https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="20 Fox Soccer Plus" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Fox Soccer Plus
-http://40.160.24.52/FOX_SOCCER_PLUS/tracks-v1a1/mono.ts.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="020 Fox Sports 1" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Fox Sports 1
 http://85.237.89.160:9590/usa-s/FOX-SPORTS-1/index.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="0020 Tigo Sports" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Tigo Sports
@@ -95,8 +84,7 @@ http://45.170.130.224:8000/play/a04i/index.m3u8
 http://181.119.66.28:8081/AZTECA-DEPORTES-HD/index.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="Universo HD" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Universo HD
 http://190.11.225.124:5000/live/universo_hd/playlist.m3u8
-#EXTINF:-1 tvg-id="01" tvg-name="Pluto TV Deportes" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Pluto TV Deportes
-https://jmp2.uk/plu-5dcde07af1c85b0009b18651.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="Deportes TVC" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="DEPORTES",Deportes TVC
 https://streaming.onnethn.com/DEPORTES_TVC/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="01" tvg-name="21 DISCOVERY CHANNEL" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM ONE",DISCOVERY CHANNEL

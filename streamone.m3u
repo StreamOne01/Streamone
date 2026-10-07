@@ -14,7 +14,7 @@
 # ==========================================
 
 #EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",DEPELICULAS
-http://181.78.8.199:8000/play/a0au/index.m3u8
+http://181.78.8.199:8000/play/a0e0/index.m3u8
 
 #EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="CANALES STREAM UNO",DRAGON BALL TV
 https://live20.bozztv.com/giatv/giatv-dball/dball/chunks.m3u8

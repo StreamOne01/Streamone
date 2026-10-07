@@ -1,14 +1,14 @@
 {
   "dispositivos": [
     {
-      "device_id": "K7P2-X9QA-4M8Z",
-      "activation_code": "731492",
+      "device_id": "KJBS-WBZ6-QT92",
+      "activation_code": "373802",
       "cliente": "Cliente de Prueba",
       "servidor": "Servidor 01",
       "status": "active",
       "fecha_activacion": "2026-10-06",
       "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://TU-SERVIDOR.com/lista1.m3u"
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/StreamOne.m3u"
     },
     {
       "device_id": "ABCD-1234-WXYZ",

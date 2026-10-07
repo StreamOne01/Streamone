@@ -1,22 +1,24 @@
 {
-  "usuarios_panel": [
+  "dispositivos": [
     {
-      "username": "carlos01",
-      "password": "123",
+      "device_id": "K7P2-X9QA-4M8Z",
+      "activation_code": "731492",
+      "cliente": "Cliente de Prueba",
+      "servidor": "Servidor 01",
       "status": "active",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+      "fecha_activacion": "2026-10-06",
+      "fecha_vencimiento": "2026-11-06",
+      "m3u": "https://TU-SERVIDOR.com/lista1.m3u"
     },
     {
-      "username": "heysel",
-      "password": "221122",
+      "device_id": "ABCD-1234-WXYZ",
+      "activation_code": "852741",
+      "cliente": "Segundo Cliente",
+      "servidor": "Servidor 02",
       "status": "active",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    },
-    {
-      "username": "usuario_a_bloquear",
-      "password": "456",
-      "status": "blocked",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+      "fecha_activacion": "2026-10-06",
+      "fecha_vencimiento": "2026-12-06",
+      "m3u": "https://TU-SERVIDOR.com/lista2.m3u"
     }
   ]
 }

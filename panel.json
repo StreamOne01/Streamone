@@ -23,6 +23,17 @@
     },
     
     {
+      "device_id": "MF8R-CGLN-H78G",
+      "activation_code": "266526",
+      "cliente": "Carlos Muñoz",
+      "servidor": "Servidor 10",
+      "status": "active",
+      "fecha_activacion": "2026-10-06",
+      "fecha_vencimiento": "2026-11-06",
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+    },
+
+        {
       "device_id": "NUEVO-ID",
       "activation_code": "123456",
       "cliente": "01",

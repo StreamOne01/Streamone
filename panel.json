@@ -10,6 +10,7 @@
       "fecha_vencimiento": "2026-11-06",
       "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     },
+    
     {
       "device_id": "6FA2-DB8G-QDVX",
       "activation_code": "726977",
@@ -20,6 +21,7 @@
       "fecha_vencimiento": "2026-11-06",
       "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     },
+    
     {
       "device_id": "NUEVO-ID",
       "activation_code": "123456",
@@ -30,5 +32,6 @@
       "fecha_vencimiento": "2026-11-06",
       "m3u": "https://tu-servidor.com/lista.m3u"
     }
+    
   ]
 }

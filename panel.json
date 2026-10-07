@@ -10,25 +10,26 @@
       "fecha_vencimiento": "2026-11-06",
       "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     },
-    {
-      "device_id": "6FA2-DB8G-QDVX",
-      "activation_code": "726977",
-      "cliente": "Segundo Cliente",
-      "servidor": "lista 02",
-      "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-12-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    } 
-      {
-      "device_id": "ABCD-1234-WXYZ",
-      "activation_code": "852741",
-      "cliente": "3 Cliente",
-      "servidor": "Servidor 03",
-      "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-12-06",
-      "m3u": "https://TU-SERVIDOR.com/lista2.m3u"
-    }
+   {
+  "device_id": "6FA2-DB8G-QDVX",
+  "activation_code": "726977",
+  "cliente": "Juan",
+  "servidor": "lista 01",
+  "status": "active",
+  "fecha_activacion": "2026-10-06",
+  "fecha_vencimiento": "2026-11-06",
+  "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+}
+{
+  "device_id": "NUEVO-ID",
+  "activation_code": "123456",
+  "cliente": "01",
+  "servidor": "Servidor 01",
+  "status": "active",
+  "fecha_activacion": "2026-10-06",
+  "fecha_vencimiento": "2026-11-06",
+  "m3u": "https://tu-servidor.com/lista.m3u"
+}
+    
   ]
 }

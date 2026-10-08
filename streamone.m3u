@@ -256,6 +256,9 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # SECCIÓN:  (VOD)
 # ==========================================
 
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/iJVkLpu0BhwhcwEMGV5vPh1pWA.jpg" group-title="PELICULAS",La llegada 2016
+https://files.eintim.me/content/cdn/YijcCosKzMCK.mp4
+
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/ayBWXnz5PkmcZoUu2UuANbgre5G.jpg" group-title="PELICULAS",El astronauta 2019
 https://files.eintim.me/content/cdn/vfCHLmBiRPqe.mp4
 

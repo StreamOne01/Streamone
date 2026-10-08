@@ -256,6 +256,9 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # SECCIÓN:  (VOD)
 # ==========================================
 
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/Af907x5h9W1wVis8XrSd7ynTWuy.jpg" group-title="PELICULAS",El diablo viste a la moda 2 2026
+https://files.eintim.me/content/cdn/aFkXZTKNkOUR.mp4
+
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/iIn6exNbm1wtMJ1YNybXlSOTNoj.jpg" group-title="PELICULAS",Mayday 2026
 https://files.eintim.me/content/cdn/vzNzyWuHMsbe.mp4
 

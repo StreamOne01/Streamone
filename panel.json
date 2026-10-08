@@ -33,6 +33,18 @@
       "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     },
 
+       {
+      "device_id": "A32J-ECPG-ZTTS",
+      "activation_code": "041515",
+      "cliente": "01",
+      "servidor": "Servidor 10",
+      "status": "active",
+      "fecha_activacion": "2026-10-06",
+      "fecha_vencimiento": "2026-11-06",
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+    },
+
+    
         {
       "device_id": "NUEVO-ID",
       "activation_code": "123456",

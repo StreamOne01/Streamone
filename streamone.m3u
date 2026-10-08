@@ -256,6 +256,9 @@ https://amg01131-tracetv-amg01131c1-rakuten-us-1081.playouts.now.amagi.tv/playli
 # SECCIÓN:  (VOD)
 # ==========================================
 
+#EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/ayBWXnz5PkmcZoUu2UuANbgre5G.jpg" group-title="PELICULAS",El astronauta 2019
+https://files.eintim.me/content/cdn/vfCHLmBiRPqe.mp4
+
 #EXTINF:-1 tvg-logo="https://image.tmdb.org/t/p/w1280/rtf4vjjLZLalpOzDUi0Qd2GTUqq.jpg" group-title="PELICULAS",Terminator: Destino oculto 2019
 https://files.eintim.me/content/cdn/rCaLLoZLeltx.mp4
 

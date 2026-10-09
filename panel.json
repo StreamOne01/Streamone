@@ -54,6 +54,17 @@
       "fecha_vencimiento": "2026-11-06",
       "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     },
+
+     {
+      "device_id": "XR7P-VCV5-H5RV",
+      "activation_code": "219711",
+      "cliente": "26",
+      "servidor": "Servidor 01",
+      "status": "active",
+      "fecha_activacion": "2026-10-09",
+      "fecha_vencimiento": "2026-11-06",
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+    },
     
         {
       "device_id": "NUEVO-ID",

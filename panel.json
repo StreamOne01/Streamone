@@ -1,81 +1,24 @@
 {
   "dispositivos": [
     {
-      "device_id": "KJBS-WBZ6-QT92",
-      "activation_code": "373802",
-      "cliente": "Cliente de Prueba",
-      "servidor": "Servidor 01",
+      "activation_code": "482910",
+      "cliente": "Juan Pérez",
+      "servidor": "Servidor 1",
+      "fecha_activacion": "2026-10-01",
+      "fecha_vencimiento": "2026-11-01",
       "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
+      "m3u": "https://tu-enlace-m3u.com/get.php?username=xxx&password=xxx&type=m3u"
     },
-    
     {
-      "device_id": "PCEU-MW6C-WNWN",
-      "activation_code": "384511",
-      "cliente": "READMI",
-      "servidor": "lista 01",
+      "activation_code": "482910",
+      "cliente": "Juan Pérez",
+      "servidor": "Servidor 1",
+      "fecha_activacion": "2026-10-01",
+      "fecha_vencimiento": "2026-11-01",
       "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    },
-    
-    {
-      "device_id": "MF8R-CGLN-H78G",
-      "activation_code": "266526",
-      "cliente": "Carlos Muñoz",
-      "servidor": "Servidor 10",
-      "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    },
-
-       {
-      "device_id": "A32J-ECPG-ZTTS",
-      "activation_code": "041515",
-      "cliente": "01",
-      "servidor": "Servidor 10",
-      "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    },
-
-            {
-      "device_id": "JKLM-SLTL-L67P",
-      "activation_code": "136952",
-      "cliente": "01",
-      "servidor": "Servidor 20",
-      "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    },
-
-     {
-      "device_id": "XR7P-VCV5-H5RV",
-      "activation_code": "219711",
-      "cliente": "26",
-      "servidor": "Servidor 01",
-      "status": "active",
-      "fecha_activacion": "2026-10-09",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
-    },
-    
-        {
-      "device_id": "NUEVO-ID",
-      "activation_code": "123456",
-      "cliente": "01",
-      "servidor": "Servidor 01",
-      "status": "active",
-      "fecha_activacion": "2026-10-06",
-      "fecha_vencimiento": "2026-11-06",
-      "m3u": "https://tu-servidor.com/lista.m3u"
+      "m3u": "https://tu-enlace-m3u.com/get.php?username=xxx&password=xxx&type=m3u"
     }
+
     
   ]
 }

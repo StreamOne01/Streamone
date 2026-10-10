@@ -2,15 +2,23 @@
   {
     "codigo": "482910",
     "dispositivo": "TV Box Sala",
+    "activo": true,
+    "m3uUrl": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u",
+    "fechaInicio": "2026-01-01",
+    "fechaFin": "2026-12-31",
     "estado": "EN LÍNEA",
     "reproduciendo": "Fox Sports HD+",
     "ultimaConexion": "10:24 PM"
   },
   {
     "codigo": "938102",
-    "dispositivo": "Celular Cuarto",
+    "dispositivo": "Celular de Prueba",
+    "activo": false,
+    "m3uUrl": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u",
+    "fechaInicio": "2026-01-01",
+    "fechaFin": "2026-03-30",
     "estado": "FUERA DE LÍNEA",
     "reproduciendo": "Ninguno",
-    "ultimaConexion": "Ayer, 08:15 PM"
+    "ultimaConexion": "Ayer"
   }
 ]

@@ -6,5 +6,15 @@
     "m3uUrl": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u",
     "fechaInicio": "2026-01-01",
     "fechaFin": "2026-12-31"
+  },
+  
+  {
+    "codigo": "640973",
+    "dispositivo": "TV Box Sala",
+    "activo": true,
+    "m3uUrl": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u",
+    "fechaInicio": "2026-01-01",
+    "fechaFin": "2026-12-31"
   }
+  
 ]

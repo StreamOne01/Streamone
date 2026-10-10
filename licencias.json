@@ -1,4 +1,16 @@
 [
-  { "codigo": "640973", "dispositivo": "PC", "activo": true },
-  { "codigo": "938102", "dispositivo": "Celular de Prueba", "activo": false }
+  {
+    "codigo": "482910",
+    "dispositivo": "TV Box Sala",
+    "estado": "EN LÍNEA",
+    "reproduciendo": "Fox Sports HD+",
+    "ultimaConexion": "10:24 PM"
+  },
+  {
+    "codigo": "938102",
+    "dispositivo": "Celular Cuarto",
+    "estado": "FUERA DE LÍNEA",
+    "reproduciendo": "Ninguno",
+    "ultimaConexion": "Ayer, 08:15 PM"
+  }
 ]

@@ -1,8 +1,4 @@
 [
-  { "codigo": "640973", "dispositivo": "PC Escritorio", "activo": true },
-  { "codigo": "938102", "dispositivo": "Celular Carlos", "activo": false }
-    { "codigo": "938102", "dispositivo": "Celular Carlos", "activo": false }
-    { "codigo": "938102", "dispositivo": "Celular Carlos", "activo": false }
-    { "codigo": "938102", "dispositivo": "Celular Carlos", "activo": false }
-    { "codigo": "938102", "dispositivo": "Celular Carlos", "activo": false }
+  { "codigo": "640973", "dispositivo": "PC", "activo": true },
+  { "codigo": "938102", "dispositivo": "Celular de Prueba", "activo": false }
 ]

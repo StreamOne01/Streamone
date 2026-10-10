@@ -480,7 +480,6 @@
 
   <script>
     const PANEL_JSON_URL = "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/licencias.json";
-    const WEBHOOK_REPORTES_URL = "TU_ENLACE_DE_WEBHOOK_O_APPS_SCRIPT"; 
 
     let m3uUrl = ""; 
     let allItems = [];
@@ -509,12 +508,12 @@
     async function verificarLicenciaNube() {
       const codigoActual = obtenerCodigoDispositivo();
       const statusText = document.getElementById('statusLicencia');
-      statusText.textContent = "Verificando autorización en el panel...";
+      statusText.textContent = `Buscando código ${codigoActual} en la nube...`;
 
       try {
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_JSON_URL)}`;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_JSON_URL + '?t=' + new Date().getTime())}`;
         const res = await fetch(proxyUrl);
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error("No se pudo conectar al servidor.");
         
         const data = await res.json();
         const licencias = JSON.parse(data.contents);
@@ -527,7 +526,7 @@
         }
 
         if (dispositivo.activo !== true) {
-          statusText.textContent = `Esperando activación. Código: ${codigoActual}`;
+          statusText.textContent = `Código ${codigoActual}: Esperando activación en el panel.`;
           return;
         }
 
@@ -538,7 +537,7 @@
         }
 
         if (!dispositivo.m3uUrl) {
-          statusText.textContent = `Licencia activa, pero falta asignarle el enlace M3U en el panel.`;
+          statusText.textContent = `Licencia activa, pero falta asignar la m3uUrl en el JSON.`;
           return;
         }
 
@@ -548,41 +547,16 @@
         setTimeout(() => {
           document.getElementById('activationScreen').style.display = 'none';
           iniciarApp();
-        }, 1000);
+        }, 800);
 
       } catch (e) {
-        statusText.textContent = `Sin conexión al panel. Código actual: ${codigoActual}`;
+        statusText.textContent = `Error de lectura. Tu código único es: ${codigoActual}`;
       }
     }
 
     function iniciarApp() {
       detectarDispositivoUI();
       descargarListaM3U();
-      
-      if (heartbeatInterval) clearInterval(heartbeatInterval);
-      heartbeatInterval = setInterval(() => {
-        const canalActual = document.getElementById('currentChannelName').textContent;
-        reportarEstadoServidor("EN LÍNEA", canalActual);
-      }, 45000);
-    }
-
-    function reportarEstadoServidor(estado, reproduciendo) {
-      const codigoActual = obtenerCodigoDispositivo();
-      const payload = {
-        codigo: codigoActual,
-        estado: estado,
-        reproduciendo: reproduciendo,
-        ultimaConexion: new Date().toLocaleTimeString()
-      };
-
-      /*
-      fetch(WEBHOOK_REPORTES_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(err => {});
-      */
     }
 
     function detectarDispositivoUI() {
@@ -753,8 +727,6 @@
     function playItem(item) {
       document.getElementById('currentChannelName').textContent = item.name;
       document.getElementById('epgShowTitle').textContent = item.group;
-
-      reportarEstadoServidor("EN LÍNEA", item.name);
 
       if (Hls.isSupported() && (item.url.includes('.m3u8') || !item.url.includes('.'))) {
         if (hls) hls.destroy();

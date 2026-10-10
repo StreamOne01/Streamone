@@ -1,514 +1,781 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Stream One - Azul Pro Centrado</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>
-        :root {
-            --bg-base: #0a0e1a;
-            --bg-overlay: rgba(13, 22, 41, 0.95);
-            --bg-card: rgba(26, 38, 67, 0.6);
-            --bg-card-hover: rgba(0, 113, 227, 0.25);
-            --accent: #0071e3;
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stream One Player - Panel Remoto</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        * { box-sizing: border-box; }
+    body {
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #070b14 0%, #101d36 100%);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
+    .app-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: radial-gradient(circle at 10% 20%, #ff1e27 0%, #b80009 45%, #600004 90%);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-        /* Pantalla de Bienvenida */
-        #welcomeScreen {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(5, 8, 15, 0.98);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+    .sparkles-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle at 85% 15%, rgba(255, 215, 0, 0.6) 0%, transparent 12%),
+        radial-gradient(circle at 92% 30%, rgba(255, 255, 255, 0.7) 0%, transparent 6%),
+        radial-gradient(circle at 15% 80%, rgba(255, 215, 0, 0.4) 0%, transparent 15%),
+        radial-gradient(circle at 28% 50%, rgba(255, 200, 100, 0.5) 0%, transparent 8%),
+        radial-gradient(circle at 70% 85%, rgba(255, 255, 255, 0.5) 0%, transparent 10%);
+      pointer-events: none;
+      z-index: 1;
+    }
 
-        .welcome-card {
-            background: var(--bg-overlay);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px 25px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-        }
+    .header {
+      position: relative;
+      z-index: 10;
+      height: 60px;
+      padding: 10px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .welcome-logo {
-            font-size: 26px;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .welcome-logo span { color: var(--accent); }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .welcome-card p {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
+    .logo-box {
+      background: #fff;
+      color: #d30008;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            text-align: left;
-        }
+    .app-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fff;
+    }
 
-        .input-group label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--accent);
-        }
+    .app-version {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.75);
+      background: rgba(0,0,0,0.3);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
 
-        .input-group input[type="text"] {
-            width: 100%;
-            padding: 12px 14px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-        }
-        .input-group input[type="text"]:focus { border-color: var(--accent); }
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 10px;
+    }
 
-        .file-upload-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 13px;
-            color: #fff;
-            margin-top: 12px;
-        }
-        .file-upload-btn:hover { background: rgba(255, 255, 255, 0.1); }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
 
-        .btn-start {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 13px;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-top: 15px;
-            width: 100%;
-        }
-        .btn-start:hover { opacity: 0.9; }
+    .tab-btn.active {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+    }
 
-        /* Cabecera Principal */
-        header {
-            background: rgba(10, 15, 28, 0.95);
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
+    .tab-btn.kids {
+      color: #ffeb3b;
+      font-weight: 900;
+    }
 
-        .brand-logo-header { font-size: 13px; font-weight: 800; color: #fff; background: rgba(0, 113, 227, 0.2); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(0, 113, 227, 0.4); }
-        .header-right { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        /* Contenedor Principal */
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 60px 10px 10px 10px;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .load-m3u-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-        /* Reproductor Arriba */
-        .player-column {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: transparent;
-            width: 100%;
-        }
+    .membership-btn {
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      color: #5d3a00;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
 
-        .video-box {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-        }
-        video { width: 100%; height: 100%; object-fit: contain; }
+    .main-content {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: flex;
+      padding: 10px 25px 20px 25px;
+      gap: 15px;
+      height: calc(100% - 60px);
+    }
 
-        .epg-bar {
-            background: var(--bg-overlay);
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .epg-info h2 { margin: 0 0 2px 0; font-size: 14px; color: #fff; font-weight: 700; }
-        .epg-info p { margin: 0; font-size: 11px; color: var(--text-muted); }
+    .categories-panel {
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
 
-        /* Carrusel Horizontal de Carpetas */
-        .folders-scroll-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 5px 0;
-            scrollbar-width: none;
-        }
-        .folders-scroll-container::-webkit-scrollbar { display: none; }
+    .items-panel {
+      width: 280px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
 
-        .folder-chip {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            color: var(--text-muted);
-        }
-        .folder-chip:hover { border-color: var(--accent); color: #fff; }
-        .folder-chip.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 113, 227, 0.4);
-        }
+    .panel-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        /* Sección de Elementos Vertical */
-        .column-box {
-            background: var(--bg-overlay);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            height: 45vh;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-        }
+    .item-count-badge {
+      font-size: 0.7rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
 
-        .column-header {
-            padding: 12px 15px;
-            font-size: 12px;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0,0,0,0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            text-align: center;
-        }
+    .scroll-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding-right: 4px;
+    }
 
-        .column-content {
-            overflow-y: auto;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
+    .scroll-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .scroll-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
 
-        .list-item {
-            background: var(--bg-card);
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            width: 100%;
-            max-width: 520px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            word-break: break-word;
-            transition: all 0.2s ease;
-        }
-        .list-item:hover { background: var(--bg-card-hover); border-color: var(--accent); }
-        .list-item.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .list-card {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      font-size: 0.82rem;
+      font-weight: 600;
+      gap: 8px;
+    }
 
-        @media (min-width: 1025px) {
-            .app-container { max-width: 900px; }
-            .column-box { height: 50vh; }
-        }
-    </style>
+    .list-card:hover, .list-card.active {
+      background: rgba(0, 0, 0, 0.65);
+      border-color: #fff;
+    }
+
+    .channel-logo-container {
+      width: 36px;
+      height: 24px;
+      background: #111;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .channel-logo {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .player-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .video-container {
+      flex: 1;
+      background: #000;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .expand-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .player-bar {
+      height: 52px;
+      background: #800000;
+      border-radius: 0 0 8px 8px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      justify-content: space-between;
+    }
+
+    .current-channel-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .current-channel-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .epg-show-title {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+
+    .epg-time-badge {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ffd700;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* PANTALLA DE ACTIVACIÓN Y BLOQUEO */
+    .activation-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5,0,1,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+    }
+
+    .activation-box {
+      background: #1a0002;
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      border-radius: 16px;
+      padding: 30px;
+      width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      text-align: center;
+    }
+
+    .device-code-display {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1.5px dashed #ffd700;
+      color: #ffd700;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .activation-box button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      border: none;
+      border-radius: 8px;
+      color: #5d3a00;
+      font-weight: 900;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      gap: 15px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top: 4px solid #ff1e27;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Pantalla de Bienvenida -->
-    <div id="welcomeScreen">
-        <div class="welcome-card">
-            <div class="welcome-logo">Stream <span>One</span></div>
-            <p>Ingresa tu enlace M3U para comenzar</p>
-            
-            <div class="input-group">
-                <label>Enlace M3U (URL)</label>
-                <input type="text" id="m3uUrlInput" placeholder="https://ejemplo.com/lista.m3u" value="">
-            </div>
-
-            <div class="file-upload-btn" onclick="document.getElementById('m3uFileInput').click()">
-                📂 Cargar archivo .m3u local
-            </div>
-            <input type="file" id="m3uFileInput" accept=".m3u" style="display: none;" onchange="cargarArchivoLocal(this)">
-
-            <button class="btn-start" onclick="iniciarStreamOne()">Iniciar Aplicación</button>
-        </div>
+  <!-- PANTALLA DE ACTIVACIÓN -->
+  <div class="activation-overlay" id="activationScreen">
+    <div class="activation-box">
+      <div style="font-size: 2.2rem; color: #ffd700;"><i class="fa-solid fa-tv"></i></div>
+      <h3 style="color: #fff; font-size: 1.2rem;">Activación de Dispositivo</h3>
+      <p style="font-size: 0.82rem; color: #ccc;">Tu código único de 6 dígitos es:</p>
+      
+      <div class="device-code-display" id="uniqueDeviceCode">------</div>
+      
+      <p style="font-size: 0.78rem; color: #aaa;" id="statusLicencia">Esperando activación en el panel...</p>
+      
+      <button onclick="verificarLicenciaNube()">Verificar Activación</button>
     </div>
+  </div>
 
-    <!-- Cabecera -->
-    <header>
-        <div class="brand-logo-header">📺 Stream One</div>
-        <div class="header-right">
-            <button onclick="location.reload()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color:#fff; padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 11px;">🔄 Cambiar</button>
-            <span id="reloj">11:46 PM</span>
+  <!-- PANTALLA DE CARGA -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <h3 style="color: #fff; font-size: 1.1rem;">Cargando Stream One...</h3>
+    <p style="color: #aaa; font-size: 0.85rem;" id="loadingStatus">Sincronizando canales...</p>
+  </div>
+
+  <div class="app-container">
+    <div class="sparkles-overlay"></div>
+
+    <header class="header">
+      <div style="display: flex; align-items: center;">
+        <div class="brand-section">
+          <div class="logo-box"><i class="fa-solid fa-play"></i></div>
+          <span class="app-title">Stream One</span>
+          <span class="app-version" id="deviceBadge">TV Box</span>
         </div>
+
+        <nav class="nav-tabs" id="navTabs">
+          <button class="tab-btn active" data-category="LIVE">LIVE</button>
+          <button class="tab-btn" data-category="MOVIES">MOVIES</button>
+          <button class="tab-btn" data-category="SERIES">SERIES</button>
+          <button class="tab-btn kids" data-category="KIDS">KIDS</button>
+          <button class="tab-btn" data-category="FREE">FREE</button>
+          <button class="tab-btn" data-category="EXPLORAR">EXPLORAR</button>
+        </nav>
+      </div>
+
+      <div class="header-actions">
+        <button class="load-m3u-btn" onclick="verificarLicenciaNube()">
+          <i class="fa-solid fa-rotate"></i> Recargar
+        </button>
+        <button class="membership-btn"><i class="fa-solid fa-gem"></i> Get membership</button>
+      </div>
     </header>
 
-    <!-- Interfaz Estructurada -->
-    <div class="app-container">
+    <main class="main-content">
+      <section class="categories-panel">
+        <div class="panel-title"><span>Categorías</span></div>
+        <div class="scroll-list" id="categoriesContainer"></div>
+      </section>
+
+      <section class="items-panel">
+        <div class="panel-title">
+          <span id="itemsPanelTitle">Contenido</span>
+          <span class="item-count-badge" id="itemCount">0</span>
+        </div>
+        <div class="scroll-list" id="itemsContainer"></div>
+      </section>
+
+      <section class="player-panel">
+        <div class="video-container">
+          <video id="videoPlayer" autoplay controls></video>
+          <button class="expand-btn" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i></button>
+        </div>
+        <div class="player-bar">
+          <div class="current-channel-info">
+            <div class="current-channel-title" id="currentChannelName">Selecciona un canal</div>
+            <div class="epg-show-title" id="epgShowTitle">Transmisión en directo</div>
+          </div>
+          <div class="epg-time-badge" id="epgTimeBadge">LIVE</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const PANEL_JSON_URL = "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/licencias.json";
+    const WEBHOOK_REPORTES_URL = "TU_ENLACE_DE_WEBHOOK_O_APPS_SCRIPT"; 
+
+    let m3uUrl = ""; 
+    let allItems = [];
+    let currentCategory = "LIVE";
+    let hls = null;
+    let heartbeatInterval = null;
+    const video = document.getElementById('videoPlayer');
+
+    function obtenerCodigoDispositivo() {
+      let code = localStorage.getItem('streamone_device_id');
+      if (!code || code.length !== 6) {
+        code = Math.floor(100000 + Math.random() * 900000).toString();
+        localStorage.setItem('streamone_device_id', code);
+      }
+      return code;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const codigoUnico = obtenerCodigoDispositivo();
+      document.getElementById('uniqueDeviceCode').textContent = codigoUnico;
+
+      document.getElementById('activationScreen').style.display = 'flex';
+      verificarLicenciaNube();
+    });
+
+    async function verificarLicenciaNube() {
+      const codigoActual = obtenerCodigoDispositivo();
+      const statusText = document.getElementById('statusLicencia');
+      statusText.textContent = "Verificando autorización en el panel...";
+
+      try {
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_JSON_URL)}`;
+        const res = await fetch(proxyUrl);
+        if (!res.ok) throw new Error();
         
-        <!-- 1. Reproductor Arriba -->
-        <div class="player-column">
-            <div class="video-box">
-                <video id="videoPlayer" controls playsinline autoplay></video>
-            </div>
-            <div class="epg-bar">
-                <div class="epg-info">
-                    <h2 id="currentTitle">Selecciona un archivo</h2>
-                    <p id="currentDesc">Listo para reproducir</p>
-                </div>
-            </div>
-        </div>
+        const data = await res.json();
+        const licencias = JSON.parse(data.contents);
 
-        <!-- 2. Carpetas en Horizontal (Scroll) -->
-        <div class="folders-scroll-container" id="folderList">
-            <div style="color: var(--text-muted); font-size: 12px; padding: 5px; text-align: center; width: 100%;">Esperando lista...</div>
-        </div>
+        const dispositivo = licencias.find(item => item.codigo === codigoActual);
 
-        <!-- 3. Elementos en Vertical (Centrados Perfectos) -->
-        <div class="column-box">
-            <div class="column-header" id="itemsHeaderTitle">📄 Elementos</div>
-            <div id="itemList" class="column-content">
-                <div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 13px;">Selecciona una carpeta arriba</div>
-            </div>
-        </div>
+        if (!dispositivo) {
+          statusText.textContent = `Dispositivo no registrado. Tu código es: ${codigoActual}`;
+          return;
+        }
 
-    </div>
+        if (dispositivo.activo !== true) {
+          statusText.textContent = `Esperando activación. Código: ${codigoActual}`;
+          return;
+        }
 
-    <script>
-        const video = document.getElementById('videoPlayer');
-        const folderList = document.getElementById('folderList');
-        const itemList = document.getElementById('itemList');
-        const currentTitle = document.getElementById('currentTitle');
-        const currentDesc = document.getElementById('currentDesc');
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        const m3uUrlInput = document.getElementById('m3uUrlInput');
-        const itemsHeaderTitle = document.getElementById('itemsHeaderTitle');
+        const hoy = new Date().toISOString().split('T')[0];
+        if (dispositivo.fechaFin && hoy > dispositivo.fechaFin) {
+          statusText.textContent = `Suscripción vencida el ${dispositivo.fechaFin}.`;
+          return;
+        }
 
-        let hls = null;
-        let baseDatosCategorias = {};
+        if (!dispositivo.m3uUrl) {
+          statusText.textContent = `Licencia activa, pero falta asignarle el enlace M3U en el panel.`;
+          return;
+        }
 
-        window.onload = function() {
-            setInterval(actualizarReloj, 1000);
+        m3uUrl = dispositivo.m3uUrl;
+
+        statusText.textContent = "¡Activado con éxito! Cargando...";
+        setTimeout(() => {
+          document.getElementById('activationScreen').style.display = 'none';
+          iniciarApp();
+        }, 1000);
+
+      } catch (e) {
+        statusText.textContent = `Sin conexión al panel. Código actual: ${codigoActual}`;
+      }
+    }
+
+    function iniciarApp() {
+      detectarDispositivoUI();
+      descargarListaM3U();
+      
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      heartbeatInterval = setInterval(() => {
+        const canalActual = document.getElementById('currentChannelName').textContent;
+        reportarEstadoServidor("EN LÍNEA", canalActual);
+      }, 45000);
+    }
+
+    function reportarEstadoServidor(estado, reproduciendo) {
+      const codigoActual = obtenerCodigoDispositivo();
+      const payload = {
+        codigo: codigoActual,
+        estado: estado,
+        reproduciendo: reproduciendo,
+        ultimaConexion: new Date().toLocaleTimeString()
+      };
+
+      /*
+      fetch(WEBHOOK_REPORTES_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => {});
+      */
+    }
+
+    function detectarDispositivoUI() {
+      const ua = navigator.userAgent.toLowerCase();
+      let tipo = "PC";
+      if (ua.includes('googletv') || ua.includes('android tv') || ua.includes('aftb') || ua.includes('smarttv')) {
+        tipo = "TV Box";
+      } else if (/android|iphone|ipad|ipod|mobile/i.test(ua)) {
+        tipo = "Móvil";
+      }
+      document.getElementById('deviceBadge').textContent = tipo;
+    }
+
+    document.querySelectorAll('#navTabs .tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#navTabs .tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.getAttribute('data-category');
+        buildCategoriesList();
+      });
+    });
+
+    async function descargarListaM3U() {
+      const statusText = document.getElementById('loadingStatus');
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      statusText.textContent = "Sincronizando M3U...";
+
+      const apiProxy = `https://api.allorigins.win/get?url=${encodeURIComponent(m3uUrl)}`;
+
+      try {
+        const response = await fetch(apiProxy);
+        if (!response.ok) throw new Error();
+        
+        const data = await response.json();
+        if (!data || !data.contents) throw new Error();
+
+        allItems = parseAndClassifyM3U(data.contents);
+        document.getElementById('loadingOverlay').style.display = 'none';
+        buildCategoriesList();
+      } catch (error) {
+        statusText.textContent = "Error al descargar el enlace M3U del panel.";
+        document.getElementById('loadingOverlay').style.display = 'none';
+      }
+    }
+
+    function parseAndClassifyM3U(content) {
+      const lines = content.split('\n');
+      const items = [];
+      let currentItem = {};
+      let counter = 1;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('#EXTINF:')) {
+          const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+          const logo = logoMatch ? logoMatch[1] : '';
+          const groupMatch = line.match(/group-title="([^"]+)"/);
+          const group = groupMatch ? groupMatch[1].trim() : 'GENERAL';
+          const parts = line.split(',');
+          const name = parts.length > 1 ? parts.slice(1).join(',').trim() : `Canal ${counter}`;
+          currentItem = { name, logo, group, number: counter };
+        } else if (line.length > 0 && !line.startsWith('#')) {
+          currentItem.url = line;
+          const n = (currentItem.name || '').toLowerCase();
+          const g = (currentItem.group || '').toLowerCase();
+          const u = (currentItem.url || '').toLowerCase();
+
+          if (
+            g.includes('serie') || 
+            g.includes('series') || 
+            n.includes('temporada') || 
+            n.match(/s\d{1,2}\s*e\d{1,2}/i) || 
+            u.includes('/series/')
+          ) {
+            currentItem.category = 'SERIES';
+          } else if (
+            g.includes('kids') || 
+            g.includes('infantil') || 
+            n.includes('disney') || 
+            n.includes('cartoon')
+          ) {
+            currentItem.category = 'KIDS';
+          } else if (
+            g.includes('movie') || 
+            g.includes('pelicula') || 
+            g.includes('cine') || 
+            u.endsWith('.mp4') || 
+            u.endsWith('.mkv') || 
+            u.includes('/movie/')
+          ) {
+            currentItem.category = 'MOVIES';
+          } else if (
+            g.includes('free') || 
+            g.includes('gratis')
+          ) {
+            currentItem.category = 'FREE';
+          } else {
+            currentItem.category = 'LIVE';
+          }
+
+          items.push(currentItem);
+          counter++;
+          currentItem = {};
+        }
+      }
+      return items;
+    }
+
+    function buildCategoriesList() {
+      const catItems = currentCategory === 'EXPLORAR' ? allItems : allItems.filter(i => i.category === currentCategory);
+      const groups = [...new Set(catItems.map(i => i.group))];
+
+      const container = document.getElementById('categoriesContainer');
+      container.innerHTML = '';
+
+      if (groups.length === 0) {
+        container.innerHTML = '<div style="font-size:0.8rem; padding:10px; color:#aaa;">Sin categorías</div>';
+        document.getElementById('itemsContainer').innerHTML = '';
+        document.getElementById('itemCount').textContent = '0';
+        return;
+      }
+
+      groups.forEach((group, idx) => {
+        const card = document.createElement('div');
+        card.className = `list-card ${idx === 0 ? 'active' : ''}`;
+        card.innerHTML = `<i class="fa-solid fa-folder"></i> <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${group}</span>`;
+        card.onclick = () => {
+          document.querySelectorAll('#categoriesContainer .list-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          loadItemsForGroup(group, catItems);
+        };
+        container.appendChild(card);
+      });
+
+      loadItemsForGroup(groups[0], catItems);
+    }
+
+    function loadItemsForGroup(groupName, catItems) {
+      const groupItems = catItems.filter(i => i.group === groupName);
+      document.getElementById('itemsPanelTitle').textContent = groupName;
+      document.getElementById('itemCount').textContent = groupItems.length;
+
+      const container = document.getElementById('itemsContainer');
+      container.innerHTML = '';
+
+      groupItems.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `list-card ${index === 0 ? 'active' : ''}`;
+        card.onclick = () => {
+          document.querySelectorAll('#itemsContainer .list-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          playItem(item);
         };
 
-        function actualizarReloj() {
-            const ahora = new Date();
-            let horas = ahora.getHours();
-            const minutos = ahora.getMinutes().toString().padStart(2, '0');
-            const ampm = horas >= 12 ? 'PM' : 'AM';
-            horas = horas % 12 || 12;
-            document.getElementById('reloj').textContent = `${horas}:${minutos} ${ampm}`;
-        }
+        const logoSrc = item.logo || 'https://via.placeholder.com/100/111111/FFFFFF?text=TV';
+        card.innerHTML = `
+          <div class="channel-logo-container">
+            <img src="${logoSrc}" class="channel-logo" onerror="this.src='https://via.placeholder.com/100/111111/FFFFFF?text=TV'">
+          </div>
+          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">${item.name}</span>
+        `;
+        container.appendChild(card);
+      });
 
-        async function iniciarStreamOne() {
-            const url = m3uUrlInput.value.trim();
-            if (!url) {
-                alert("Ingresa un enlace M3U válido");
-                return;
-            }
+      if (groupItems.length > 0) playItem(groupItems[0]);
+    }
 
-            try {
-                folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 5px; width: 100%; text-align: center;">Cargando lista...</div>';
-                welcomeScreen.style.display = 'none';
+    function playItem(item) {
+      document.getElementById('currentChannelName').textContent = item.name;
+      document.getElementById('epgShowTitle').textContent = item.group;
 
-                const respuesta = await fetch(url);
-                if (!respuesta.ok) throw new Error("Error de red");
-                const texto = await respuesta.text();
-                parsearM3UenCarpetas(texto);
-            } catch (error) {
-                welcomeScreen.style.display = 'flex';
-                alert("No se pudo cargar la lista. Verifica la URL.");
-            }
-        }
+      reportarEstadoServidor("EN LÍNEA", item.name);
 
-        function cargarArchivoLocal(input) {
-            const archivo = input.files[0];
-            if (!archivo) return;
+      if (Hls.isSupported() && (item.url.includes('.m3u8') || !item.url.includes('.'))) {
+        if (hls) hls.destroy();
+        hls = new Hls({ maxBufferLength: 30, backBufferLength: 60 });
+        hls.loadSource(item.url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(e => {}));
+      } else {
+        if (hls) hls.destroy();
+        video.src = item.url;
+        video.play().catch(e => {});
+      }
+    }
 
-            const lector = new FileReader();
-            lector.onload = function(e) {
-                welcomeScreen.style.display = 'none';
-                parsearM3UenCarpetas(e.target.result);
-            };
-            lector.readAsText(archivo);
-        }
-
-        function parsearM3UenCarpetas(contenido) {
-            const lineas = contenido.split('\n');
-            baseDatosCategorias = {};
-
-            let nombreActual = "Sin nombre";
-            let categoriaActual = "General";
-
-            lineas.forEach(linea => {
-                linea = linea.trim();
-                if (linea.startsWith('#EXTINF:')) {
-                    const matchGroup = linea.match(/group-title="([^"]+)"/);
-                    if (matchGroup && matchGroup[1]) {
-                        categoriaActual = matchGroup[1].trim();
-                    } else {
-                        categoriaActual = "General";
-                    }
-
-                    const partes = linea.split(',');
-                    if (partes.length > 1) {
-                        nombreActual = partes.slice(1).join(',').trim();
-                    }
-                } else if (linea && !linea.startsWith('#')) {
-                    if (!baseDatosCategorias[categoriaActual]) {
-                        baseDatosCategorias[categoriaActual] = [];
-                    }
-
-                    baseDatosCategorias[categoriaActual].push({
-                        nombre: nombreActual,
-                        url: linea
-                    });
-
-                    nombreActual = "Sin nombre";
-                }
-            });
-
-            renderizarCarpetas();
-        }
-
-        function renderizarCarpetas() {
-            folderList.innerHTML = '';
-            const categorias = Object.keys(baseDatosCategorias);
-
-            if (categorias.length === 0) {
-                folderList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; text-align: center; width: 100%;">Sin carpetas</div>';
-                return;
-            }
-
-            categorias.forEach((cat, index) => {
-                const div = document.createElement('div');
-                div.className = 'folder-chip';
-                div.id = `chip-${index}`;
-                div.textContent = `📁 ${cat} (${baseDatosCategorias[cat].length})`;
-                div.onclick = () => seleccionarCarpeta(cat, div);
-                folderList.appendChild(div);
-            });
-
-            if (categorias.length > 0) {
-                document.getElementById('chip-0').click();
-            }
-        }
-
-        function seleccionarCarpeta(nombreCarpeta, elementoDiv) {
-            document.querySelectorAll('.folder-chip').forEach(el => el.classList.remove('active'));
-            elementoDiv.classList.add('active');
-
-            elementoDiv.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-
-            itemsHeaderTitle.textContent = `📄 ${nombreCarpeta}`;
-            const elementos = baseDatosCategorias[nombreCarpeta] || [];
-            renderizarElementos(elementos);
-        }
-
-        function renderizarElementos(elementos) {
-            itemList.innerHTML = '';
-
-            if (elementos.length === 0) {
-                itemList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 13px;">Carpeta vacía</div>';
-                return;
-            }
-
-            elementos.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'list-item';
-                div.textContent = item.nombre;
-                div.title = item.nombre;
-                div.onclick = () => reproducirItem(item.url, item.nombre, div);
-                itemList.appendChild(div);
-            });
-        }
-
-        function reproducirItem(url, nombre, elementoDiv) {
-            document.querySelectorAll('#itemList .list-item').forEach(el => el.classList.remove('active'));
-            elementoDiv.classList.add('active');
-
-            currentTitle.textContent = nombre;
-            currentDesc.textContent = "Reproduciendo • Stream One";
-
-            if (hls) hls.destroy();
-
-            if (url.includes('.m3u8')) {
-                if (Hls.isSupported()) {
-                    hls = new Hls();
-                    hls.loadSource(url);
-                    hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(e => console.log(e)));
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = url;
-                    video.addEventListener('loadedmetadata', () => video.play().catch(e => console.log(e)));
-                } else {
-                    alert('HLS no compatible');
-                }
-            } else {
-                video.src = url;
-                video.load();
-                video.play().catch(e => console.log(e));
-            }
-        }
-    </script>
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.querySelector('.video-container').requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
 </body>
 </html>

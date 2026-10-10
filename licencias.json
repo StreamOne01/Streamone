@@ -11,6 +11,17 @@
     "ultimaConexion": "10:24 PM"
   },
   {
+    "codigo": "586775",
+    "dispositivo": "Celular de Prueba",
+    "activo": false,
+    "m3uUrl": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u",
+    "fechaInicio": "2026-01-01",
+    "fechaFin": "2026-03-30",
+    "estado": "FUERA DE LÍNEA",
+    "reproduciendo": "Ninguno",
+    "ultimaConexion": "Ayer"
+  },
+ {
     "codigo": "938102",
     "dispositivo": "Celular de Prueba",
     "activo": false,
@@ -21,4 +32,6 @@
     "reproduciendo": "Ninguno",
     "ultimaConexion": "Ayer"
   }
+
+  
 ]

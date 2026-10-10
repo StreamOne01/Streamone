@@ -16,7 +16,7 @@
       "fecha_activacion": "2026-10-01",
       "fecha_vencimiento": "2026-11-01",
       "status": "active",
-      "m3u": "https://tu-enlace-m3u.com/get.php?username=xxx&password=xxx&type=m3u"
+      "m3u": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u"
     }
 
     

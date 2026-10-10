@@ -1,7 +1,7 @@
 [
   {
-    "codigo": "482910",
-    "dispositivo": "TV Box Sala",
+    "codigo": "640973",
+    "dispositivo": "pc",
     "activo": true,
     "m3uUrl": "https://raw.githubusercontent.com/StreamOne01/Streamone/refs/heads/main/streamone.m3u",
     "fechaInicio": "2026-01-01",

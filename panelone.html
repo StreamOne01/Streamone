@@ -236,7 +236,7 @@
       max-width: 380px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .modal-content input {
@@ -258,7 +258,7 @@
 </head>
 <body>
 
-  <!-- LOBBY DE ACCESO (LOGIN) -->
+  <!-- LOBBY DE ACCESO -->
   <div class="login-overlay" id="loginOverlay">
     <div class="login-box">
       <div style="font-size: 2.2rem; color: #ffd700;"><i class="fa-solid fa-lock"></i></div>
@@ -272,7 +272,7 @@
     </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL DEL PANEL -->
+  <!-- PANEL PRINCIPAL -->
   <header>
     <div class="brand"><i class="fa-solid fa-gauge-high"></i> Stream One Admin</div>
     <div class="header-actions-group">
@@ -310,6 +310,10 @@
       <label style="font-size: 0.75rem; color: #ccc;">Fecha de Vencimiento:</label>
       <input type="date" id="editFechaFin">
 
+      <!-- CAMPO PARA NOTIFICACIÓN / MARQUEE -->
+      <label style="font-size: 0.75rem; color: #ffd700;">Mensaje / Notificación (Marquee):</label>
+      <input type="text" id="editMensaje" placeholder="Ej: Renueva tu suscripción antes del viernes...">
+
       <div class="modal-actions">
         <button class="action-btn btn-toggle" onclick="cerrarModal()">Cancelar</button>
         <button class="action-btn btn-edit" onclick="guardarDispositivo()">Guardar</button>
@@ -318,10 +322,7 @@
   </div>
 
   <script>
-    // NUEVA URL DE TU APPS SCRIPT
     const PANEL_JSON_URL = "https://script.google.com/macros/s/AKfycbwSTfvX_zmlgBEmtZiQseLrvKCnMW-Il5Mre3SvO5rXpjjR5EDVSA8WkZMf09EkVslY/exec";
-    
-    // PIN SECRETO PARA ENTRAR
     const PIN_SECRETO = "9616"; 
 
     let dispositivosData = [];
@@ -393,6 +394,7 @@
             <div><i class="fa-solid fa-tv"></i> Viendo: <b>${d.viendo || 'Menú Principal'}</b></div>
             <div><i class="fa-solid fa-link"></i> M3U: <span style="color:#aaa; word-break:break-all;">${d.m3uUrl || 'Sin enlace asignado'}</span></div>
             <div><i class="fa-solid fa-calendar"></i> Vence: ${d.fechaFin || 'Indefinido'}</div>
+            <div><i class="fa-solid fa-bullhorn" style="color:#ffd700;"></i> Aviso: <span style="color:#ffd700;">${d.mensaje || 'Ninguno'}</span></div>
           </div>
           <div class="device-actions">
             <button class="action-btn btn-toggle" onclick="toggleEstado('${d.codigo}', ${isActivo})">
@@ -426,6 +428,7 @@
       document.getElementById('editCodigo').disabled = false;
       document.getElementById('editM3uUrl').value = '';
       document.getElementById('editFechaFin').value = '';
+      document.getElementById('editMensaje').value = '';
       document.getElementById('editModal').style.display = 'flex';
     }
 
@@ -438,6 +441,7 @@
       document.getElementById('editCodigo').disabled = true;
       document.getElementById('editM3uUrl').value = disp.m3uUrl || '';
       document.getElementById('editFechaFin').value = disp.fechaFin || '';
+      document.getElementById('editMensaje').value = disp.mensaje || '';
       document.getElementById('editModal').style.display = 'flex';
     }
 
@@ -449,6 +453,7 @@
       const codigo = document.getElementById('editCodigo').value.trim();
       const m3uUrl = document.getElementById('editM3uUrl').value.trim();
       const fechaFin = document.getElementById('editFechaFin').value;
+      const mensaje = document.getElementById('editMensaje').value.trim();
 
       if (!codigo || codigo.length < 4) {
         alert("Por favor ingresa un código válido.");
@@ -456,7 +461,7 @@
       }
 
       cerrarModal();
-      await enviarActualizacionAlServidor({ codigo, m3uUrl, fechaFin, activo: true });
+      await enviarActualizacionAlServidor({ codigo, m3uUrl, fechaFin, mensaje, activo: true });
     }
 
     async function enviarActualizacionAlServidor(dataObj) {

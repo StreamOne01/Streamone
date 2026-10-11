@@ -24,7 +24,7 @@
       overflow: hidden;
     }
 
-    /* PANTALLA DE LOGIN (LOBBY) */
+    /* LOBBY DE LOGIN */
     .login-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -76,7 +76,7 @@
       cursor: pointer;
     }
 
-    /* PANEL PRINCIPAL */
+    /* ESTRUCTURA PRINCIPAL */
     header {
       display: flex;
       justify-content: space-between;
@@ -215,7 +215,7 @@
     .btn-edit { background: #ffd700; color: #5d3a00; }
     .btn-delete { background: #ff1e27; color: #fff; }
 
-    /* Modal */
+    /* MODAL */
     .modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -296,7 +296,7 @@
     <div style="text-align:center; color:#770; margin-top:40px;">Cargando dispositivos...</div>
   </div>
 
-  <!-- Modal para Agregar / Editar dispositivo -->
+  <!-- MODAL EDITAR / AGREGAR -->
   <div class="modal" id="editModal">
     <div class="modal-content">
       <h3 style="font-size: 1rem; color: #ffd700;" id="modalTitle">Nuevo Dispositivo</h3>
@@ -310,9 +310,8 @@
       <label style="font-size: 0.75rem; color: #ccc;">Fecha de Vencimiento:</label>
       <input type="date" id="editFechaFin">
 
-      <!-- CAMPO PARA NOTIFICACIÓN / MARQUEE -->
       <label style="font-size: 0.75rem; color: #ffd700;">Mensaje / Notificación (Marquee):</label>
-      <input type="text" id="editMensaje" placeholder="Ej: Renueva tu suscripción antes del viernes...">
+      <input type="text" id="editMensaje" placeholder="Ej: Estimado cliente, tu servicio vence pronto...">
 
       <div class="modal-actions">
         <button class="action-btn btn-toggle" onclick="cerrarModal()">Cancelar</button>

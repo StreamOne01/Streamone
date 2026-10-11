@@ -13,6 +13,10 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 
+#EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",UNE TV
+https://amixtv.com:8081/unetvhn/tracks-v1a1/mono.m3u8
+
+
 #EXTINF:-1 tvg-id="01" tvg-name="DRAGON BALL TV" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="MEXICO",DEPELICULAS
 http://181.78.8.199:8000/play/a0e0/index.m3u8
 

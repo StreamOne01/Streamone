@@ -368,174 +368,7 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    @media screen and (max-width: 950px) and (orientation: landscape) {
-      .header {
-        height: 40px;
-        padding: 4px 12px;
-      }
-      .brand-section .logo-box {
-        font-size: 0.85rem;
-        padding: 2px 6px;
-      }
-      .app-title {
-        font-size: 0.9rem;
-      }
-      .app-version {
-        font-size: 0.55rem;
-        padding: 1px 4px;
-      }
-      .tab-btn {
-        font-size: 0.68rem;
-        padding: 3px 8px;
-      }
-      .load-m3u-btn, .membership-btn {
-        font-size: 0.68rem;
-        padding: 3px 8px;
-      }
-      .main-content {
-        padding: 5px 10px 10px 10px;
-        gap: 8px;
-        height: calc(100% - 40px);
-      }
-      .categories-panel {
-        width: 140px;
-      }
-      .items-panel {
-        width: 170px;
-      }
-      .panel-title {
-        font-size: 0.72rem;
-        margin-bottom: 4px;
-      }
-      .list-card {
-        padding: 4px 6px;
-        font-size: 0.7rem;
-        gap: 6px;
-      }
-      .channel-logo-container {
-        width: 28px;
-        height: 18px;
-      }
-      .player-bar {
-        height: 38px;
-        padding: 0 10px;
-      }
-      .current-channel-title {
-        font-size: 0.75rem;
-      }
-      .epg-show-title {
-        font-size: 0.58rem;
-      }
-      .epg-time-badge {
-        font-size: 0.6rem;
-        padding: 2px 6px;
-      }
-      .expand-btn {
-        width: 26px;
-        height: 26px;
-        bottom: 8px;
-        right: 8px;
-        font-size: 0.8rem;
-      }
-    }
-
-    @media screen and (max-width: 768px) and (orientation: portrait) {
-      .header {
-        height: 50px;
-        padding: 5px 12px;
-      }
-      .brand-section .app-title {
-        font-size: 1rem;
-      }
-      .nav-tabs {
-        display: none; 
-      }
-      .header-actions .load-m3u-btn {
-        display: none;
-      }
-
-      .main-content {
-        flex-direction: column;
-        padding: 8px;
-        gap: 8px;
-        height: calc(100% - 50px);
-      }
-
-      .player-panel {
-        height: 35vh;
-        flex: none;
-      }
-
-      .video-container {
-        border-radius: 8px 8px 0 0;
-      }
-
-      .player-bar {
-        height: 42px;
-        padding: 0 12px;
-        border-radius: 0 0 8px 8px;
-      }
-
-      .current-channel-title {
-        font-size: 0.85rem;
-      }
-      .epg-show-title {
-        font-size: 0.65rem;
-      }
-
-      .mobile-tabs-container {
-        display: flex;
-        background: rgba(0,0,0,0.4);
-        border-radius: 8px 8px 0 0;
-        overflow-x: auto;
-        flex-shrink: 0;
-      }
-      .mobile-tab-btn {
-        flex: 1;
-        padding: 8px;
-        background: transparent;
-        border: none;
-        color: #ccc;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-align: center;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        white-space: nowrap;
-      }
-      .mobile-tab-btn.active {
-        color: #fff;
-        background: rgba(0,0,0,0.3);
-        border-bottom-color: #ff1e27;
-      }
-
-      .mobile-section-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background: rgba(0,0,0,0.2);
-        border-radius: 0 0 8px 8px;
-        overflow: hidden;
-        padding: 8px;
-      }
-
-      .categories-panel, .items-panel {
-        width: 100%;
-        height: 100%;
-      }
-
-      .categories-panel {
-        display: flex; 
-      }
-      .items-panel {
-        display: none;
-      }
-    }
-
-    .mobile-tabs-container {
-      display: none;
-    }
-
+    /* Estilos de la caja de activación y QR */
     .activation-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -550,13 +383,13 @@
       background: #1a0002;
       border: 2px solid rgba(255, 215, 0, 0.5);
       border-radius: 16px;
-      padding: 30px;
-      width: 90%;
+      padding: 22px;
+      width: 92%;
       max-width: 440px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: 10px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.8);
       text-align: center;
     }
@@ -565,24 +398,79 @@
       background: rgba(0, 0, 0, 0.6);
       border: 1.5px dashed #ffd700;
       color: #ffd700;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
-      letter-spacing: 6px;
-      padding: 12px 20px;
+      letter-spacing: 5px;
+      padding: 8px 15px;
       border-radius: 8px;
       width: 100%;
     }
 
     .activation-box button {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       background: linear-gradient(135deg, #ffd700, #ff9800);
       border: none;
       border-radius: 8px;
       color: #5d3a00;
       font-weight: 900;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
+    }
+
+    .whatsapp-btn {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      outline: none;
+    }
+    .whatsapp-btn:focus {
+      border: 2px solid #fff;
+      box-shadow: 0 0 10px #25d366;
+    }
+
+    .qr-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 100%;
+      margin-top: 2px;
+    }
+
+    .qr-container img {
+      width: 65px;
+      height: 65px;
+      border-radius: 6px;
+      background: #fff;
+      padding: 2px;
+    }
+
+    .qr-text {
+      font-size: 0.72rem;
+      color: #ccc;
+      text-align: left;
+      line-height: 1.3;
+    }
+
+    .activation-box button:focus {
+      border: 2px solid #fff;
+      box-shadow: 0 0 10px #ffd700;
+      outline: none;
     }
 
     .loading-overlay {
@@ -616,15 +504,29 @@
 
   <div class="activation-overlay" id="activationScreen">
     <div class="activation-box">
-      <div style="font-size: 2.2rem; color: #ffd700;"><i class="fa-solid fa-tv"></i></div>
-      <h3 style="color: #fff; font-size: 1.2rem;">Activación de Dispositivo</h3>
-      <p style="font-size: 0.82rem; color: #ccc;">Tu código único de 6 dígitos es:</p>
+      <div style="font-size: 1.8rem; color: #ffd700;"><i class="fa-solid fa-tv"></i></div>
+      <h3 style="color: #fff; font-size: 1.1rem;">Activación de Dispositivo</h3>
+      <p style="font-size: 0.78rem; color: #ccc;">Tu código único de 6 dígitos es:</p>
       
       <div class="device-code-display" id="uniqueDeviceCode">------</div>
       
-      <p style="font-size: 0.78rem; color: #aaa;" id="statusLicencia">Verificando en la base de datos...</p>
+      <p style="font-size: 0.75rem; color: #aaa;" id="statusLicencia">Verificando en la base de datos...</p>
       
       <button onclick="verificarLicenciaNube()">Verificar Activación</button>
+      
+      <!-- BOTÓN DE REPORTE POR WHATSAPP (PC / MÓVIL) -->
+      <a id="whatsappReportBtn" href="#" target="_blank" class="whatsapp-btn">
+        <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i> Activar por WhatsApp
+      </a>
+
+      <!-- CÓDIGO QR PARA TV BOX / SMART TV -->
+      <div class="qr-container">
+        <img id="whatsappQrImage" src="" alt="QR WhatsApp">
+        <div class="qr-text">
+          <strong style="color: #ffd700; font-size: 0.75rem;">¿Estás en TV Box?</strong><br>
+          Escanea este código con tu celular para enviar tu código por WhatsApp automáticamente.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -665,46 +567,39 @@
 
     <main class="main-content">
       
-      <div style="display:flex; flex-direction:column; flex:1; width:100%; height:100%;" id="mobileWrapper">
-        <div class="mobile-tabs-container" id="mobileTabsContainer">
-          <button class="mobile-tab-btn active" onclick="switchMobileTab('cat')">Categorías</button>
-          <button class="mobile-tab-btn" onclick="switchMobileTab('channels')">Canales</button>
-          <button class="mobile-tab-btn" onclick="switchMobileTab('menu')">Menú / Secciones</button>
-        </div>
+      <!-- CONTENEDOR DE 3 PANELES FIJOS (CATEGORÍAS, CANALES Y REPRODUCTOR) -->
+      <div style="display:flex; flex-direction:row; flex:1; width:100%; height:100%; gap:15px; min-height:0;">
+        
+        <!-- Panel de Categorías (Columna 1) -->
+        <section class="categories-panel" id="categoriesPanel">
+          <div class="panel-title"><span>Categorías</span></div>
+          <div class="scroll-list" id="categoriesContainer"></div>
+        </section>
 
-        <div class="mobile-section-container" id="mobileSectionContainer" style="display:flex; flex-direction:row; flex:1; gap:15px; background:transparent; padding:0; min-height:0;">
-          
-          <!-- Panel de Categorías -->
-          <section class="categories-panel" id="categoriesPanel">
-            <div class="panel-title"><span>Categorías</span></div>
-            <div class="scroll-list" id="categoriesContainer"></div>
-          </section>
+        <!-- Panel de Ítems / Canales (Columna 2) -->
+        <section class="items-panel" id="itemsPanel">
+          <div class="panel-title">
+            <span id="itemsPanelTitle">Contenido</span>
+            <span class="item-count-badge" id="itemCount">0</span>
+          </div>
+          <div class="scroll-list" id="itemsContainer"></div>
+        </section>
 
-          <!-- Panel de Ítems / Canales -->
-          <section class="items-panel" id="itemsPanel">
-            <div class="panel-title">
-              <span id="itemsPanelTitle">Contenido</span>
-              <span class="item-count-badge" id="itemCount">0</span>
+        <!-- Panel del Reproductor de Video (Columna 3) -->
+        <section class="player-panel">
+          <div class="video-container" id="videoContainerBox" tabindex="0">
+            <video id="videoPlayer" autoplay controls></video>
+            <button class="expand-btn" id="expandBtn" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i></button>
+          </div>
+          <div class="player-bar">
+            <div class="current-channel-info">
+              <div class="current-channel-title" id="currentChannelName">Selecciona un canal</div>
+              <div class="epg-show-title" id="epgShowTitle">Transmisión en vivo</div>
             </div>
-            <div class="scroll-list" id="itemsContainer"></div>
-          </section>
+            <div class="epg-time-badge" id="epgTimeBadge">LIVE</div>
+          </div>
+        </section>
 
-          <!-- Panel del Reproductor de Video -->
-          <section class="player-panel">
-            <div class="video-container" id="videoContainerBox" tabindex="0">
-              <video id="videoPlayer" autoplay controls></video>
-              <button class="expand-btn" id="expandBtn" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i></button>
-            </div>
-            <div class="player-bar">
-              <div class="current-channel-info">
-                <div class="current-channel-title" id="currentChannelName">Selecciona un canal</div>
-                <div class="epg-show-title" id="epgShowTitle">Transmisión en vivo</div>
-              </div>
-              <div class="epg-time-badge" id="epgTimeBadge">LIVE</div>
-            </div>
-          </section>
-
-        </div>
       </div>
 
     </main>
@@ -719,7 +614,6 @@
     let hls = null;
     let canalActual = "";
     let monitorInterval = null;
-    let mobileActiveTab = 'cat'; 
     const video = document.getElementById('videoPlayer');
     const videoBox = document.getElementById('videoContainerBox');
 
@@ -736,12 +630,23 @@
       const codigoUnico = obtenerCodigoDispositivo();
       document.getElementById('uniqueDeviceCode').textContent = codigoUnico;
 
+      // Configurar enlace y QR automático de WhatsApp con el código de 6 dígitos
+      const numeroWhatsApp = "50496169786";
+      const textoMensaje = `Hola, deseo activar mi dispositivo Stream One. Mi código es: ${codigoUnico}`;
+      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(textoMensaje)}`;
+
+      // Asignar al botón de PC/Móvil
+      document.getElementById('whatsappReportBtn').href = urlWhatsApp;
+
+      // Generar código QR dinámico mediante API pública para la TV Box
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(urlWhatsApp)}`;
+      document.getElementById('whatsappQrImage').src = qrApiUrl;
+
       document.getElementById('activationScreen').style.display = 'flex';
       verificarLicenciaNube();
       
       setInterval(verificarLicenciaNube, 60000);
-      window.addEventListener('resize', checkMobileLayout);
-      checkMobileLayout();
+      detectarDispositivoUI();
       initRemoteControlNavigation();
 
       videoBox.addEventListener('dblclick', toggleFullscreen);
@@ -862,79 +767,6 @@
       });
     }
 
-    function isMobilePortrait() {
-      return window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
-    }
-
-    function checkMobileLayout() {
-      const catPanel = document.getElementById('categoriesPanel');
-      const itemsPanel = document.getElementById('itemsPanel');
-      
-      if (isMobilePortrait()) {
-        if (mobileActiveTab === 'cat') {
-          catPanel.style.display = 'flex';
-          itemsPanel.style.display = 'none';
-        } else if (mobileActiveTab === 'channels') {
-          catPanel.style.display = 'none';
-          itemsPanel.style.display = 'flex';
-        } else if (mobileActiveTab === 'menu') {
-          catPanel.style.display = 'flex';
-          itemsPanel.style.display = 'none';
-        }
-      } else {
-        catPanel.style.display = 'flex';
-        itemsPanel.style.display = 'flex';
-      }
-    }
-
-    function switchMobileTab(tab) {
-      mobileActiveTab = tab;
-      const buttons = document.querySelectorAll('.mobile-tab-btn');
-      buttons.forEach(b => b.classList.remove('active'));
-
-      if (tab === 'cat') {
-        buttons[0].classList.add('active');
-        currentCategory = "LIVE"; 
-      } else if (tab === 'channels') {
-        buttons[1].classList.add('active');
-      } else if (tab === 'menu') {
-        buttons[2].classList.add('active');
-        mostrarMenuSeccionesMovil();
-        return;
-      }
-      checkMobileLayout();
-    }
-
-    function mostrarMenuSeccionesMovil() {
-      const catPanel = document.getElementById('categoriesPanel');
-      const container = document.getElementById('categoriesContainer');
-      container.innerHTML = '';
-      
-      const categoriasPrincipales = [
-        {name: 'LIVE', icon: 'fa-tv', label: 'En Vivo (LIVE)'},
-        {name: 'MOVIES', icon: 'fa-film', label: 'Películas (MOVIES)'},
-        {name: 'SERIES', icon: 'fa-video', label: 'Series (SERIES)'},
-        {name: 'KIDS', icon: 'fa-child', label: 'Infantil (KIDS)'},
-        {name: 'FREE', icon: 'fa-gift', label: 'Gratis (FREE)'},
-        {name: 'EXPLORAR', icon: 'fa-compass', label: 'Explorar Todo'}
-      ];
-
-      categoriasPrincipales.forEach(cat => {
-        const card = document.createElement('div');
-        card.className = `list-card ${currentCategory === cat.name ? 'active' : ''}`;
-        card.tabIndex = 0;
-        card.innerHTML = `<i class="fa-solid ${cat.icon}"></i> <span style="font-weight:700;">${cat.label}</span>`;
-        card.onclick = () => {
-          currentCategory = cat.name;
-          switchMobileTab('cat');
-          buildCategoriesList();
-        };
-        container.appendChild(card);
-      });
-      catPanel.style.display = 'flex';
-      document.getElementById('itemsPanel').style.display = 'none';
-    }
-
     async function verificarLicenciaNube() {
       const codigoActual = obtenerCodigoDispositivo();
       const statusText = document.getElementById('statusLicencia');
@@ -1024,8 +856,8 @@
       let tipo = "PC / Tablet";
       if (ua.includes('googletv') || ua.includes('android tv') || ua.includes('aftb') || ua.includes('smarttv')) {
         tipo = "TV Box";
-      } else if (isMobilePortrait()) {
-        tipo = "Móvil (Vertical)";
+      } else {
+        tipo = "Navegador / PC";
       }
       document.getElementById('deviceBadge').textContent = tipo;
     }
@@ -1127,10 +959,6 @@
           document.querySelectorAll('#categoriesContainer .list-card').forEach(c => c.classList.remove('active'));
           card.classList.add('active');
           loadItemsForGroup(group, catItems);
-          
-          if (isMobilePortrait()) {
-            switchMobileTab('channels'); 
-          }
         };
         container.appendChild(card);
       });

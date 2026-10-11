@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Stream One - Panel Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #0b0002;
+      color: #fff;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* PANTALLA DE LOGIN (LOBBY) */
+    .login-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 10% 20%, #ff1e27 0%, #b80009 45%, #1a0002 90%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+    }
+
+    .login-box {
+      background: rgba(26, 0, 2, 0.95);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 25px;
+      width: 90%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      text-align: center;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1.5px solid rgba(255, 215, 0, 0.4);
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 4px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      border: none;
+      border-radius: 8px;
+      color: #5d3a00;
+      font-weight: 900;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    /* PANEL PRINCIPAL */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #ff1e27;
+    }
+
+    .header-actions-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .icon-btn.add {
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      color: #5d3a00;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-number {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #ffd700;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+
+    .devices-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 20px;
+    }
+
+    .device-card {
+      background: rgba(20, 0, 3, 0.8);
+      border: 1.5px solid rgba(255, 215, 0, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .device-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .device-code {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #ffd700;
+      letter-spacing: 2px;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .badge.active { background: #25d366; color: #000; }
+    .badge.inactive { background: #ff1e27; color: #fff; }
+
+    .device-info {
+      font-size: 0.78rem;
+      color: #ccc;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .device-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .btn-toggle { background: #333; color: #fff; }
+    .btn-edit { background: #ffd700; color: #5d3a00; }
+    .btn-delete { background: #ff1e27; color: #fff; }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: #1a0002;
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOBBY DE ACCESO (LOGIN) -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div style="font-size: 2.2rem; color: #ffd700;"><i class="fa-solid fa-lock"></i></div>
+      <h3 style="color: #fff; font-size: 1.1rem;">Panel Administrativo</h3>
+      <p style="font-size: 0.78rem; color: #ccc;">Ingresa tu PIN de acceso:</p>
+      
+      <input type="password" id="pinInput" placeholder="••••" maxlength="6">
+      <p style="font-size: 0.72rem; color: #ff1e27; display:none;" id="errorPin">PIN incorrecto</p>
+
+      <button onclick="verificarPin()">Entrar al Panel</button>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL DEL PANEL -->
+  <header>
+    <div class="brand"><i class="fa-solid fa-gauge-high"></i> Stream One Admin</div>
+    <div class="header-actions-group">
+      <button class="icon-btn add" onclick="abrirModalNuevo()"><i class="fa-solid fa-plus"></i> Nuevo</button>
+      <button class="icon-btn" onclick="cargarDispositivos()"><i class="fa-solid fa-rotate"></i></button>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-number" id="totalCount">0</div>
+      <div class="stat-label">Dispositivos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="activeCount" style="color:#25d366;">0</div>
+      <div class="stat-label">Activos</div>
+    </div>
+  </div>
+
+  <div class="devices-list" id="devicesContainer">
+    <div style="text-align:center; color:#770; margin-top:40px;">Cargando dispositivos...</div>
+  </div>
+
+  <!-- Modal para Agregar / Editar dispositivo -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <h3 style="font-size: 1rem; color: #ffd700;" id="modalTitle">Nuevo Dispositivo</h3>
+      
+      <label style="font-size: 0.75rem; color: #ccc;">Código de 6 Dígitos:</label>
+      <input type="text" id="editCodigo" placeholder="Ej: 481920" maxlength="6">
+
+      <label style="font-size: 0.75rem; color: #ccc;">URL M3U / Playlist:</label>
+      <input type="text" id="editM3uUrl" placeholder="https://consola.rockytvplus.com.mx/...">
+
+      <label style="font-size: 0.75rem; color: #ccc;">Fecha de Vencimiento:</label>
+      <input type="date" id="editFechaFin">
+
+      <div class="modal-actions">
+        <button class="action-btn btn-toggle" onclick="cerrarModal()">Cancelar</button>
+        <button class="action-btn btn-edit" onclick="guardarDispositivo()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // NUEVA URL DE TU APPS SCRIPT
+    const PANEL_JSON_URL = "https://script.google.com/macros/s/AKfycbwSTfvX_zmlgBEmtZiQseLrvKCnMW-Il5Mre3SvO5rXpjjR5EDVSA8WkZMf09EkVslY/exec";
+    
+    // PIN SECRETO PARA ENTRAR
+    const PIN_SECRETO = "9616"; 
+
+    let dispositivosData = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('streamone_admin_logged') === 'true') {
+        document.getElementById('loginOverlay').style.display = 'none';
+        cargarDispositivos();
+      } else {
+        document.getElementById('loginOverlay').style.display = 'flex';
+      }
+    });
+
+    function verificarPin() {
+      const pin = document.getElementById('pinInput').value.trim();
+      const errorMsg = document.getElementById('errorPin');
+
+      if (pin === PIN_SECRETO) {
+        localStorage.setItem('streamone_admin_logged', 'true');
+        document.getElementById('loginOverlay').style.display = 'none';
+        cargarDispositivos();
+      } else {
+        errorMsg.style.display = 'block';
+        document.getElementById('pinInput').value = '';
+      }
+    }
+
+    async function cargarDispositivos() {
+      const container = document.getElementById('devicesContainer');
+      container.innerHTML = '<div style="text-align:center; color:#aaa; margin-top:20px;">Sincronizando base de datos...</div>';
+
+      try {
+        const res = await fetch(`${PANEL_JSON_URL}?t=${new Date().getTime()}`);
+        if (!res.ok) throw new Error();
+        
+        dispositivosData = await res.json();
+        renderizarDispositivos();
+      } catch (e) {
+        container.innerHTML = '<div style="text-align:center; color:#ff1e27; margin-top:20px;">Error al conectar con la base de datos.</div>';
+      }
+    }
+
+    function renderizarDispositivos() {
+      const container = document.getElementById('devicesContainer');
+      container.innerHTML = '';
+
+      let total = dispositivosData.length;
+      let activos = dispositivosData.filter(d => d.activo === true).length;
+
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('activeCount').textContent = activos;
+
+      if (total === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#aaa; margin-top:20px;">No hay dispositivos registrados aún.</div>';
+        return;
+      }
+
+      dispositivosData.forEach(d => {
+        const card = document.createElement('div');
+        card.className = 'device-card';
+
+        const isActivo = d.activo === true;
+        card.innerHTML = `
+          <div class="device-header">
+            <span class="device-code">${d.codigo || '------'}</span>
+            <span class="badge ${isActivo ? 'active' : 'inactive'}">${isActivo ? 'ACTIVO' : 'INACTIVO'}</span>
+          </div>
+          <div class="device-info">
+            <div><i class="fa-solid fa-tv"></i> Viendo: <b>${d.viendo || 'Menú Principal'}</b></div>
+            <div><i class="fa-solid fa-link"></i> M3U: <span style="color:#aaa; word-break:break-all;">${d.m3uUrl || 'Sin enlace asignado'}</span></div>
+            <div><i class="fa-solid fa-calendar"></i> Vence: ${d.fechaFin || 'Indefinido'}</div>
+          </div>
+          <div class="device-actions">
+            <button class="action-btn btn-toggle" onclick="toggleEstado('${d.codigo}', ${isActivo})">
+              <i class="fa-solid ${isActivo ? 'fa-lock' : 'fa-lock-open'}"></i> ${isActivo ? 'Susp.' : 'Activ.'}
+            </button>
+            <button class="action-btn btn-edit" onclick="abrirModalEditar('${d.codigo}')">
+              <i class="fa-solid fa-pen"></i> Editar
+            </button>
+            <button class="action-btn btn-delete" onclick="borrarDispositivo('${d.codigo}')">
+              <i class="fa-solid fa-trash"></i> Borrar
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function toggleEstado(codigo, estadoActual) {
+      const nuevoEstado = !estadoActual;
+      await enviarActualizacionAlServidor({ codigo: codigo, activo: nuevoEstado });
+    }
+
+    async function borrarDispositivo(codigo) {
+      if (!confirm(`¿Estás seguro de eliminar el código ${codigo}?`)) return;
+      await enviarActualizacionAlServidor({ codigo: codigo, eliminar: true });
+    }
+
+    function abrirModalNuevo() {
+      document.getElementById('modalTitle').textContent = "Nuevo Dispositivo";
+      document.getElementById('editCodigo').value = '';
+      document.getElementById('editCodigo').disabled = false;
+      document.getElementById('editM3uUrl').value = '';
+      document.getElementById('editFechaFin').value = '';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function abrirModalEditar(codigo) {
+      const disp = dispositivosData.find(d => String(d.codigo) === String(codigo));
+      if (!disp) return;
+
+      document.getElementById('modalTitle').textContent = "Editar Dispositivo";
+      document.getElementById('editCodigo').value = codigo;
+      document.getElementById('editCodigo').disabled = true;
+      document.getElementById('editM3uUrl').value = disp.m3uUrl || '';
+      document.getElementById('editFechaFin').value = disp.fechaFin || '';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function cerrarModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+
+    async function guardarDispositivo() {
+      const codigo = document.getElementById('editCodigo').value.trim();
+      const m3uUrl = document.getElementById('editM3uUrl').value.trim();
+      const fechaFin = document.getElementById('editFechaFin').value;
+
+      if (!codigo || codigo.length < 4) {
+        alert("Por favor ingresa un código válido.");
+        return;
+      }
+
+      cerrarModal();
+      await enviarActualizacionAlServidor({ codigo, m3uUrl, fechaFin, activo: true });
+    }
+
+    async function enviarActualizacionAlServidor(dataObj) {
+      try {
+        await fetch(PANEL_JSON_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataObj)
+        });
+        setTimeout(cargarDispositivos, 1200);
+      } catch (e) {
+        alert("Error al actualizar la base de datos.");
+      }
+    }
+  </script>
+</body>
+</html>

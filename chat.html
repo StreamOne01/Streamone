@@ -14,7 +14,7 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         
         .glass-panel {
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -37,9 +37,9 @@
             background-color: #020617;
         }
 
-        /* Safe area padding for mobile gesture bars */
-        .safe-bottom {
-            padding-bottom: env(safe-area-inset-bottom, 12px);
+        /* Safe padding for mobile bottom bar */
+        .pb-safe {
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
     </style>
 </head>
@@ -65,108 +65,106 @@
             </div>
         </div>
 
-        <!-- SCREEN 2: MAIN CHAT INTERFACE (MOBILE OPTIMIZED TOP HEADER) -->
+        <!-- SCREEN 2: MAIN CHAT INTERFACE (VERTICAL MOBILE FULLSCREEN) -->
         <div id="chatScreen" class="hidden absolute inset-0 flex flex-col h-[100dvh] w-full overflow-hidden bg-slate-950">
 
             <!-- TOP HEADER WITH DROPDOWN MENU -->
-            <div class="glass-panel px-4 py-3 flex items-center justify-between z-30 shrink-0 shadow-lg">
-                <div class="flex items-center gap-3">
-                    <div id="currentHeaderAvatar" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-base shadow-md bg-blue-600">🧔‍♂️</div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h2 id="currentHeaderName" class="font-bold text-slate-100 text-sm">Carlos</h2>
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <div class="glass-panel px-3 py-2.5 flex items-center justify-between z-30 shrink-0 shadow-lg">
+                <div class="flex items-center gap-2.5 overflow-hidden">
+                    <div id="currentHeaderAvatar" class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm shadow-md bg-blue-600 shrink-0">🧔‍♂️</div>
+                    <div class="overflow-hidden">
+                        <div class="flex items-center gap-1.5">
+                            <h2 id="currentHeaderName" class="font-bold text-slate-100 text-sm truncate">Carlos</h2>
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                         </div>
-                        <p id="activeChatSubtitle" class="text-[11px] text-indigo-400 font-medium">Chat Familiar</p>
+                        <p id="activeChatSubtitle" class="text-[10px] text-indigo-400 font-medium truncate">Chat Familiar</p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <!-- Dropdown Menu Button -->
-                    <button onclick="toggleDropdownMenu(event)" class="px-3 py-2 bg-slate-800/80 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-200 border border-slate-700 transition flex items-center gap-2 shadow">
-                        <i class="fa-solid fa-bars text-indigo-400"></i> <span id="menuButtonLabel">Chats</span>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button onclick="toggleDropdownMenu(event)" class="px-2.5 py-1.5 bg-slate-800/90 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-200 border border-slate-700/80 transition flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-bars text-indigo-400"></i> <span>Chats</span>
                     </button>
-                    <button onclick="syncWithCloud()" title="Sincronizar" class="p-2.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-800/60 rounded-xl transition">
-                        <i id="syncIcon" class="fa-solid fa-rotate text-sm"></i>
+                    <button onclick="syncWithCloud()" title="Sincronizar" class="p-2 text-slate-400 hover:text-indigo-400 rounded-xl transition">
+                        <i id="syncIcon" class="fa-solid fa-rotate text-xs"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- DROPDOWN MENU PANEL (CHATS & CONTACTS SELECTOR) -->
-            <div id="dropdownMenu" class="absolute top-16 right-3 z-40 hidden w-72 glass-modal rounded-2xl p-3 shadow-2xl border border-slate-700 flex-col gap-2 transition-all duration-200">
-                <div class="text-xs font-bold text-slate-400 px-2 py-1 uppercase tracking-wider">Cambiar Conversación</div>
-                <div id="dropdownChatList" class="flex flex-col gap-1 max-h-64 overflow-y-auto">
-                    <!-- Dynamic chat list inside dropdown -->
-                </div>
+            <!-- DROPDOWN MENU PANEL -->
+            <div id="dropdownMenu" class="absolute top-14 right-2 z-40 hidden w-64 glass-modal rounded-2xl p-2.5 shadow-2xl border border-slate-700 flex-col gap-1.5 transition-all duration-200">
+                <div class="text-[10px] font-bold text-slate-400 px-2 py-0.5 uppercase tracking-wider">Conversaciones</div>
+                <div id="dropdownChatList" class="flex flex-col gap-1 max-h-60 overflow-y-auto"></div>
                 <div class="border-t border-slate-800 pt-2 mt-1 flex justify-between gap-1">
-                    <button onclick="togglePinModal()" class="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl flex items-center justify-center gap-1.5">
+                    <button onclick="togglePinModal()" class="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl flex items-center justify-center gap-1">
                         <i class="fa-solid fa-key text-indigo-400"></i> PIN
                     </button>
-                    <button onclick="switchUser()" class="flex-1 py-1.5 px-2 bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 text-xs rounded-xl flex items-center justify-center gap-1.5 border border-rose-900/40">
+                    <button onclick="switchUser()" class="flex-1 py-1.5 px-2 bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 text-xs rounded-xl flex items-center justify-center gap-1 border border-rose-900/40">
                         <i class="fa-solid fa-right-from-bracket"></i> Salir
                     </button>
                 </div>
             </div>
 
             <!-- MESSAGES CONTAINER -->
-            <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div id="messagesContainer" class="flex-1 overflow-y-auto p-3 space-y-3 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-            <!-- IMAGE PREVIEW -->
-            <div id="imagePreviewContainer" class="hidden px-4 py-2 bg-slate-900 border-t border-slate-800 flex items-center justify-between shrink-0">
-                <div class="flex items-center gap-3">
-                    <img id="imagePreview" src="" class="w-12 h-12 object-cover rounded-lg border border-slate-700">
-                    <span class="text-xs text-slate-300">Imagen lista para enviar</span>
+            <!-- PREVIEWS -->
+            <div id="imagePreviewContainer" class="hidden px-3 py-1.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <img id="imagePreview" src="" class="w-10 h-10 object-cover rounded-lg border border-slate-700">
+                    <span class="text-xs text-slate-300">Imagen lista</span>
                 </div>
                 <button onclick="cancelImageUpload()" class="p-1 text-slate-400 hover:text-rose-400">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                    <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
 
-            <!-- VOICE RECORDING BAR -->
-            <div id="recordingBar" class="hidden px-4 py-3 bg-rose-950/40 border-t border-rose-900/50 flex items-center justify-between animate-pulse shrink-0">
-                <div class="flex items-center gap-3 text-rose-400">
-                    <div class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></div>
-                    <span class="text-xs font-semibold">Grabando audio...</span>
-                    <span id="recordingTimer" class="text-xs font-mono bg-rose-900/60 px-2 py-0.5 rounded text-rose-200">00:00</span>
+            <div id="recordingBar" class="hidden px-3 py-2 bg-rose-950/50 border-t border-rose-900/50 flex items-center justify-between animate-pulse shrink-0">
+                <div class="flex items-center gap-2 text-rose-400">
+                    <div class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></div>
+                    <span class="text-xs font-semibold">Grabando...</span>
+                    <span id="recordingTimer" class="text-xs font-mono bg-rose-900/60 px-1.5 py-0.5 rounded text-rose-200">00:00</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="cancelRecording()" class="px-3 py-1 text-xs rounded-lg bg-slate-800 text-slate-300">Cancelar</button>
-                    <button onclick="stopAndSendVoice()" class="px-3 py-1 text-xs rounded-lg bg-rose-600 text-white font-medium shadow">Enviar</button>
+                <div class="flex items-center gap-1.5">
+                    <button onclick="cancelRecording()" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 text-slate-300">Cancelar</button>
+                    <button onclick="stopAndSendVoice()" class="px-2.5 py-1 text-xs rounded-lg bg-rose-600 text-white font-medium shadow">Enviar</button>
                 </div>
             </div>
 
             <!-- EMOJI PICKER POPUP -->
-            <div id="emojiPicker" class="absolute bottom-20 left-3 z-40 hidden w-72 h-64 glass-modal rounded-2xl p-3 shadow-2xl border border-slate-700/80 flex-col">
-                <div class="flex border-b border-slate-700/60 pb-2 mb-2 gap-1 overflow-x-auto text-xs">
+            <div id="emojiPicker" class="absolute bottom-16 left-2 z-40 hidden w-64 h-56 glass-modal rounded-2xl p-2.5 shadow-2xl border border-slate-700/80 flex-col">
+                <div class="flex border-b border-slate-700/60 pb-1.5 mb-1.5 gap-1 overflow-x-auto text-xs">
                     <button onclick="filterEmojis('smileys')" class="px-2 py-1 bg-indigo-600 text-white rounded">😀</button>
                     <button onclick="filterEmojis('gestures')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded">👍</button>
                     <button onclick="filterEmojis('hearts')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded">❤️</button>
                     <button onclick="filterEmojis('food')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded">🍕</button>
                     <button onclick="filterEmojis('objects')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded">🎉</button>
                 </div>
-                <div id="emojiGrid" class="flex-1 grid grid-cols-6 gap-1 overflow-y-auto text-xl p-1 text-center cursor-pointer"></div>
+                <div id="emojiGrid" class="flex-1 grid grid-cols-5 gap-1 overflow-y-auto text-lg p-1 text-center cursor-pointer"></div>
             </div>
 
-            <!-- FIXED FOOTER INPUT BAR (SAFE BOTTOM) -->
-            <div class="glass-panel p-3 flex items-center gap-2 z-20 shrink-0 safe-bottom shadow-2xl border-t border-slate-800">
-                <button onclick="toggleEmojiPicker(event)" class="p-2.5 text-slate-400 hover:text-indigo-400 rounded-xl hover:bg-slate-800/80 transition">
-                    <i class="fa-regular fa-face-smile text-lg"></i>
+            <!-- COMPACT FOOTER INPUT BAR (100% VISIBLE SEND BUTTON) -->
+            <div class="glass-panel px-2 py-2 flex items-center gap-1.5 z-20 shrink-0 pb-safe border-t border-slate-800/80">
+                <button onclick="toggleEmojiPicker(event)" class="p-2 text-slate-400 hover:text-indigo-400 rounded-lg hover:bg-slate-800/60 shrink-0">
+                    <i class="fa-regular fa-face-smile text-base"></i>
                 </button>
 
-                <label class="p-2.5 text-slate-400 hover:text-indigo-400 rounded-xl hover:bg-slate-800/80 transition cursor-pointer">
-                    <i class="fa-solid fa-image text-lg"></i>
+                <label class="p-2 text-slate-400 hover:text-indigo-400 rounded-lg hover:bg-slate-800/60 shrink-0 cursor-pointer">
+                    <i class="fa-solid fa-image text-base"></i>
                     <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
                 </label>
 
-                <input type="text" id="messageInput" placeholder="Escribe un mensaje..." 
+                <input type="text" id="messageInput" placeholder="Escribe..." 
                     onkeydown="if(event.key === 'Enter') sendMessage()"
-                    class="flex-1 bg-slate-950 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
+                    class="flex-1 min-w-0 bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
 
-                <button id="micBtn" onclick="startRecording()" class="p-2.5 text-slate-400 hover:text-rose-400 rounded-xl hover:bg-slate-800/80 transition">
-                    <i class="fa-solid fa-microphone text-lg"></i>
+                <button id="micBtn" onclick="startRecording()" class="p-2 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800/60 shrink-0">
+                    <i class="fa-solid fa-microphone text-base"></i>
                 </button>
-                <button id="sendBtn" onclick="sendMessage()" class="p-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center">
-                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                
+                <!-- Enviar button strictly pinned & visible -->
+                <button id="sendBtn" onclick="sendMessage()" class="p-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl shadow-lg shadow-indigo-600/30 shrink-0 flex items-center justify-center">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
             </div>
 
@@ -239,7 +237,6 @@
             syncWithCloud();
             syncInterval = setInterval(syncWithCloud, 4000);
 
-            // Close dropdown & emoji picker on outside click
             document.addEventListener('click', (e) => {
                 const dropdown = document.getElementById('dropdownMenu');
                 const menuBtn = e.target.closest('button[onclick*="toggleDropdownMenu"]');
@@ -333,7 +330,7 @@
             currentUser = user;
             document.getElementById('currentHeaderName').innerText = user.name;
             document.getElementById('currentHeaderAvatar').innerText = user.avatar;
-            document.getElementById('currentHeaderAvatar').className = `w-10 h-10 rounded-full flex items-center justify-center text-white text-base shadow-md ${user.color}`;
+            document.getElementById('currentHeaderAvatar').className = `w-9 h-9 rounded-full flex items-center justify-center text-white text-sm shadow-md shrink-0 ${user.color}`;
 
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('chatScreen').classList.remove('hidden');
@@ -400,11 +397,11 @@
         function renderDropdownChatList() {
             const list = document.getElementById('dropdownChatList');
             let html = `
-                <div onclick="openChat('group')" class="p-2.5 rounded-xl ${activeTargetId === 'group' ? 'bg-indigo-600/30 border border-indigo-500/50' : 'hover:bg-slate-800/60'} cursor-pointer transition flex items-center gap-3">
-                    <div class="w-8 h-8 bg-gradient-to-tr from-indigo-500 to-cyan-400 rounded-full flex items-center justify-center text-white text-sm shadow">👥</div>
+                <div onclick="openChat('group')" class="p-2 rounded-xl ${activeTargetId === 'group' ? 'bg-indigo-600/30 border border-indigo-500/50' : 'hover:bg-slate-800/60'} cursor-pointer transition flex items-center gap-2.5">
+                    <div class="w-7 h-7 bg-gradient-to-tr from-indigo-500 to-cyan-400 rounded-full flex items-center justify-center text-white text-xs shadow shrink-0">👥</div>
                     <div class="flex-1 overflow-hidden">
                         <h4 class="font-bold text-slate-100 text-xs truncate">Chat Familiar</h4>
-                        <p class="text-[10px] text-slate-400">Grupo general</p>
+                        <p class="text-[9px] text-slate-400">Grupo general</p>
                     </div>
                 </div>
             `;
@@ -413,12 +410,12 @@
             otherUsers.forEach(u => {
                 const unread = messages.filter(m => m.isPrivate && m.senderId === u.id && m.receiverId === currentUser.id && !m.read).length;
                 html += `
-                    <div onclick="openChat('${u.id}')" class="p-2.5 rounded-xl ${activeTargetId === u.id ? 'bg-indigo-600/30 border border-indigo-500/50' : 'hover:bg-slate-800/60'} cursor-pointer transition flex items-center justify-between">
-                        <div class="flex items-center gap-3 overflow-hidden">
-                            <div class="w-8 h-8 ${u.color} rounded-full flex items-center justify-center text-white text-sm shadow">${u.avatar}</div>
+                    <div onclick="openChat('${u.id}')" class="p-2 rounded-xl ${activeTargetId === u.id ? 'bg-indigo-600/30 border border-indigo-500/50' : 'hover:bg-slate-800/60'} cursor-pointer transition flex items-center justify-between">
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            <div class="w-7 h-7 ${u.color} rounded-full flex items-center justify-center text-white text-xs shadow shrink-0">${u.avatar}</div>
                             <div class="overflow-hidden">
                                 <h4 class="font-bold text-slate-100 text-xs truncate">${u.name}</h4>
-                                <p class="text-[10px] text-slate-400">Chat Privado</p>
+                                <p class="text-[9px] text-slate-400">Chat Privado</p>
                             </div>
                         </div>
                         ${unread > 0 ? `<span class="bg-indigo-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">${unread}</span>` : ''}
@@ -462,30 +459,30 @@
                 const sender = users.find(u => u.id === msg.senderId) || { name: 'Familiar', avatar: '👤', color: 'bg-slate-700' };
 
                 const msgDiv = document.createElement('div');
-                msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1.5`;
+                msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1`;
 
                 let contentHtml = '';
                 if (msg.text) {
                     contentHtml += `<p class="text-sm leading-relaxed">${escapeHtml(msg.text)}</p>`;
                 }
                 if (msg.image) {
-                    contentHtml += `<img src="${msg.image}" onclick="openImageModal('${msg.image}')" class="max-w-xs max-h-60 rounded-xl cursor-pointer hover:opacity-90 transition mt-1 border border-slate-700/50">`;
+                    contentHtml += `<img src="${msg.image}" onclick="openImageModal('${msg.image}')" class="max-w-xs max-h-56 rounded-xl cursor-pointer hover:opacity-90 transition mt-1 border border-slate-700/50">`;
                 }
                 if (msg.audio) {
                     contentHtml += `
                         <div class="flex items-center gap-2 mt-1 bg-slate-900/60 p-2 rounded-xl border border-slate-700/40">
-                            <audio controls src="${msg.audio}" class="h-8 max-w-[200px]"></audio>
+                            <audio controls src="${msg.audio}" class="h-8 max-w-[180px]"></audio>
                         </div>
                     `;
                 }
 
                 msgDiv.innerHTML = `
-                    <div class="flex items-end gap-2 max-w-[88%] ${isMe ? 'flex-row-reverse' : 'flex-row'}">
-                        <div class="w-7 h-7 rounded-full ${sender.color} flex items-center justify-center text-xs text-white shrink-0 shadow">
+                    <div class="flex items-end gap-1.5 max-w-[90%] ${isMe ? 'flex-row-reverse' : 'flex-row'}">
+                        <div class="w-6 h-6 rounded-full ${sender.color} flex items-center justify-center text-[10px] text-white shrink-0 shadow">
                             ${sender.avatar}
                         </div>
-                        <div class="p-3 rounded-2xl ${isMe ? 'bg-indigo-600 text-white rounded-br-xs' : 'glass-panel text-slate-100 rounded-bl-xs border border-slate-800'} shadow-md">
-                            ${!isMe && activeTargetId === 'group' ? `<div class="text-[11px] font-bold text-indigo-400 mb-1">${sender.name}</div>` : ''}
+                        <div class="p-2.5 rounded-2xl ${isMe ? 'bg-indigo-600 text-white rounded-br-xs' : 'glass-panel text-slate-100 rounded-bl-xs border border-slate-800'} shadow-md">
+                            ${!isMe && activeTargetId === 'group' ? `<div class="text-[10px] font-bold text-indigo-400 mb-0.5">${sender.name}</div>` : ''}
                             ${contentHtml}
                             <div class="text-[9px] ${isMe ? 'text-indigo-200' : 'text-slate-400'} text-right mt-1">${msg.time}</div>
                         </div>
@@ -570,7 +567,7 @@
         }
 
         function cancelImageUpload() {
-            pendingImageData = model = null;
+            pendingImageData = null;
             document.getElementById('imageInput').value = '';
             document.getElementById('imagePreviewContainer').classList.add('hidden');
         }

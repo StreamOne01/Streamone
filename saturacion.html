@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Pro de Espectro y Saturación Wi-Fi</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-secondary: #12192c;
+            --bg-card: rgba(23, 32, 54, 0.75);
+            --border-card: rgba(60, 80, 120, 0.4);
+            --text-main: #f0f4f8;
+            --text-muted: #8a99ad;
+            --accent-blue: #0088ff;
+            --accent-cyan: #00f0ff;
+            --accent-red: #ff3366;
+            --accent-warning: #ffaa00;
+            --accent-success: #00e676;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-card);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .band-selector {
+            display: flex;
+            gap: 10px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .band-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .band-btn.active {
+            background: var(--accent-blue);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(0, 136, 255, 0.5);
+        }
+
+        .presets-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .preset-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-card);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(0, 136, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-optimize {
+            background: linear-gradient(135deg, #00e676, #0088ff);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        }
+        .btn-optimize:hover {
+            opacity: 0.9;
+            background: linear-gradient(135deg, #00e676, #0088ff);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-card);
+            padding-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spectrum-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background: rgba(5, 8, 18, 0.85);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #spectrumCanvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #spectrumCanvas:active {
+            cursor: grabbing;
+        }
+
+        .spectrum-hint {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .metric-box {
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-card);
+        }
+
+        .metric-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .metric-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Airtime Bar */
+        .airtime-container {
+            margin-top: 15px;
+        }
+
+        .airtime-bar {
+            height: 16px;
+            width: 100%;
+            background: #111;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            margin-top: 6px;
+        }
+
+        .airtime-segment {
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .airtime-useful { background: var(--accent-success); }
+        .airtime-collision { background: var(--accent-red); }
+        .airtime-idle { background: rgba(255,255,255,0.1); }
+
+        .airtime-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-top: 6px;
+            color: var(--text-muted);
+        }
+
+        /* Chart */
+        .chart-container {
+            height: 180px;
+            margin-top: 15px;
+        }
+
+        /* AP List */
+        .ap-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .ap-item {
+            background: rgba(10, 15, 30, 0.6);
+            border: 1px solid var(--border-card);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .ap-item:hover {
+            background: rgba(0, 136, 255, 0.1);
+        }
+
+        .ap-item.selected {
+            background: rgba(0, 240, 255, 0.12);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .ap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ap-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ap-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .ap-control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ap-control-group label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent-cyan);
+        }
+
+        select, input[type="text"] {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border-card);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .btn-action {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-card);
+            color: var(--text-main);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .btn-danger {
+            color: var(--accent-red);
+            border-color: rgba(255,51,102,0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255,51,102,0.2);
+        }
+
+        .btn-inspect {
+            background: var(--accent-blue);
+            color: white;
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0, 136, 255, 0.4);
+            transition: transform 0.1s;
+        }
+
+        .btn-inspect:active {
+            transform: scale(0.98);
+        }
+
+        /* Modal Inspector */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 650px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-card);
+            padding-bottom: 10px;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .csma-stage {
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border-card);
+        }
+
+        .csma-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            padding: 6px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 4px;
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .badge-success { background: var(--accent-success); color: #000; }
+        .badge-danger { background: var(--accent-red); color: #fff; }
+        .badge-warning { background: var(--accent-warning); color: #000; }
+
+        .edu-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            background: rgba(0, 136, 255, 0.1);
+            border-left: 3px solid var(--accent-blue);
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📡 Simulador Pro de Espectro y Saturación Wi-Fi</h1>
+        <div class="band-selector">
+            <button class="band-btn active" onclick="switchBand('2.4')">Banda 2.4 GHz</button>
+            <button class="band-btn" onclick="switchBand('5')">Banda 5 GHz</button>
+        </div>
+    </header>
+
+    <div class="presets-bar">
+        <span style="font-size:0.85rem; color: var(--text-muted);">Escenarios:</span>
+        <button class="preset-btn" onclick="loadPreset('clean')">🌱 Limpio</button>
+        <button class="preset-btn" onclick="loadPreset('aci_disaster')">⚠️ Caos Adyacente</button>
+        <button class="preset-btn" onclick="loadPreset('dense_residential')">🏠 Pasaje Denso (12)</button>
+        <button class="preset-btn" onclick="loadPreset('apartment_building')">🏢 Edificio (14)</button>
+        <button class="preset-btn btn-optimize" onclick="autoOptimizeChannels()">✨ Auto-Optimizar Canales</button>
+    </div>
+
+    <div class="grid-container">
+        <!-- Columna Izquierda -->
+        <div class="left-col" style="display:flex; flex-direction:column; gap:20px;">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📊 Analizador RF y Mapa de Calor Espectral</span>
+                    <span id="activeBandText" style="font-size: 0.85rem; color: var(--accent-cyan);">2.4 GHz (1 - 14)</span>
+                </div>
+                <div class="spectrum-container">
+                    <canvas id="spectrumCanvas"></canvas>
+                    <div class="spectrum-hint">💡 Clic en onda para seleccionar / Arrastra para cambiar canal</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">💡 Diagnóstico Físico del Dispositivo Seleccionado</span>
+                </div>
+                <div class="edu-note" id="eduDiagnosis">
+                    Cargando análisis...
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📈 Rendimiento Efectivo (Throughput) vs Pérdida</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha -->
+        <div class="right-col" style="display:flex; flex-direction:column; gap:20px;">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">⏱️ Airtime del Dispositivo Seleccionado</span>
+                    <span id="selectedApBadge" style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 6px; border-radius: 4px;">Ninguno</span>
+                </div>
+                
+                <div class="airtime-container">
+                    <div class="airtime-bar">
+                        <div id="airtimeUseful" class="airtime-segment airtime-useful" style="width: 50%;"></div>
+                        <div id="airtimeCollision" class="airtime-segment airtime-collision" style="width: 30%;"></div>
+                        <div id="airtimeIdle" class="airtime-segment airtime-idle" style="width: 20%;"></div>
+                    </div>
+                    <div class="airtime-legend">
+                        <span style="color:var(--accent-success);">● Útil: <b id="textUseful">0%</b></span>
+                        <span style="color:var(--accent-red);">● Colisión: <b id="textCollision">0%</b></span>
+                        <span style="color:var(--text-muted);">● Libre: <b id="textIdle">0%</b></span>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-title">Caudal Real Útil</div>
+                        <div class="metric-value" id="valThroughput">0 Mbps</div>
+                        <div class="metric-sub" id="valThroughputTheoretical">de 144 Mbps</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-title">Pérdida Paquetes</div>
+                        <div class="metric-value" id="valPacketLoss" style="color: var(--accent-success);">0%</div>
+                        <div class="metric-sub">Retransmisiones</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-title">Latencia / Jitter</div>
+                        <div class="metric-value" id="valLatency">12 ms</div>
+                        <div class="metric-sub">Retraso CSMA/CA</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-title">Piso de Ruido</div>
+                        <div class="metric-value" id="valNoiseFloor">-95 dBm</div>
+                        <div class="metric-sub" id="valSNR">SNR: 40 dB</div>
+                    </div>
+                </div>
+
+                <button class="btn-inspect" onclick="openCollisionInspector()">🔍 Inspeccionar Colisión en Vivo</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📻 Redes Wi-Fi Transmitiendo</span>
+                    <button class="btn-action" onclick="addNewAP()">+ Agregar Router</button>
+                </div>
+                <div class="ap-list" id="apListContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Inspector -->
+    <div class="modal-overlay" id="collisionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--accent-cyan);">💥 Microscopio CSMA/CA: Anatomía de una Colisión Wi-Fi</h3>
+                <button class="btn-action" onclick="closeCollisionInspector()">✕ Cerrar</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted);">
+                    El aire es un medio <b>Half-Duplex compartido</b>. Cuando las ondas colisionan o se solapan en canales adyacentes, el receptor descarta la trama por corrupción.
+                </p>
+                <div class="csma-stage">
+                    <div class="csma-timeline">
+                        <div class="timeline-item"><span class="badge badge-warning">1</span><span><b>CCA (Escucha):</b> Los routers miden el nivel de energía del canal.</span></div>
+                        <div class="timeline-item"><span class="badge badge-danger">2</span><span><b>Transmisión Simultánea:</b> Choque de tramas por solapamiento de frecuencia.</span></div>
+                        <div class="timeline-item"><span class="badge badge-danger">3</span><span><b>ACK Timeout:</b> El destino no puede confirmar la recepción.</span></div>
+                        <div class="timeline-item"><span class="badge badge-success">4</span><span><b>Backoff Exponencial:</b> Pausa aleatoria antes de retransmitir.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBand = '2.4';
+        let accessPoints = [];
+        let selectedAPIndex = 0;
+        let chart = null;
+
+        let draggedAPIndex = null;
+        let isDragging = false;
+
+        class AccessPoint {
+            constructor(id, ssid, channel, width, power, traffic, distance, color) {
+                this.id = id;
+                this.ssid = ssid;
+                this.channel = channel;
+                this.width = width;
+                this.power = power;         // Potencia TX base
+                this.traffic = traffic;     // Carga de tráfico %
+                this.distance = distance;   // Distancia/Paredes (1 a 5 metros/obstáculos)
+                this.color = color || getRandomColor();
+                this.active = true;
+                this.particles = [];
+            }
+            
+            getEffectivePower() {
+                // Atenuación por distancia/obstáculos (cada nivel resta ~4 dBm)
+                return this.power - (this.distance - 1) * 4;
+            }
+        }
+
+        function getRandomColor() {
+            const colors = ['#00f0ff', '#ff3366', '#ffaa00', '#00e676', '#b000ff', '#ff00aa', '#00ffff'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        window.onload = () => {
+            initCanvas();
+            initChart();
+            loadPreset('clean');
+            requestAnimationFrame(animate);
+        };
+
+        function switchBand(band) {
+            currentBand = band;
+            document.querySelectorAll('.band-btn').forEach(btn => btn.classList.remove('active'));
+            if(band === '2.4') {
+                document.querySelectorAll('.band-btn')[0].classList.add('active');
+                document.getElementById('activeBandText').innerText = "2.4 GHz (Canales 1 - 14)";
+                loadPreset('clean');
+            } else {
+                document.querySelectorAll('.band-btn')[1].classList.add('active');
+                document.getElementById('activeBandText').innerText = "5 GHz (UNII-1, UNII-2, UNII-3)";
+                loadPreset('5ghz_default');
+            }
+        }
+
+        function loadPreset(presetKey) {
+            accessPoints = [];
+
+            if(currentBand === '2.4') {
+                if(presetKey === 'clean') {
+                    accessPoints.push(new AccessPoint(1, 'Mi_Casa_WiFi', 1, 20, -42, 50, 1, '#00f0ff'));
+                    accessPoints.push(new AccessPoint(2, 'Router_Oficina', 6, 20, -48, 30, 2, '#00e676'));
+                    accessPoints.push(new AccessPoint(3, 'Vecino_Lejano', 11, 20, -60, 20, 4, '#ffaa00'));
+                } else if(presetKey === 'aci_disaster') {
+                    accessPoints.push(new AccessPoint(1, 'Mi_Casa_WiFi', 1, 20, -42, 80, 1, '#00f0ff'));
+                    accessPoints.push(new AccessPoint(2, 'Vecino_Ch2', 2, 20, -45, 90, 1, '#ff3366'));
+                    accessPoints.push(new AccessPoint(3, 'Vecino_Ch3', 3, 20, -50, 70, 2, '#ffaa00'));
+                    accessPoints.push(new AccessPoint(4, 'Vecino_Ch4', 4, 20, -55, 85, 2, '#b000ff'));
+                } else if(presetKey === 'dense_residential') {
+                    const colors = ['#00f0ff', '#ff3366', '#ffaa00', '#00e676', '#b000ff', '#ff00aa', '#00ffff', '#e6ff00', '#00ffaa', '#ff5500', '#aa00ff', '#0055ff'];
+                    for(let i = 1; i <= 12; i++) {
+                        let ch = [1, 2, 3, 6, 7, 8, 11, 11, 6, 1, 3, 6][i - 1];
+                        accessPoints.push(new AccessPoint(i, `Casa_${i}_Red`, ch, 20, -40, 45, (i % 3) + 1, colors[i-1]));
+                    }
+                } else if(presetKey === 'apartment_building') {
+                    for(let i = 1; i <= 14; i++) {
+                        let ch = (i % 3 === 0) ? 6 : ((i % 2 === 0) ? 1 : 11);
+                        let w = (i % 4 === 0) ? 40 : 20;
+                        accessPoints.push(new AccessPoint(i, `Dpto_${100+i}`, ch, w, -42, 50, (i % 2) + 1, getRandomColor()));
+                    }
+                }
+            } else {
+                accessPoints.push(new AccessPoint(1, 'Fibra_5G_Casa', 36, 80, -40, 60, 1, '#00f0ff'));
+                accessPoints.push(new AccessPoint(2, 'SmartTV_5G', 52, 40, -50, 80, 2, '#ffaa00'));
+                accessPoints.push(new AccessPoint(3, 'Vecino_5G', 149, 80, -60, 40, 3, '#00e676'));
+            }
+
+            selectedAPIndex = 0;
+            renderAPControls();
+        }
+
+        // FUNCIÓN DE AUTO-OPTIMIZACIÓN CON 1 CLIC
+        function autoOptimizeChannels() {
+            if(currentBand === '2.4') {
+                const optimalChannels = [1, 6, 11, 1, 6, 11, 1, 6, 11, 1, 6, 11, 1, 6];
+                accessPoints.forEach((ap, idx) => {
+                    ap.channel = optimalChannels[idx % optimalChannels.length];
+                    ap.width = 20; // Forzar 20MHz para evitar solapamiento masivo en 2.4GHz
+                });
+            } else {
+                const optimalChannels5G = [36, 44, 52, 60, 100, 149, 157];
+                accessPoints.forEach((ap, idx) => {
+                    ap.channel = optimalChannels5G[idx % optimalChannels5G.length];
+                });
+            }
+            renderAPControls();
+        }
+
+        let canvas, ctx;
+
+        function initCanvas() {
+            canvas = document.getElementById('spectrumCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            canvas.addEventListener('mousedown', onMouseDown);
+            canvas.addEventListener('mousemove', onMouseMove);
+            canvas.addEventListener('mouseup', onMouseUp);
+            canvas.addEventListener('mouseleave', onMouseUp);
+
+            canvas.addEventListener('touchstart', (e) => {
+                const t = e.touches[0];
+                onMouseDown({ clientX: t.clientX, clientY: t.clientY });
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                onMouseMove({ clientX: t.clientX, clientY: t.clientY });
+            });
+            canvas.addEventListener('touchend', onMouseUp);
+        }
+
+        function resizeCanvas() {
+            if(!canvas) return;
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+
+        function channelToX(channel) {
+            const width = canvas.width;
+            const padding = 40;
+            const usableWidth = width - padding * 2;
+            if(currentBand === '2.4') {
+                return padding + ((channel - 0) / 14) * usableWidth;
+            } else {
+                return padding + ((channel - 32) / 136) * usableWidth;
+            }
+        }
+
+        function xToChannel(x) {
+            const width = canvas.width;
+            const padding = 40;
+            const usableWidth = width - padding * 2;
+            if(currentBand === '2.4') {
+                let ch = Math.round(0 + ((x - padding) / usableWidth) * 14);
+                return Math.max(1, Math.min(14, ch));
+            } else {
+                let ch = Math.round(32 + ((x - padding) / usableWidth) * 136);
+                return Math.max(36, Math.min(165, ch));
+            }
+        }
+
+        function powerToY(powerDbm) {
+            const height = canvas.height;
+            const paddingBottom = 50; // Espacio extra para barra de calor
+            const paddingTop = 30;
+            const usableHeight = height - paddingBottom - paddingTop;
+            const ratio = (powerDbm - (-100)) / (-25 - (-100));
+            return height - paddingBottom - (ratio * usableHeight);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawGridAndAxes();
+            drawChannelHeatmapBar();
+            drawNoiseFloor();
+            
+            let allCollisions = checkCollisions();
+            
+            accessPoints.forEach((ap, index) => {
+                if(ap.active) {
+                    drawSpectralShape(ap, index === draggedAPIndex, index === selectedAPIndex);
+                    drawTrafficParticles(ap);
+                }
+            });
+
+            if(allCollisions.length > 0) {
+                drawCollisionEffects(allCollisions);
+            }
+
+            updateSelectedAPMetrics(allCollisions);
+
+            requestAnimationFrame(animate);
+        }
+
+        function drawGridAndAxes() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+
+            for(let dbm = -30; dbm >= -90; dbm -= 15) {
+                let y = powerToY(dbm);
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.font = '10px sans-serif';
+                ctx.fillText(`${dbm} dBm`, 5, y - 2);
+            }
+
+            const channelsToDraw = (currentBand === '2.4') ? [1,2,3,4,5,6,7,8,9,10,11,12,13,14] : [36, 40, 44, 48, 52, 56, 60, 64, 100, 108, 149, 157, 165];
+            
+            channelsToDraw.forEach(ch => {
+                let x = channelToX(ch);
+                ctx.beginPath();
+                ctx.moveTo(x, 20);
+                ctx.lineTo(x, h - 50);
+                ctx.stroke();
+
+                ctx.fillStyle = (ch === 1 || ch === 6 || ch === 11) ? varColor('--accent-cyan') : 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Ch ${ch}`, x, h - 30);
+            });
+        }
+
+        // BARRA DE CALOR / OCUPACIÓN ESPECTRAL POR CANAL
+        function drawChannelHeatmapBar() {
+            const h = canvas.height;
+            const barY = h - 22;
+            const barHeight = 14;
+            const channels = (currentBand === '2.4') ? [1,2,3,4,5,6,7,8,9,10,11,12,13,14] : [36, 40, 44, 48, 52, 56, 60, 64, 100, 108, 149, 157, 165];
+
+            channels.forEach(ch => {
+                let x1 = channelToX(ch - 0.5);
+                let x2 = channelToX(ch + 0.5);
+                let width = Math.max(10, x2 - x1);
+
+                // Calcular energía acumulada en este canal
+                let energyLoad = 0;
+                accessPoints.forEach(ap => {
+                    if(!ap.active) return;
+                    let dist = Math.abs(ap.channel - ch);
+                    let span = ap.width / 10; // Ancho de banda influenciador
+                    if(dist <= span) {
+                        let effPower = ap.getEffectivePower();
+                        let intensity = (effPower + 100) / 70; // 0 a 1
+                        energyLoad += intensity * (ap.traffic / 100);
+                    }
+                });
+
+                // Color según saturación
+                let color = 'rgba(0, 230, 118, 0.3)'; // Verde limpio
+                if(energyLoad > 0.8) color = 'rgba(255, 51, 102, 0.85)'; // Rojo saturado
+                else if(energyLoad > 0.35) color = 'rgba(255, 170, 0, 0.7)'; // Naranja medio
+
+                ctx.fillStyle = color;
+                ctx.fillRect(x1 - width/2, barY, width, barHeight);
+                ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+                ctx.strokeRect(x1 - width/2, barY, width, barHeight);
+            });
+
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            ctx.font = '9px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Ocupación RF:', 10, barY + 11);
+        }
+
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function drawNoiseFloor() {
+            let noiseY = powerToY(-95);
+            ctx.strokeStyle = 'rgba(255, 51, 102, 0.4)';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(0, noiseY);
+            ctx.lineTo(canvas.width, noiseY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = 'rgba(255, 51, 102, 0.6)';
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('Ruido (-95 dBm)', canvas.width - 10, noiseY - 4);
+        }
+
+        function drawSpectralShape(ap, isDragged, isSelected) {
+            let centerX = channelToX(ap.channel);
+            let effPower = ap.getEffectivePower();
+            let topY = powerToY(effPower);
+            let baseY = powerToY(-100);
+
+            let channelSpacingPx = (channelToX(2) - channelToX(1));
+            if(currentBand === '5') channelSpacingPx = (channelToX(40) - channelToX(36)) / 4;
+            let halfWidthPx = (ap.width / 5) * channelSpacingPx;
+
+            ctx.save();
+            ctx.beginPath();
+
+            let startX = centerX - halfWidthPx * 1.3;
+            let endX = centerX + halfWidthPx * 1.3;
+
+            ctx.moveTo(startX, baseY);
+            for (let x = startX; x <= endX; x++) {
+                let normX = (x - centerX) / halfWidthPx;
+                let shape = Math.exp(-Math.pow(normX * 1.8, 4));
+                let y = baseY - (baseY - topY) * shape;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(endX, baseY);
+            ctx.closePath();
+
+            let grad = ctx.createLinearGradient(0, topY, 0, baseY);
+            let alpha = isSelected ? 0.65 : 0.35;
+            grad.addColorStop(0, hexToRgba(ap.color, alpha));
+            grad.addColorStop(1, hexToRgba(ap.color, 0.03));
+
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            ctx.strokeStyle = ap.color;
+            ctx.lineWidth = (isSelected || isDragged) ? 3 : 1.5;
+            ctx.stroke();
+
+            if(isSelected) {
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([3, 3]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `${isSelected ? 'bold ' : ''}11px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText(`${ap.ssid} (${effPower}dBm)`, centerX, topY - 8);
+
+            ctx.restore();
+        }
+
+        function drawTrafficParticles(ap) {
+            let centerX = channelToX(ap.channel);
+            let effPower = ap.getEffectivePower();
+            let topY = powerToY(effPower);
+            let baseY = powerToY(-100);
+
+            if(Math.random() < (ap.traffic / 100) * 0.25) {
+                ap.particles.push({
+                    x: centerX + (Math.random() - 0.5) * 15,
+                    y: baseY,
+                    speed: 1.5 + Math.random() * 2
+                });
+            }
+
+            ctx.fillStyle = ap.color;
+            for(let i = ap.particles.length - 1; i >= 0; i--) {
+                let p = ap.particles[i];
+                p.y -= p.speed;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                if(p.y <= topY) ap.particles.splice(i, 1);
+            }
+        }
+
+        function checkCollisions() {
+            let activeAPs = accessPoints.filter(ap => ap.active);
+            let collisions = [];
+
+            for(let i = 0; i < activeAPs.length; i++) {
+                for(let j = i + 1; j < activeAPs.length; j++) {
+                    let ap1 = activeAPs[i];
+                    let ap2 = activeAPs[j];
+
+                    let chDiff = Math.abs(ap1.channel - ap2.channel);
+                    let freqDiff = chDiff * 5;
+                    let maxOverlap = (ap1.width / 2) + (ap2.width / 2);
+
+                    if(freqDiff < maxOverlap) {
+                        let overlapRatio = (maxOverlap - freqDiff) / maxOverlap;
+                        let powerFactor = Math.min(1, Math.abs(ap1.getEffectivePower() + ap2.getEffectivePower()) / 100);
+                        collisions.push({
+                            ap1: ap1, ap2: ap2,
+                            severity: overlapRatio * powerFactor,
+                            isCCI: (ap1.channel === ap2.channel)
+                        });
+                    }
+                }
+            }
+            return collisions;
+        }
+
+        function drawCollisionEffects(collisions) {
+            collisions.forEach(col => {
+                let x1 = channelToX(col.ap1.channel);
+                let x2 = channelToX(col.ap2.channel);
+                let midX = (x1 + x2) / 2;
+                let midY = (powerToY(col.ap1.getEffectivePower()) + powerToY(col.ap2.getEffectivePower())) / 2;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(midX, midY, 12 + Math.sin(Date.now() / 120) * 4, 0, Math.PI * 2);
+                ctx.strokeStyle = col.isCCI ? 'rgba(255, 170, 0, 0.7)' : 'rgba(255, 51, 102, 0.9)';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('⚡', midX, midY + 3);
+                ctx.restore();
+            });
+        }
+
+        function updateSelectedAPMetrics(collisions) {
+            if(accessPoints.length === 0 || selectedAPIndex >= accessPoints.length) {
+                document.getElementById('selectedApBadge').innerText = "Ninguno";
+                document.getElementById('eduDiagnosis').innerText = "Agrega o selecciona un router.";
+                return;
+            }
+
+            let selAP = accessPoints[selectedAPIndex];
+            document.getElementById('selectedApBadge').innerText = selAP.ssid;
+
+            if(!selAP.active) {
+                document.getElementById('airtimeUseful').style.width = '0%';
+                document.getElementById('airtimeCollision').style.width = '0%';
+                document.getElementById('airtimeIdle').style.width = '100%';
+                document.getElementById('textUseful').innerText = '0%';
+                document.getElementById('textCollision').innerText = '0%';
+                document.getElementById('textIdle').innerText = '100%';
+                document.getElementById('valThroughput').innerText = '0 Mbps';
+                document.getElementById('valPacketLoss').innerText = '0%';
+                document.getElementById('eduDiagnosis').innerText = `El router "${selAP.ssid}" está apagado.`;
+                return;
+            }
+
+            let myCollisions = collisions.filter(c => c.ap1 === selAP || c.ap2 === selAP);
+            let totalSeverity = myCollisions.reduce((sum, c) => sum + c.severity, 0);
+            let hasACI = myCollisions.some(c => !c.isCCI);
+
+            let packetLoss = Math.min(90, Math.round(totalSeverity * 45));
+            let usefulAirtime = Math.max(10, 100 - packetLoss - (myCollisions.length * 6));
+            let collisionAirtime = packetLoss;
+            let idleAirtime = Math.max(0, 100 - usefulAirtime - collisionAirtime);
+
+            document.getElementById('airtimeUseful').style.width = usefulAirtime + '%';
+            document.getElementById('airtimeCollision').style.width = collisionAirtime + '%';
+            document.getElementById('airtimeIdle').style.width = idleAirtime + '%';
+
+            document.getElementById('textUseful').innerText = usefulAirtime + '%';
+            document.getElementById('textCollision').innerText = collisionAirtime + '%';
+            document.getElementById('textIdle').innerText = idleAirtime + '%';
+
+            let maxTheoretical = selAP.width === 40 ? 300 : (selAP.width === 80 ? 866 : 144.4);
+            let realThroughput = (maxTheoretical * (usefulAirtime / 100)).toFixed(1);
+
+            document.getElementById('valThroughput').innerText = `${realThroughput} Mbps`;
+            document.getElementById('valThroughputTheoretical').innerText = `de ${maxTheoretical} Mbps`;
+            document.getElementById('valPacketLoss').innerText = `${packetLoss}%`;
+            document.getElementById('valPacketLoss').style.color = packetLoss > 20 ? 'var(--accent-red)' : 'var(--accent-success)';
+            
+            let latency = 6 + Math.round(totalSeverity * 50);
+            document.getElementById('valLatency').innerText = `${latency} ms`;
+
+            let effPwr = selAP.getEffectivePower();
+            document.getElementById('valNoiseFloor').innerText = `${effPwr} dBm`;
+
+            let diagnosisBox = document.getElementById('eduDiagnosis');
+            if(myCollisions.length === 0) {
+                diagnosisBox.innerHTML = `<b>🟢 Espectro Óptimo para "${selAP.ssid}":</b> Sin solapamientos en canal ${selAP.channel}. Rendimiento al máximo.`;
+            } else if(hasACI) {
+                diagnosisBox.innerHTML = `<b>🔴 Interferencia Adyacente (ACI) Crítica:</b> Canales solapados destruyen tramas (${packetLoss}% pérdida). Usa el botón <b>✨ Auto-Optimizar Canales</b> o arrastra la onda al canal 1, 6 u 11.`;
+            } else {
+                diagnosisBox.innerHTML = `<b>🟠 Interferencia de Canal Compartido (CCI):</b> Routers vecinos conviven en el canal ${selAP.channel}. Airtime compartido, velocidad reducida sin corrupción severa.`;
+            }
+
+            updateChartData(realThroughput, packetLoss);
+        }
+
+        function onMouseDown(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            accessPoints.forEach((ap, index) => {
+                if(!ap.active) return;
+                let apX = channelToX(ap.channel);
+                let apY = powerToY(ap.getEffectivePower());
+
+                if(Math.hypot(mouseX - apX, mouseY - apY) < 45) {
+                    draggedAPIndex = index;
+                    selectedAPIndex = index;
+                    isDragging = true;
+                    renderAPControls();
+                }
+            });
+        }
+
+        function onMouseMove(e) {
+            if(!isDragging || draggedAPIndex === null) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+
+            accessPoints[draggedAPIndex].channel = xToChannel(mouseX);
+            renderAPControls();
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            draggedAPIndex = null;
+        }
+
+        function renderAPControls() {
+            const container = document.getElementById('apListContainer');
+            container.innerHTML = '';
+
+            accessPoints.forEach((ap, index) => {
+                const item = document.createElement('div');
+                item.className = `ap-item ${index === selectedAPIndex ? 'selected' : ''}`;
+                item.style.borderLeftColor = ap.color;
+                item.onclick = (e) => {
+                    if(['INPUT', 'SELECT', 'BUTTON', 'LABEL'].includes(e.target.tagName)) return;
+                    selectedAPIndex = index;
+                    renderAPControls();
+                };
+
+                item.innerHTML = `
+                    <div class="ap-header">
+                        <span class="ap-name">
+                            <input type="checkbox" ${ap.active ? 'checked' : ''} onchange="toggleAP(${index})">
+                            <span style="color:${ap.color}">●</span> ${ap.ssid} ${index === selectedAPIndex ? '<b>(Sel)</b>' : ''}
+                        </span>
+                        <button class="btn-action btn-danger" onclick="deleteAP(${index})">🗑️</button>
+                    </div>
+                    <div class="ap-controls">
+                        <div class="ap-control-group">
+                            <label>Canal: <b>${ap.channel}</b></label>
+                            <input type="range" min="${currentBand === '2.4' ? 1 : 36}" max="${currentBand === '2.4' ? 14 : 165}" value="${ap.channel}" oninput="updateAP(${index}, 'channel', this.value)">
+                        </div>
+                        <div class="ap-control-group">
+                            <label>Distancia / Paredes: <b>Nivel ${ap.distance}</b></label>
+                            <input type="range" min="1" max="5" value="${ap.distance}" oninput="updateAP(${index}, 'distance', this.value)">
+                        </div>
+                        <div class="ap-control-group">
+                            <label>Ancho Banda:</label>
+                            <select onchange="updateAP(${index}, 'width', this.value)">
+                                <option value="20" ${ap.width == 20 ? 'selected' : ''}>20 MHz</option>
+                                <option value="40" ${ap.width == 40 ? 'selected' : ''}>40 MHz</option>
+                                ${currentBand === '5' ? `<option value="80" ${ap.width == 80 ? 'selected' : ''}>80 MHz</option>` : ''}
+                            </select>
+                        </div>
+                        <div class="ap-control-group">
+                            <label>Tráfico Carga: <b>${ap.traffic}%</b></label>
+                            <input type="range" min="10" max="100" value="${ap.traffic}" oninput="updateAP(${index}, 'traffic', this.value)">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function updateAP(index, field, value) {
+            accessPoints[index][field] = parseInt(value);
+            renderAPControls();
+        }
+
+        function toggleAP(index) {
+            accessPoints[index].active = !accessPoints[index].active;
+        }
+
+        function deleteAP(index) {
+            accessPoints.splice(index, 1);
+            if(selectedAPIndex >= accessPoints.length) selectedAPIndex = Math.max(0, accessPoints.length - 1);
+            renderAPControls();
+        }
+
+        function addNewAP() {
+            let newId = accessPoints.length + 1;
+            let randomCh = currentBand === '2.4' ? Math.floor(Math.random() * 11) + 1 : 36;
+            accessPoints.push(new AccessPoint(newId, `Router_${newId}`, randomCh, 20, -42, 50, 1, getRandomColor()));
+            selectedAPIndex = accessPoints.length - 1;
+            renderAPControls();
+        }
+
+        function initChart() {
+            const ctxChart = document.getElementById('performanceChart').getContext('2d');
+            chart = new Chart(ctxChart, {
+                type: 'line',
+                data: {
+                    labels: Array(20).fill(''),
+                    datasets: [
+                        { label: 'Throughput (Mbps)', data: Array(20).fill(0), borderColor: '#00f0ff', borderWidth: 2, tension: 0.3, yAxisID: 'y' },
+                        { label: 'Pérdida (%)', data: Array(20).fill(0), borderColor: '#ff3366', borderWidth: 2, borderDash: [4, 4], tension: 0.3, yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, animation: false,
+                    scales: {
+                        x: { display: false },
+                        y: { type: 'linear', position: 'left', min: 0, max: 900, ticks: { color: '#8a99ad' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y1: { type: 'linear', position: 'right', min: 0, max: 100, ticks: { color: '#ff3366' }, grid: { drawOnChartArea: false } }
+                    },
+                    plugins: { legend: { labels: { color: '#f0f4f8' } } }
+                }
+            });
+        }
+
+        let lastChartUpdate = 0;
+        function updateChartData(throughput, loss) {
+            const now = Date.now();
+            if(now - lastChartUpdate < 500) return;
+            lastChartUpdate = now;
+            if(!chart) return;
+
+            chart.data.datasets[0].data.shift();
+            chart.data.datasets[0].data.push(throughput);
+            chart.data.datasets[1].data.shift();
+            chart.data.datasets[1].data.push(loss);
+            chart.update();
+        }
+
+        function openCollisionInspector() { document.getElementById('collisionModal').classList.add('active'); }
+        function closeCollisionInspector() { document.getElementById('collisionModal').classList.remove('active'); }
+
+        function hexToRgba(hex, alpha) {
+            let c;
+            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                c = hex.substring(1).split('');
+                if(c.length === 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                c = '0x' + c.join('');
+                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+            }
+            return hex;
+        }
+    </script>
+</body>
+</html>

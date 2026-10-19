@@ -13,6 +13,10 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 
+#EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="COSTA RICA", 88 Estereo
+https://s1.tvdatta.com:3972/live/88stereolive.m3u8
+
+
 #EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS", ICN Digital
 https://streaming.icndigital.com/live_output/icn_live_stream_1.m3u8
 

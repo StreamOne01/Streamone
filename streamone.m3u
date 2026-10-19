@@ -13,6 +13,9 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 
+#EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS",  Guayape TV
+https://tv.bitstreaming.net:8443/live/guayapetv.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="HONDURAS", Canal 11 Honduras
 https://redirector.rudo.video/hls-video/c54ac2799874375c81c1672abb700870537c5223/canal11hn/canal11hn.smil/playlist.m3u8
 

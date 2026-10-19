@@ -13,6 +13,9 @@
 # SECCIÓN: CANALES EN VIVO
 # ==========================================
 
+#EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="COSTA RICA", aGROTENDENCIA tv
+https://5fc584f3f19c9.streamlock.net/agrotendencia/videoagrotendencia_hls1/chunklist_w633455745.m3u8
+
 #EXTINF:-1 tvg-id="01" tvg-name="Golden Edge" tvg-logo="https://pastebin.com/cache/img/10/6/1/10669722.jpg" group-title="COSTA RICA", 88 Estereo
 https://s1.tvdatta.com:3972/live/88stereolive.m3u8
 

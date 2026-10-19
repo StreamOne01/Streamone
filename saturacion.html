@@ -471,6 +471,11 @@
             padding: 10px;
             border-radius: 4px;
         }
+        
+        .edu-note.critical {
+            background: rgba(255, 51, 102, 0.15);
+            border-left-color: var(--accent-red);
+        }
     </style>
 </head>
 <body>
@@ -629,7 +634,6 @@
             }
             
             getEffectivePower() {
-                // Atenuación por distancia/obstáculos (cada nivel resta ~4 dBm)
                 return this.power - (this.distance - 1) * 4;
             }
         }
@@ -653,10 +657,12 @@
                 document.querySelectorAll('.band-btn')[0].classList.add('active');
                 document.getElementById('activeBandText').innerText = "2.4 GHz (Canales 1 - 14)";
                 loadPreset('clean');
+                updateChartScale(300);
             } else {
                 document.querySelectorAll('.band-btn')[1].classList.add('active');
                 document.getElementById('activeBandText').innerText = "5 GHz (UNII-1, UNII-2, UNII-3)";
                 loadPreset('5ghz_default');
+                updateChartScale(900);
             }
         }
 
@@ -696,13 +702,12 @@
             renderAPControls();
         }
 
-        // FUNCIÓN DE AUTO-OPTIMIZACIÓN CON 1 CLIC
         function autoOptimizeChannels() {
             if(currentBand === '2.4') {
                 const optimalChannels = [1, 6, 11, 1, 6, 11, 1, 6, 11, 1, 6, 11, 1, 6];
                 accessPoints.forEach((ap, idx) => {
                     ap.channel = optimalChannels[idx % optimalChannels.length];
-                    ap.width = 20; // Forzar 20MHz para evitar solapamiento masivo en 2.4GHz
+                    ap.width = 20;
                 });
             } else {
                 const optimalChannels5G = [36, 44, 52, 60, 100, 149, 157];
@@ -769,7 +774,7 @@
 
         function powerToY(powerDbm) {
             const height = canvas.height;
-            const paddingBottom = 50; // Espacio extra para barra de calor
+            const paddingBottom = 50;
             const paddingTop = 30;
             const usableHeight = height - paddingBottom - paddingTop;
             const ratio = (powerDbm - (-100)) / (-25 - (-100));
@@ -836,7 +841,6 @@
             });
         }
 
-        // BARRA DE CALOR / OCUPACIÓN ESPECTRAL POR CANAL
         function drawChannelHeatmapBar() {
             const h = canvas.height;
             const barY = h - 22;
@@ -848,23 +852,21 @@
                 let x2 = channelToX(ch + 0.5);
                 let width = Math.max(10, x2 - x1);
 
-                // Calcular energía acumulada en este canal
                 let energyLoad = 0;
                 accessPoints.forEach(ap => {
                     if(!ap.active) return;
                     let dist = Math.abs(ap.channel - ch);
-                    let span = ap.width / 10; // Ancho de banda influenciador
+                    let span = ap.width / 10;
                     if(dist <= span) {
                         let effPower = ap.getEffectivePower();
-                        let intensity = (effPower + 100) / 70; // 0 a 1
+                        let intensity = (effPower + 100) / 70;
                         energyLoad += intensity * (ap.traffic / 100);
                     }
                 });
 
-                // Color según saturación
-                let color = 'rgba(0, 230, 118, 0.3)'; // Verde limpio
-                if(energyLoad > 0.8) color = 'rgba(255, 51, 102, 0.85)'; // Rojo saturado
-                else if(energyLoad > 0.35) color = 'rgba(255, 170, 0, 0.7)'; // Naranja medio
+                let color = 'rgba(0, 230, 118, 0.3)';
+                if(energyLoad > 0.8) color = 'rgba(255, 51, 102, 0.85)';
+                else if(energyLoad > 0.35) color = 'rgba(255, 170, 0, 0.7)';
 
                 ctx.fillStyle = color;
                 ctx.fillRect(x1 - width/2, barY, width, barHeight);
@@ -1047,6 +1049,7 @@
                 document.getElementById('textIdle').innerText = '100%';
                 document.getElementById('valThroughput').innerText = '0 Mbps';
                 document.getElementById('valPacketLoss').innerText = '0%';
+                document.getElementById('eduDiagnosis').className = 'edu-note';
                 document.getElementById('eduDiagnosis').innerText = `El router "${selAP.ssid}" está apagado.`;
                 return;
             }
@@ -1083,12 +1086,20 @@
             document.getElementById('valNoiseFloor').innerText = `${effPwr} dBm`;
 
             let diagnosisBox = document.getElementById('eduDiagnosis');
+            
+            // Alerta visual de saturación crítica si las pérdidas superan el 30%
+            if (packetLoss > 30) {
+                diagnosisBox.className = 'edu-note critical';
+            } else {
+                diagnosisBox.className = 'edu-note';
+            }
+
             if(myCollisions.length === 0) {
                 diagnosisBox.innerHTML = `<b>🟢 Espectro Óptimo para "${selAP.ssid}":</b> Sin solapamientos en canal ${selAP.channel}. Rendimiento al máximo.`;
             } else if(hasACI) {
-                diagnosisBox.innerHTML = `<b>🔴 Interferencia Adyacente (ACI) Crítica:</b> Canales solapados destruyen tramas (${packetLoss}% pérdida). Usa el botón <b>✨ Auto-Optimizar Canales</b> o arrastra la onda al canal 1, 6 u 11.`;
+                diagnosisBox.innerHTML = `<b>🔴 ALERTA DE SATURACIÓN CRÍTICA (ACI):</b> Canales solapados destruyen tramas (${packetLoss}% pérdida, airtime colapsado). Usa el botón <b>✨ Auto-Optimizar Canales</b> o arrastra la onda al canal 1, 6 u 11.`;
             } else {
-                diagnosisBox.innerHTML = `<b>🟠 Interferencia de Canal Compartido (CCI):</b> Routers vecinos conviven en el canal ${selAP.channel}. Airtime compartido, velocidad reducida sin corrupción severa.`;
+                diagnosisBox.innerHTML = `<b>🟠 Interferencia de Canal Compartido (CCI):</b> Routers vecinos conviven en el canal ${selAP.channel}. Airtime compartido (${packetLoss}% pérdida por espera), velocidad reducida sin corrupción severa.`;
             }
 
             updateChartData(realThroughput, packetLoss);
@@ -1214,12 +1225,18 @@
                     responsive: true, maintainAspectRatio: false, animation: false,
                     scales: {
                         x: { display: false },
-                        y: { type: 'linear', position: 'left', min: 0, max: 900, ticks: { color: '#8a99ad' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { type: 'linear', position: 'left', min: 0, max: 300, ticks: { color: '#8a99ad' }, grid: { color: 'rgba(255,255,255,0.05)' } },
                         y1: { type: 'linear', position: 'right', min: 0, max: 100, ticks: { color: '#ff3366' }, grid: { drawOnChartArea: false } }
                     },
                     plugins: { legend: { labels: { color: '#f0f4f8' } } }
                 }
             });
+        }
+
+        function updateChartScale(maxVal) {
+            if(!chart) return;
+            chart.options.scales.y.max = maxVal;
+            chart.update();
         }
 
         let lastChartUpdate = 0;

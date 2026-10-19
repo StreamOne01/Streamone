@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Simulador Inalámbrico - Carlos Muñoz</title>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --accent: #38bdf8;
+            --border: #334155;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        /* --- ENCABEZADO CON FOTO DE PERFIL Y TÍTULO --- */
+        .header-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        .header-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        h1 { margin: 0; font-size: 1.15rem; }
+        .header-subtitle-author {
+            font-size: 0.78rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        p { color: #94a3b8; margin: 0 0 10px 0; font-size: 0.78rem; text-align: center; }
+        
+        .main-layout {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1280px;
+            box-sizing: border-box;
+            justify-content: center;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: #000;
+            border: 3px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            overflow: hidden;
+            flex: 1;
+            max-width: 850px;
+            aspect-ratio: 16 / 10;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            background: var(--panel-bg);
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            width: 360px;
+            min-width: 300px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .sidebar h3 { margin: 0 0 4px 0; color: var(--accent); font-size: 0.88rem; border-bottom: 1px solid var(--border); padding-bottom: 3px; }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        label { font-size: 0.76rem; color: #cbd5e1; font-weight: bold; }
+        select, .btn {
+            background-color: #0f172a;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            outline: none;
+        }
+        .btn { font-weight: bold; text-align: center; cursor: pointer; }
+        .btn-primary { background-color: var(--accent); color: #0f172a; border: none; }
+        .btn-secondary { background-color: #334155; color: var(--text-main); }
+        .btn-success { background-color: #10b981; color: #0f172a; border: none; }
+        .btn-warning { background-color: #f59e0b; color: #0f172a; border: none; }
+
+        .telemetry-card {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.78rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .telemetry-row { display: flex; justify-content: space-between; }
+        .telemetry-val { font-weight: bold; color: var(--accent); }
+        
+        .legend-box { display: flex; flex-direction: column; gap: 3px; font-size: 0.72rem; }
+        .gradient-bar { width: 100%; height: 8px; background: linear-gradient(to right, #ef4444, #eab308, #22c55e); border-radius: 4px; }
+        .legend-labels { display: flex; justify-content: space-between; color: #94a3b8; }
+        
+        .progress-container { width: 100%; background: #334155; border-radius: 4px; height: 6px; overflow: hidden; margin-top: 1px; }
+        .progress-fill { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal-content h3 { margin: 0; color: var(--accent); font-size: 1rem; }
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        .main-layout.vertical-mode {
+            flex-direction: column;
+            align-items: center;
+        }
+        .main-layout.vertical-mode .canvas-container {
+            max-width: 100%;
+            width: 100%;
+        }
+        .main-layout.vertical-mode .sidebar {
+            width: 100%;
+            max-height: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado con tu foto al lado del título -->
+    <div class="header-container">
+        <img src="https://github.com/StreamOne01/Streamone/blob/main/ChatGPT%20Image%2020%20sept%202026,%2018_31_02.png?raw=true" alt="Carlos Muñoz" class="header-avatar">
+        <div class="header-title-wrapper">
+            <h1>Simulador Inalámbrico</h1>
+            <span class="header-subtitle-author">Carlos Muñoz</span>
+        </div>
+    </div>
+    <p id="mode-indicator">Modo Inteligente Activo: Calibración -20 dBm a -30 dBm en proximidad directa</p>
+
+    <div class="main-layout" id="mainLayout">
+        <div class="canvas-container">
+            <canvas id="houseCanvas" width="960" height="600"></canvas>
+        </div>
+
+        <div class="sidebar">
+            <h3>Control de Pantalla</h3>
+            <button class="btn btn-warning" onclick="toggleForcedMode()">🔄 Cambiar Modo (Vertical / Horizontal)</button>
+
+            <h3>Gestión de Red</h3>
+            <div style="display: flex; gap: 6px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="addMeshNode()">+ Nodo Mesh</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="resetPositions()">Restablecer</button>
+            </div>
+
+            <div class="control-group" style="margin-top: 2px;">
+                <label for="deviceTypeSelect">Añadir Dispositivo (Máx. 20):</label>
+                <div style="display: flex; gap: 6px;">
+                    <select id="deviceTypeSelect" style="flex: 1;">
+                        <option value="phone">📱 Celular</option>
+                        <option value="tv">📺 Smart TV</option>
+                        <option value="pc">💻 Computadora</option>
+                        <option value="fridge">🧊 Nevera / IoT</option>
+                        <option value="cam">📷 Cámara Seguridad</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addClientDevice()">+ Añadir</button>
+                </div>
+            </div>
+
+            <h3>Configuración de Hardware & Radio</h3>
+            <div class="control-group">
+                <label for="routerConfig">Arquitectura de Antenas / MIMO:</label>
+                <select id="routerConfig" onchange="updateSimulation()">
+                    <option value="1">1 Antena (SISO 1x1 - Muy Básico)</option>
+                    <option value="2">2 Antenas (MIMO 2x2 - Estándar)</option>
+                    <option value="4" selected>4 Antenas (MIMO 4x4 + Beamforming)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="duplexSelect">Modo Dúplex:</label>
+                <select id="duplexSelect" onchange="updateSimulation()">
+                    <option value="full" selected>Full Duplex (Transmisión Simultánea)</option>
+                    <option value="half">Half Duplex (Por turnos / Equipos Básicos)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="freqSelect">Estándar / Banda Wi-Fi:</label>
+                <select id="freqSelect" onchange="onFrequencyChange()">
+                    <option value="2.4">Wi-Fi 4 (2.4 GHz) - Cobertura / Interferencia</option>
+                    <option value="5" selected>Wi-Fi 5 (5 GHz) - Balanceado</option>
+                    <option value="6">Wi-Fi 6 (6 GHz) - Alta Frecuencia</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="channelWidthSelect">Ancho de Canal (Channel Width):</label>
+                <select id="channelWidthSelect" onchange="updateSimulation()">
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="ramSelect">Memoria RAM del Router / ONT:</label>
+                <select id="ramSelect" onchange="updateSimulation()">
+                    <option value="256">256 MB (Básico)</option>
+                    <option value="512" selected>512 MB (Estándar ONT / Router)</option>
+                    <option value="1024">1 GB (Gama Media / Mesh)</option>
+                    <option value="2048">2 GB (Gama Alta Wi-Fi 6/6E)</option>
+                    <option value="4096">4 GB (Gama Pro / Flagship)</option>
+                </select>
+            </div>
+
+            <button class="btn btn-success" style="margin-top: 2px;" onclick="generateReport()">📄 Exportar Reporte Técnico</button>
+
+            <h3>⚡ Rendimiento del Router (SoC)</h3>
+            <div class="telemetry-card">
+                <div class="telemetry-row"><span>Dispositivos Activos:</span><span id="stat-dev-count" class="telemetry-val">0 / 20</span></div>
+                <div class="telemetry-row"><span>Uso de CPU:</span><span id="stat-cpu-val" class="telemetry-val">5%</span></div>
+                <div class="progress-container"><div id="cpu-bar" class="progress-fill" style="width: 5%;"></div></div>
+                <div class="telemetry-row" style="margin-top: 3px;"><span>Uso de Memoria RAM:</span><span id="stat-ram-val" class="telemetry-val">128 MB / 512 MB</span></div>
+                <div class="progress-container"><div id="ram-bar" class="progress-fill" style="width: 25%;"></div></div>
+                <div class="telemetry-row" style="margin-top: 3px;"><span>Interferencia:</span><span id="stat-interf" class="telemetry-val" style="color:#22c55e;">Óptimo</span></div>
+            </div>
+
+            <h3>Telemetría de Enlace Activo</h3>
+            <div class="telemetry-card">
+                <div class="telemetry-row"><span>Dispositivo:</span><span id="t-dev-name" class="telemetry-val">-</span></div>
+                <div class="telemetry-row"><span>Conectado a:</span><span id="t-node" class="telemetry-val">-</span></div>
+                <div class="telemetry-row"><span>Distancia:</span><span id="t-dist" class="telemetry-val">0.0 m</span></div>
+                <div class="telemetry-row"><span>Muros Concreto:</span><span id="t-walls" class="telemetry-val">0</span></div>
+                <div class="telemetry-row"><span>Señal (RSSI):</span><span id="t-rssi" class="telemetry-val">-0 dBm</span></div>
+                <div class="telemetry-row"><span>Velocidad Est.:</span><span id="t-speed" class="telemetry-val">0 Mbps</span></div>
+            </div>
+
+            <h3>Mapa de Calor</h3>
+            <div class="legend-box">
+                <div class="gradient-bar"></div>
+                <div class="legend-labels">
+                    <span>Inestable (-85 dBm)</span>
+                    <span>Regular (-65 dBm)</span>
+                    <span>Excelente (-20/-30 dBm)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Reporte -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <h3>📋 Reporte Técnico de Red</h3>
+            <textarea id="reportText" readonly></textarea>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="copyReportText()">Copiar Texto</button>
+                <button class="btn btn-secondary" onclick="closeReport()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('houseCanvas');
+        const ctx = canvas.getContext('2d');
+        const scale = 50;
+
+        let primaryRouter = { x: 10.0 * scale, y: 3.0 * scale, name: "Principal (Master)" };
+        let meshNodes = [];
+        let clientDevices = [];
+        let selectedDeviceId = null;
+        let draggedElement = null;
+        let draggedIndex = null;
+
+        let forcedVerticalOverride = null;
+
+        function checkScreenOrientation() {
+            const layout = document.getElementById('mainLayout');
+            const indicator = document.getElementById('mode-indicator');
+            let isVertical = false;
+
+            if (forcedVerticalOverride !== null) {
+                isVertical = forcedVerticalOverride;
+                indicator.innerText = isVertical ? "Modo Forzado: Vertical" : "Modo Forzado: Horizontal";
+            } else {
+                const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                if (window.innerWidth < 950 || (isMobileDevice && window.innerHeight > window.innerWidth)) {
+                    isVertical = true;
+                    indicator.innerText = "Modo Automático: Pantalla Estrecha / Móvil.";
+                } else {
+                    isVertical = false;
+                    indicator.innerText = "Modo Automático: Escritorio / Ancho.";
+                }
+            }
+
+            if (isVertical) layout.classList.add('vertical-mode');
+            else layout.classList.remove('vertical-mode');
+        }
+
+        function toggleForcedMode() {
+            const layout = document.getElementById('mainLayout');
+            if (forcedVerticalOverride === null) {
+                forcedVerticalOverride = !layout.classList.contains('vertical-mode');
+            } else {
+                forcedVerticalOverride = !forcedVerticalOverride;
+            }
+            checkScreenOrientation();
+        }
+
+        window.addEventListener('resize', checkScreenOrientation);
+        window.addEventListener('orientationchange', checkScreenOrientation);
+        checkScreenOrientation();
+
+        const rooms = [
+            { name: "Hab. Principal", x: 0, y: 0, w: 5.5, h: 5.5, color: "#1e293b" },
+            { name: "Baño Ppl.", x: 5.5, y: 0, w: 2.5, h: 3.0, color: "#162032" },
+            { name: "Baño Com.", x: 8.0, y: 0, w: 3.0, h: 4.5, color: "#162032" },
+            { name: "Habitación 2", x: 0, y: 5.5, w: 5.5, h: 6.5, color: "#1e293b" },
+            { name: "Habitación 3", x: 5.5, y: 6.0, w: 5.5, h: 6.0, color: "#1e293b" },
+            { name: "Cocina / Comedor", x: 11.0, y: 0, w: 8.2, h: 6.0, color: "#1e293b" },
+            { name: "Sala de Estar", x: 11.0, y: 6.0, w: 8.2, h: 6.0, color: "#1e293b" }
+        ];
+
+        const walls = [
+            { x1: 0, y1: 0, x2: 19.2, y2: 0, loss: 18 },
+            { x1: 19.2, y1: 0, x2: 19.2, y2: 12, loss: 18 },
+            { x1: 0, y1: 12, x2: 19.2, y2: 12, loss: 18 },
+            { x1: 0, y1: 0, x2: 0, y2: 12, loss: 18 },
+            { x1: 5.5, y1: 0, x2: 5.5, y2: 2.3, loss: 10 },
+            { x1: 5.5, y1: 3.0, x2: 5.5, y2: 5.5, loss: 10 },
+            { x1: 5.5, y1: 3.0, x2: 8.0, y2: 3.0, loss: 9 },
+            { x1: 8.0, y1: 0, x2: 8.0, y2: 1.3, loss: 10 },
+            { x1: 8.0, y1: 2.0, x2: 8.0, y2: 4.5, loss: 10 },
+            { x1: 11.0, y1: 0, x2: 11.0, y2: 3.2, loss: 10 },
+            { x1: 11.0, y1: 3.9, x2: 11.0, y2: 12, loss: 10 },
+            { x1: 0, y1: 5.5, x2: 2.2, y2: 5.5, loss: 10 },
+            { x1: 3.0, y1: 5.5, x2: 5.5, y2: 5.5, loss: 10 },
+            { x1: 5.5, y1: 6.0, x2: 7.7, y2: 6.0, loss: 10 },
+            { x1: 8.5, y1: 6.0, x2: 11.0, y2: 6.0, loss: 10 },
+            { x1: 5.5, y1: 6.0, x2: 5.5, y2: 12, loss: 10 },
+            { x1: 11.0, y1: 6.0, x2: 19.2, y2: 6.0, loss: 9 }
+        ];
+
+        function onFrequencyChange() {
+            const freq = document.getElementById('freqSelect').value;
+            const channelSelect = document.getElementById('channelWidthSelect');
+            channelSelect.innerHTML = '';
+
+            if (freq === "2.4") {
+                channelSelect.innerHTML = `
+                    <option value="20" selected>20 MHz (Estable / Estándar)</option>
+                    <option value="40">40 MHz (Mayor Interferencia)</option>
+                `;
+            } else if (freq === "5") {
+                channelSelect.innerHTML = `
+                    <option value="20">20 MHz</option>
+                    <option value="40">40 MHz</option>
+                    <option value="80" selected>80 MHz (Estándar 5G)</option>
+                    <option value="160">160 MHz (Ultra Rendimiento)</option>
+                `;
+            } else if (freq === "6") {
+                channelSelect.innerHTML = `
+                    <option value="80">80 MHz</option>
+                    <option value="160" selected>160 MHz</option>
+                    <option value="320">320 MHz (Wi-Fi 7 Max)</option>
+                `;
+            }
+            updateSimulation();
+        }
+
+        function updateSimulation() { drawHouse(); }
+
+        function addMeshNode() {
+            if (meshNodes.length >= 3) {
+                alert("Máximo de 3 nodos mesh alcanzado.");
+                return;
+            }
+            const defaultPositions = [
+                { x: 3.0 * scale, y: 8.5 * scale },
+                { x: 3.0 * scale, y: 2.5 * scale },
+                { x: 14.5 * scale, y: 3.0 * scale }
+            ];
+            let pos = defaultPositions[meshNodes.length];
+            meshNodes.push({ x: pos.x, y: pos.y, name: `Mesh Satélite ${meshNodes.length + 1}` });
+            drawHouse();
+        }
+
+        function addClientDevice() {
+            if (clientDevices.length >= 20) {
+                alert("Límite máximo de 20 dispositivos alcanzado.");
+                return;
+            }
+            const type = document.getElementById('deviceTypeSelect').value;
+            let typeName = "Celular";
+            if (type === "tv") typeName = "Smart TV";
+            if (type === "pc") typeName = "Computadora";
+            if (type === "fridge") typeName = "Nevera";
+            if (type === "cam") typeName = "Cámara";
+
+            const newId = clientDevices.length > 0 ? Math.max(...clientDevices.map(d => d.id)) + 1 : 1;
+            let randomRoom = rooms[Math.floor(Math.random() * rooms.length)];
+            let posX = (randomRoom.x + 0.8 + (Math.random() * (randomRoom.w - 1.6))) * scale;
+            let posY = (randomRoom.y + 0.8 + (Math.random() * (randomRoom.h - 1.6))) * scale;
+
+            clientDevices.push({ id: newId, type: type, name: `${typeName} ${clientDevices.length + 1}`, x: posX, y: posY });
+            if (selectedDeviceId === null) selectedDeviceId = newId;
+            drawHouse();
+        }
+
+        function calculateSignalAt(rx, ry, tx, ty, gainBonus, freqMult) {
+            let distance = Math.hypot(rx - tx, ry - ty);
+            let wallPenalties = 0;
+            walls.forEach(w => {
+                if (lineIntersect(tx, ty, rx, ry, w.x1, w.y1, w.x2, w.y2)) wallPenalties += w.loss;
+            });
+
+            const channelWidth = parseInt(document.getElementById('channelWidthSelect').value) || 20;
+            let widthLoss = Math.log2(channelWidth / 20) * 1.5;
+
+            let signalScore = (112 * gainBonus) - widthLoss - (distance * 4.5 * freqMult) - (wallPenalties * 2.2 * freqMult);
+            return signalScore > 0 ? signalScore : 0;
+        }
+
+        function drawHouse() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const routerType = document.getElementById('routerConfig').value;
+            const freqType = document.getElementById('freqSelect').value;
+            const channelWidth = parseInt(document.getElementById('channelWidthSelect').value) || 20;
+            const isHalfDuplex = document.getElementById('duplexSelect').value === 'half';
+
+            let freqMultiplier = freqType === "6" ? 1.55 : (freqType === "5" ? 1.25 : 1.0);
+            let labelFreqText = freqType === "6" ? "Wi-Fi 6" : (freqType === "5" ? "5 GHz" : "2.4 GHz");
+            
+            let antennaGainBonus = routerType === "4" ? 1.15 : (routerType === "2" ? 0.95 : 0.80);
+
+            rooms.forEach(r => {
+                ctx.fillStyle = r.color;
+                ctx.fillRect(r.x * scale, r.y * scale, r.w * scale, r.h * scale);
+                ctx.strokeStyle = "#334155";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(r.x * scale, r.y * scale, r.w * scale, r.h * scale);
+            });
+
+            drawFurniture();
+
+            const step = 16;
+            for (let x = 0; x < canvas.width; x += step) {
+                for (let y = 0; y < canvas.height; y += step) {
+                    let rx = x / scale, ry = y / scale;
+                    let maxSignal = calculateSignalAt(rx, ry, primaryRouter.x/scale, primaryRouter.y/scale, antennaGainBonus, freqMultiplier);
+
+                    meshNodes.forEach(node => {
+                        let sigNode = calculateSignalAt(rx, ry, node.x/scale, node.y/scale, antennaGainBonus, freqMultiplier) * 0.94;
+                        if (sigNode > maxSignal) maxSignal = sigNode;
+                    });
+
+                    if (maxSignal > 0) {
+                        let hue = Math.min(120, (maxSignal / 100) * 120);
+                        ctx.fillStyle = `hsla(${hue}, 100%, 50%, 0.24)`;
+                        ctx.fillRect(x, y, step, step);
+                    }
+                }
+            }
+
+            ctx.strokeStyle = "#94a3b8";
+            ctx.lineWidth = 4;
+            walls.forEach(w => {
+                ctx.beginPath();
+                ctx.moveTo(w.x1 * scale, w.y1 * scale);
+                ctx.lineTo(w.x2 * scale, w.y2 * scale);
+                ctx.stroke();
+            });
+
+            drawDoors();
+
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "bold 10px 'Segoe UI', Arial";
+            ctx.textAlign = "center";
+            rooms.forEach(r => {
+                ctx.fillText(r.name, (r.x + r.w / 2) * scale, (r.y + 0.45) * scale);
+            });
+
+            meshNodes.forEach(node => {
+                ctx.beginPath();
+                ctx.moveTo(primaryRouter.x, primaryRouter.y);
+                ctx.lineTo(node.x, node.y);
+                ctx.strokeStyle = "rgba(168, 85, 247, 0.4)";
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            let selectedTelemetry = null;
+
+            clientDevices.forEach(client => {
+                let bestNode = primaryRouter;
+                let bestScore = calculateSignalAt(client.x/scale, client.y/scale, primaryRouter.x/scale, primaryRouter.y/scale, antennaGainBonus, freqMultiplier);
+
+                meshNodes.forEach(node => {
+                    let score = calculateSignalAt(client.x/scale, client.y/scale, node.x/scale, node.y/scale, antennaGainBonus, freqMultiplier) * 0.94;
+                    if (score > bestScore) { bestScore = score; bestNode = node; }
+                });
+
+                let linkScore = Math.max(0, Math.min(100, bestScore));
+                let clientColor = `hsl(${(linkScore / 100) * 120}, 100%, 45%)`;
+
+                if (client.id === selectedDeviceId) {
+                    drawRadioWaves(bestNode.x, bestNode.y, client.x, client.y, freqType, clientColor);
+
+                    let distM = (Math.hypot(client.x - bestNode.x, client.y - bestNode.y) / scale).toFixed(1);
+                    let wallsCrossed = 0;
+                    walls.forEach(w => {
+                        if (lineIntersect(bestNode.x/scale, bestNode.y/scale, client.x/scale, client.y/scale, w.x1, w.y1, w.x2, w.y2)) wallsCrossed++;
+                    });
+
+                    let rssiVal = Math.max(-92, Math.round(-20 - (100 - linkScore) * 0.72));
+                    
+                    let mimoMul = routerType === "4" ? 12 : (routerType === "2" ? 6 : 3);
+                    let widthBonus = channelWidth / 20;
+                    let duplexPenalty = isHalfDuplex ? 0.55 : 1.0;
+                    let speedVal = Math.max(5, Math.round(linkScore * widthBonus * duplexPenalty * (freqType === "6" ? mimoMul * 1.5 : (freqType === "5" ? mimoMul : mimoMul * 0.5))));
+
+                    selectedTelemetry = { name: client.name, nodeName: bestNode.name, dist: distM, walls: wallsCrossed, rssi: rssiVal, speed: speedVal, color: clientColor };
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(bestNode.x, bestNode.y);
+                    ctx.lineTo(client.x, client.y);
+                    ctx.strokeStyle = "rgba(56, 189, 248, 0.12)";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            });
+
+            updateRouterStats(routerType, freqType);
+
+            if (selectedTelemetry) {
+                document.getElementById('t-dev-name').innerText = selectedTelemetry.name;
+                document.getElementById('t-node').innerText = selectedTelemetry.nodeName;
+                document.getElementById('t-dist').innerText = selectedTelemetry.dist + " m";
+                document.getElementById('t-walls').innerText = selectedTelemetry.walls;
+                document.getElementById('t-rssi').innerText = selectedTelemetry.rssi + " dBm";
+                document.getElementById('t-speed').innerText = selectedTelemetry.speed + " Mbps (" + labelFreqText + " | " + channelWidth + "MHz)";
+            } else {
+                document.getElementById('t-dev-name').innerText = "-";
+                document.getElementById('t-node').innerText = "-";
+                document.getElementById('t-dist').innerText = "0.0 m";
+                document.getElementById('t-walls').innerText = "0";
+                document.getElementById('t-rssi').innerText = "-0 dBm";
+                document.getElementById('t-speed').innerText = "0 Mbps";
+            }
+
+            drawRouterIcon(primaryRouter.x, primaryRouter.y, routerType, true);
+            meshNodes.forEach((node, idx) => drawMeshNodeIcon(node.x, node.y, routerType, idx + 1));
+            clientDevices.forEach(client => {
+                let isSel = (client.id === selectedDeviceId);
+                drawClientIcon(client.x, client.y, client.type, client.name, isSel, isSel && selectedTelemetry ? selectedTelemetry.color : "#38bdf8");
+            });
+        }
+
+        function updateRouterStats(routerType, freqType) {
+            let count = clientDevices.length;
+            document.getElementById('stat-dev-count').innerText = `${count} / 20`;
+
+            const isHalfDuplex = document.getElementById('duplexSelect').value === 'half';
+            const channelWidth = parseInt(document.getElementById('channelWidthSelect').value) || 20;
+            const maxRam = parseInt(document.getElementById('ramSelect').value) || 512;
+
+            let interfPenalty = 0;
+            if (meshNodes.length > 0) {
+                meshNodes.forEach((node, i) => {
+                    if (Math.hypot(node.x - primaryRouter.x, node.y - primaryRouter.y) / scale < 4.0) interfPenalty += 12;
+                    for (let j = i + 1; j < meshNodes.length; j++) {
+                        if (Math.hypot(node.x - meshNodes[j].x, node.y - meshNodes[j].y) / scale < 3.5) interfPenalty += 15;
+                    }
+                });
+            }
+            if (freqType === "2.4") interfPenalty += 15;
+            if (channelWidth >= 40 && freqType === "2.4") interfPenalty += 18;
+
+            let interfLabel = document.getElementById('stat-interf');
+            if (interfPenalty > 25) { interfLabel.innerText = "⚠️ Alta"; interfLabel.style.color = "#ef4444"; }
+            else if (interfPenalty > 10) { interfLabel.innerText = "⚡ Moderada"; interfLabel.style.color = "#eab308"; }
+            else { interfLabel.innerText = "Óptimo"; interfLabel.style.color = "#22c55e"; }
+
+            let duplexCpuMultiplier = isHalfDuplex ? 1.45 : 1.0;
+            let baseCpu = routerType === "4" ? 8 : (routerType === "2" ? 18 : 32);
+            let cpuUsage = Math.min(99, Math.round((baseCpu + (count * 4.8)) * duplexCpuMultiplier * (freqType === "6" ? 1.3 : 1.1)));
+            if (count === 0 && meshNodes.length === 0) cpuUsage = routerType === "4" ? 4 : (routerType === "2" ? 10 : 18);
+
+            let ramUsage = Math.min(maxRam, Math.round(90 + (count * 16) + (meshNodes.length * 35) + (channelWidth * 0.4)));
+
+            document.getElementById('stat-cpu-val').innerText = cpuUsage + "%" + (isHalfDuplex ? " (Half)" : "");
+            document.getElementById('stat-ram-val').innerText = `${ramUsage} MB / ${maxRam >= 1024 ? (maxRam / 1024).toFixed(1) + " GB" : maxRam + " MB"}`;
+
+            let cpuBar = document.getElementById('cpu-bar');
+            cpuBar.style.width = cpuUsage + "%";
+            cpuBar.style.backgroundColor = cpuUsage > 85 ? "#ef4444" : (cpuUsage > 60 ? "#eab308" : "#22c55e");
+
+            let ramBar = document.getElementById('ram-bar');
+            let ramPct = Math.round((ramUsage / maxRam) * 100);
+            ramBar.style.width = ramPct + "%";
+            ramBar.style.backgroundColor = ramPct > 85 ? "#ef4444" : (ramPct > 65 ? "#eab308" : "#22c55e");
+        }
+
+        function drawRadioWaves(x1, y1, x2, y2, freqType, color) {
+            ctx.save();
+            let totalDist = Math.hypot(x2 - x1, y2 - y1);
+            let angle = Math.atan2(y2 - y1, x2 - x1);
+            let waveSpacing = freqType === "6" ? 7 : (freqType === "5" ? 11 : 16);
+
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.8;
+            for (let d = 25; d < totalDist - 15; d += waveSpacing) {
+                let cx = x1 + Math.cos(angle) * d, cy = y1 + Math.sin(angle) * d;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle + Math.PI / 2);
+                ctx.globalAlpha = 0.75;
+                ctx.beginPath();
+                ctx.arc(0, 0, 14 + (d / totalDist) * 8, -Math.PI / 2, Math.PI / 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+            ctx.restore();
+        }
+
+        function drawDoors() {
+            ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+            ctx.beginPath(); ctx.arc(2.5 * scale, 5.5 * scale, 22, 0, Math.PI / 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(8.0 * scale, 6.0 * scale, 22, Math.PI, Math.PI * 1.5); ctx.stroke();
+            ctx.beginPath(); ctx.arc(5.5 * scale, 2.6 * scale, 18, Math.PI * 1.5, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(8.0 * scale, 1.6 * scale, 18, Math.PI * 0.5, Math.PI); ctx.stroke();
+            ctx.beginPath(); ctx.arc(11.0 * scale, 3.5 * scale, 22, Math.PI * 0.5, Math.PI * 1.5); ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawRouterIcon(x, y, type, isMaster) {
+            ctx.save(); ctx.translate(x, y);
+            ctx.fillStyle = isMaster ? "#0284c7" : "#7c3aed"; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2;
+            ctx.fillRect(-16, -7, 32, 14); ctx.strokeRect(-16, -7, 32, 14);
+            ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2;
+
+            if (type === "4") {
+                ctx.beginPath();
+                ctx.moveTo(-10, -7); ctx.lineTo(-15, -16);
+                ctx.moveTo(-3, -7); ctx.lineTo(-4, -18);
+                ctx.moveTo(3, -7); ctx.lineTo(4, -18);
+                ctx.moveTo(10, -7); ctx.lineTo(15, -16);
+                ctx.stroke();
+            } else if (type === "2") {
+                ctx.beginPath(); ctx.moveTo(-8, -7); ctx.lineTo(-12, -16); ctx.moveTo(8, -7); ctx.lineTo(12, -16); ctx.stroke();
+            } else {
+                ctx.beginPath(); ctx.moveTo(0, -7); ctx.lineTo(0, -18); ctx.stroke();
+            }
+            ctx.fillStyle = "#22c55e"; ctx.fillRect(-3, -2, 2, 2);
+            ctx.restore();
+        }
+
+        function drawMeshNodeIcon(x, y, type, index) {
+            ctx.save(); ctx.translate(x, y);
+            ctx.fillStyle = "#9333ea"; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2;
+            ctx.fillRect(-14, -6, 28, 12); ctx.strokeRect(-14, -6, 28, 12);
+            ctx.strokeStyle = "#c084fc"; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(-6, -6); ctx.lineTo(-10, -14); ctx.moveTo(6, -6); ctx.lineTo(10, -14); ctx.stroke();
+            ctx.fillStyle = "#38bdf8"; ctx.fillRect(-2, -2, 2, 2);
+            ctx.restore();
+        }
+
+        function drawClientIcon(x, y, type, name, isSelected, accentColor) {
+            ctx.save(); ctx.translate(x, y);
+            if (isSelected) {
+                ctx.strokeStyle = "#f59e0b"; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI * 2); ctx.stroke();
+            }
+            ctx.fillStyle = "#334155"; ctx.strokeStyle = accentColor; ctx.lineWidth = 2;
+            if (type === "phone") {
+                ctx.fillRect(-8, -12, 16, 24); ctx.strokeRect(-8, -12, 16, 24);
+            } else if (type === "tv") {
+                ctx.fillRect(-14, -10, 28, 18); ctx.strokeRect(-14, -10, 28, 18);
+            } else if (type === "pc") {
+                ctx.fillRect(-13, -8, 26, 15); ctx.strokeRect(-13, -8, 26, 15);
+            } else if (type === "fridge") {
+                ctx.fillRect(-10, -15, 20, 30); ctx.strokeRect(-10, -15, 20, 30);
+            } else if (type === "cam") {
+                ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawFurniture() {
+            ctx.fillStyle = "#334155"; ctx.strokeStyle = "#64748b"; ctx.lineWidth = 1.5;
+            ctx.fillRect(0.8 * scale, 1.0 * scale, 2.2 * scale, 3 * scale);
+            ctx.fillRect(0.8 * scale, 7.0 * scale, 2.2 * scale, 3 * scale);
+            ctx.fillRect(6.3 * scale, 7.0 * scale, 2.2 * scale, 3 * scale);
+            ctx.fillRect(12.0 * scale, 1.0 * scale, 3.0 * scale, 1.5 * scale);
+            ctx.fillRect(12.0 * scale, 8.5 * scale, 4.0 * scale, 1.8 * scale);
+        }
+
+        function lineIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+            let denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+            if (denom === 0) return false;
+            let ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+            let ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+            return (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1);
+        }
+
+        function generateReport() {
+            let report = `=== REPORTE TÉCNICO DE RED ===\n`;
+            report += `• Arquitectura: ${document.getElementById('routerConfig').options[document.getElementById('routerConfig').selectedIndex].text}\n`;
+            report += `• Modo Dúplex: ${document.getElementById('duplexSelect').value.toUpperCase()}\n`;
+            report += `• Ancho de Canal: ${document.getElementById('channelWidthSelect').value} MHz\n`;
+            report += `• Dispositivos Activos: ${clientDevices.length}/20\n`;
+            report += `• Nodos Mesh: ${meshNodes.length}\n`;
+            report += `• CPU: ${document.getElementById('stat-cpu-val').innerText}\n`;
+            report += `• RAM: ${document.getElementById('stat-ram-val').innerText}\n`;
+            report += `• Interferencia: ${document.getElementById('stat-interf').innerText}\n`;
+            document.getElementById('reportText').value = report;
+            document.getElementById('reportModal').style.display = 'flex';
+        }
+        function closeReport() { document.getElementById('reportModal').style.display = 'none'; }
+        function copyReportText() {
+            let t = document.getElementById('reportText'); t.select();
+            navigator.clipboard.writeText(t.value); alert("Copiado al portapapeles");
+        }
+
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function handleStart(e) {
+            e.preventDefault();
+            const pos = getCanvasCoords(e);
+            if (Math.hypot(pos.x - primaryRouter.x, pos.y - primaryRouter.y) < 40) { draggedElement = 'primary'; return; }
+            
+            let found = false;
+            meshNodes.forEach((node, idx) => {
+                if (Math.hypot(pos.x - node.x, pos.y - node.y) < 40) { draggedElement = 'mesh'; draggedIndex = idx; found = true; }
+            });
+            if (found) return;
+
+            clientDevices.forEach(client => {
+                if (Math.hypot(pos.x - client.x, pos.y - client.y) < 40) { draggedElement = 'device'; selectedDeviceId = client.id; found = true; }
+            });
+
+            if (!found) draggedElement = null;
+            drawHouse();
+        }
+
+        function handleMove(e) {
+            if (!draggedElement) return;
+            e.preventDefault();
+            const pos = getCanvasCoords(e);
+            if (draggedElement === 'primary') { primaryRouter.x = pos.x; primaryRouter.y = pos.y; }
+            else if (draggedElement === 'mesh' && draggedIndex !== null) { meshNodes[draggedIndex].x = pos.x; meshNodes[draggedIndex].y = pos.y; }
+            else if (draggedElement === 'device') {
+                let dev = clientDevices.find(d => d.id === selectedDeviceId);
+                if (dev) { dev.x = pos.x; dev.y = pos.y; }
+            }
+            drawHouse();
+        }
+
+        function handleEnd() { draggedElement = null; draggedIndex = null; }
+
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+
+        canvas.addEventListener('touchstart', handleStart, { passive: false });
+        canvas.addEventListener('touchmove', handleMove, { passive: false });
+        window.addEventListener('touchend', handleEnd);
+
+        function resetPositions() {
+            primaryRouter = { x: 10.0 * scale, y: 3.0 * scale, name: "Principal (Master)" };
+            meshNodes = []; clientDevices = []; selectedDeviceId = null;
+            drawHouse();
+        }
+
+        onFrequencyChange();
+    </script>
+</body>
+</html>

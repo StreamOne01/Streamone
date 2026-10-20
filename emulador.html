@@ -33,7 +33,6 @@
             overflow-x: hidden;
         }
 
-        /* Barra superior limpia y perfectamente equilibrada */
         header {
             width: 100%;
             max-width: 960px;
@@ -149,14 +148,13 @@
             left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
         }
 
-        /* Gabinete Arcade Battlestation */
         .arcade-station {
             position: relative;
             width: 100%;
             max-width: 960px;
             height: 500px;
             background-color: #090514;
-            background-image: url('https://images.wallpapersden.com/image/download/synthwave-retro-grid-sunset_bWVuZWSUmZqaraWkpJRmbmdlrWZlbWU.jpg');
+            background-image: url('https://images.wallpapersden.com/image/wxl-call-of-duty-4-modern-warfare_93329.jpg');
             background-size: cover;
             background-position: center;
             border-radius: 14px;
@@ -201,11 +199,22 @@
             background: #000;
             border-left: 2px solid rgba(255,255,255,0.08);
             border-right: 2px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .placeholder-msg {
+            color: var(--secondary-color);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.6;
+            padding: 20px;
         }
 
         #game { width: 100%; height: 100%; }
 
-        /* Panel inferior de información */
         .footer-info {
             width: 100%;
             max-width: 960px;
@@ -263,7 +272,6 @@
         }
         .shortcut-chip b { color: var(--accent-color); }
 
-        /* Controles táctiles móviles optimizados */
         .touch-controls {
             display: none;
             justify-content: space-between;
@@ -312,7 +320,6 @@
 </head>
 <body>
 
-    <!-- Marquesina / Panel Superior Organizado -->
     <header>
         <div class="brand-container">
             <img src="https://github.com/StreamOne01/Streamone/blob/main/ChatGPT%20Image%2020%20sept%202026,%2018_31_02.png?raw=true" alt="StreamOne Logo" class="brand-logo">
@@ -320,7 +327,6 @@
         </div>
         
         <div class="header-controls">
-            <!-- Selector de Consola -->
             <div class="control-group">
                 <label for="consoleSelect">Consola</label>
                 <select id="consoleSelect">
@@ -330,14 +336,12 @@
                     <option value="segaMD">Genesis</option>
                     <option value="gb">Game Boy</option>
                     <option value="psx">PSX</option>
-                    <option value="n64">N64</option>
-                    <option value="arcade">Arcade</option>
+                    <option value="n64">N64 (3D)</option>
                     <option value="nds">Nintendo DS</option>
-                    <option value="neogeo">Neo Geo</option>
+                    <option value="arcade">Arcade</option>
                 </select>
             </div>
 
-            <!-- Selector de Estilo RGB / Gabinete -->
             <div class="control-group">
                 <label for="themeSelect">Estilo</label>
                 <select id="themeSelect">
@@ -351,7 +355,7 @@
             <button class="btn-action" id="crtToggleBtn" title="Activar/Desactivar líneas CRT">📺 CRT</button>
 
             <div class="file-upload-wrapper">
-                <button class="btn-action">📂 ROM</button>
+                <button class="btn-action">📂 CARGAR ROM</button>
                 <input type="file" id="romFile">
             </div>
 
@@ -359,14 +363,15 @@
         </div>
     </header>
 
-    <!-- Estación de Juego -->
     <div class="arcade-station crt-filter" id="arcadeStation">
         <div id="game-container">
-            <div id="game"></div>
+            <div class="placeholder-msg" id="placeholderMsg">
+                SELECCIONA UNA CONSOLA Y CARGA TU ARCHIVO ROM PARA EMPEZAR
+            </div>
+            <div id="game" style="display:none;"></div>
         </div>
     </div>
 
-    <!-- Panel inferior de información -->
     <div class="footer-info">
         <div class="panel-box">
             <h4>⌨️ Atajos de Control Rápido</h4>
@@ -386,7 +391,6 @@
         </div>
     </div>
 
-    <!-- Controles táctiles móviles -->
     <div class="touch-controls" id="touchControls">
         <div class="d-pad">
             <div class="btn-touch d-btn d-up" data-key="ArrowUp">⬆️</div>
@@ -404,49 +408,63 @@
         </div>
     </div>
 
-    <!-- Configuración inicial del emulador -->
-    <script>
-        let currentCore = "snes";
-        let currentGameUrl = "Kirby 3.sfc";
-
-        window.EJS_player = "#game";
-        window.EJS_core = currentCore;
-        window.EJS_gameUrl = currentGameUrl;
-        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-        window.EJS_gamepad = true;
-    </script>
-    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
-
     <script>
         const consoleSelect = document.getElementById('consoleSelect');
+        const station = document.getElementById('arcadeStation');
+        const placeholderMsg = document.getElementById('placeholderMsg');
+        let currentCore = "snes";
+
         consoleSelect.addEventListener('change', (e) => {
             currentCore = e.target.value;
-            alert(`Plataforma cambiada a: ${consoleSelect.options[consoleSelect.selectedIndex].text}. Por favor carga tu ROM correspondiente.`);
+            // Desactiva filtros pesados automáticamente para N64, DS y PSX para mejorar los FPS
+            if (currentCore === 'n64' || currentCore === 'nds' || currentCore === 'psx') {
+                if (station.classList.contains('crt-filter')) {
+                    station.classList.remove('crt-filter');
+                    document.getElementById('crtToggleBtn').style.borderColor = '#555';
+                }
+            }
         });
 
+        // Limpieza y carga de ROMs por archivo local
         document.getElementById('romFile').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const fileUrl = URL.createObjectURL(file);
-            document.getElementById('game').innerHTML = '';
+            
+            if (placeholderMsg) placeholderMsg.style.display = 'none';
 
+            const gameContainer = document.getElementById('game-container');
+            let oldGameDiv = document.getElementById('game');
+            if (oldGameDiv) oldGameDiv.remove();
+
+            const newGameDiv = document.createElement('div');
+            newGameDiv.id = 'game';
+            gameContainer.appendChild(newGameDiv);
+
+            // Limpiar variables globales previas de EmulatorJS
+            delete window.EJS_player;
+            delete window.EJS_core;
+            delete window.EJS_gameUrl;
+
+            // Configurar nuevas propiedades
             window.EJS_player = "#game";
             window.EJS_core = currentCore;
             window.EJS_gameUrl = fileUrl;
             window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
             window.EJS_gamepad = true;
+            window.EJS_threads = true;
+            window.EJS_startOnLoaded = true;
 
+            // Cargar el script del emulador de forma limpia
             const script = document.createElement('script');
             script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
             document.body.appendChild(script);
         });
 
         const themeSelect = document.getElementById('themeSelect');
-        const station = document.getElementById('arcadeStation');
-
         const themes = {
-            synthwave: { primary: '#ff2a6d', secondary: '#05d9e8', bg: 'url("https://images.wallpapersden.com/image/download/synthwave-retro-grid-sunset_bWVuZWSUmZqaraWkpJRmbmdlrWZlbWU.jpg")' },
+            synthwave: { primary: '#ff2a6d', secondary: '#05d9e8', bg: 'url("https://plus.unsplash.com/premium_photo-1687854992749-e15cba89631d?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D")' },
             cyberpunk: { primary: '#fee140', secondary: '#fa709a', bg: 'url("https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop")' },
             arcadeclassic: { primary: '#ff4757', secondary: '#2ed573', bg: 'url("https://images.wallpapersden.com/image/download/neon-arcade-room_bWplaGyUmZqaraWkpJRmbmdlrWZlbWU.jpg")' },
             matrix: { primary: '#00ff66', secondary: '#00ffff', bg: 'url("https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1600&auto=format&fit=crop")' }

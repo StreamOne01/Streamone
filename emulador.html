@@ -213,7 +213,11 @@
             padding: 20px;
         }
 
-        #game { width: 100%; height: 100%; border: none; }
+        #game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
         .footer-info {
             width: 100%;
@@ -368,8 +372,7 @@
             <div class="placeholder-msg" id="placeholderMsg">
                 SELECCIONA UNA CONSOLA Y CARGA TU ARCHIVO ROM PARA EMPEZAR
             </div>
-            <!-- Contenedor iframe seguro para evitar bloqueos de CORS y errores del sistema -->
-            <iframe id="game" style="display:none;" allowfullscreen></iframe>
+            <iframe id="game-frame" style="display:none;" allow="autoplay; gamepad"></iframe>
         </div>
     </div>
 
@@ -425,7 +428,7 @@
             }
         });
 
-        // Carga mediante iframe embebido oficial de EmulatorJS
+        // Generación dinámica de Iframe para aislamiento total del emulador
         document.getElementById('romFile').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -434,13 +437,36 @@
             
             if (placeholderMsg) placeholderMsg.style.display = 'none';
 
-            const gameIframe = document.getElementById('game');
-            gameIframe.style.display = 'block';
+            const iframe = document.getElementById('game-frame');
+            iframe.style.display = 'block';
 
-            // Construir la URL del emulador apuntando directamente al framework aislado
-            const emulatorUrl = `https://cdn.emulatorjs.org/stable/data/index.html?core=${currentCore}&gameUrl=${encodeURIComponent(fileUrl)}&autostart=true&gamepad=true`;
-            
-            gameIframe.src = emulatorUrl;
+            // Documento HTML inyectado dentro del iframe sin depender de URLs externas propensas a 404
+            const iframeContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+                        #game { width:100%; height:100%; }
+                    </style>
+                </head>
+                <body>
+                    <div id="game"></div>
+                    <script>
+                        window.EJS_player = "#game";
+                        window.EJS_core = "${currentCore}";
+                        window.EJS_gameUrl = "${fileUrl}";
+                        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+                        window.EJS_gamepad = true;
+                        window.EJS_threads = true;
+                        window.EJS_startOnLoaded = true;
+                    <\/script>
+                    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"><\/script>
+                </body>
+                </html>
+            `;
+
+            iframe.srcdoc = iframeContent;
         });
 
         const themeSelect = document.getElementById('themeSelect');

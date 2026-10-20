@@ -182,6 +182,7 @@
             pointer-events: none;
         }
 
+        /* Filtro CRT clásico */
         .arcade-station.crt-filter::after {
             content: " ";
             display: block;
@@ -192,6 +193,18 @@
             z-index: 4;
             pointer-events: none;
             opacity: 0.5;
+        }
+
+        /* Filtro de Suavizado HQ (Gráficos nítidos sin pixeles dentados) */
+        .arcade-station.smooth-filter canvas {
+            image-rendering: auto !important;
+            filter: contrast(1.05) saturate(1.1);
+        }
+
+        /* Filtro Pixel Art Nítido (Píxeles ultra definidos y limpios) */
+        .arcade-station.pixel-filter canvas {
+            image-rendering: pixelated !important;
+            image-rendering: crisp-edges !important;
         }
 
         #game-container {
@@ -349,7 +362,17 @@
                 </select>
             </div>
 
-            <!-- Selector de Estilo Holo -->
+            <!-- Selector de Filtro Gráfico -->
+            <div class="control-group">
+                <label for="shaderSelect">Filtro</label>
+                <select id="shaderSelect">
+                    <option value="crt">CRT Retro (Líneas)</option>
+                    <option value="smooth">Suavizado HD</option>
+                    <option value="pixel" selected>Pixel Puro (Nítido)</option>
+                </select>
+            </div>
+
+            <!-- Selector de Estro Holográfico -->
             <div class="control-group">
                 <label for="themeSelect">Espectro</label>
                 <select id="themeSelect">
@@ -359,8 +382,6 @@
                     <option value="matrix">Matrix Green</option>
                 </select>
             </div>
-
-            <button class="btn-action" id="crtToggleBtn" title="Activar/Desactivar líneas CRT">📺 CRT</button>
 
             <div class="file-upload-wrapper">
                 <button class="btn-action">📂 CARGAR ROM</button>
@@ -372,7 +393,7 @@
     </header>
 
     <!-- Estación Central de Juego -->
-    <div class="arcade-station crt-filter" id="arcadeStation">
+    <div class="arcade-station pixel-filter" id="arcadeStation">
         <div id="game-container">
             <div id="game"></div>
         </div>
@@ -436,13 +457,21 @@
 
         consoleSelect.addEventListener('change', (e) => {
             currentCore = e.target.value;
-            if (currentCore === 'n64' || currentCore === 'nds' || currentCore === 'psx') {
-                if (station.classList.contains('crt-filter')) {
-                    station.classList.remove('crt-filter');
-                    document.getElementById('crtToggleBtn').style.borderColor = 'rgba(0, 243, 255, 0.3)';
-                }
-            }
             alert(`Núcleo cambiado a: ${consoleSelect.options[consoleSelect.selectedIndex].text}. Carga tu archivo ROM.`);
+        });
+
+        // Gestor de Filtros Gráficos Avanzados
+        const shaderSelect = document.getElementById('shaderSelect');
+        shaderSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            station.classList.remove('crt-filter', 'smooth-filter', 'pixel-filter');
+            if (val === 'crt') {
+                station.classList.add('crt-filter');
+            } else if (val === 'smooth') {
+                station.classList.add('smooth-filter');
+            } else if (val === 'pixel') {
+                station.classList.add('pixel-filter');
+            }
         });
 
         document.getElementById('romFile').addEventListener('change', function(event) {
@@ -481,12 +510,6 @@
                 document.documentElement.style.setProperty('--neon-magenta', theme.magenta);
                 station.style.backgroundImage = theme.bg;
             }
-        });
-
-        const crtToggleBtn = document.getElementById('crtToggleBtn');
-        crtToggleBtn.addEventListener('click', () => {
-            station.classList.toggle('crt-filter');
-            crtToggleBtn.style.borderColor = station.classList.contains('crt-filter') ? 'var(--neon-cyan)' : 'rgba(0, 243, 255, 0.3)';
         });
 
         const fullscreenBtn = document.getElementById('fullscreenBtn');

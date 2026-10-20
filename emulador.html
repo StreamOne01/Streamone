@@ -3,49 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>StreamOne - Retro Battlestation</title>
-    <!-- Fuentes estilo Retro/Cyberpunk -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>StreamOne - Quantum Battlestation</title>
+    <!-- Fuentes futuristas -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #ff2a6d;
-            --secondary-color: #05d9e8;
-            --accent-color: #fffc00;
-            --bg-dark: #050508;
-            --panel-bg: rgba(12, 12, 20, 0.9);
-            --border-glow: rgba(255, 42, 109, 0.5);
+            --neon-cyan: #00f3ff;
+            --neon-magenta: #ff0055;
+            --neon-purple: #9d00ff;
+            --bg-deep: #020205;
+            --glass-bg: rgba(5, 5, 15, 0.75);
+            --border-holo: rgba(0, 243, 255, 0.4);
+            --shadow-holo: 0 0 20px rgba(0, 243, 255, 0.25);
         }
 
         * { box-sizing: border-box; }
         
         body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 10%, #15092a 0%, #050508 80%);
-            color: #f1f2f6;
-            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 50% 20%, #12032c 0%, #020205 80%),
+                linear-gradient(rgba(0, 243, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            color: #e0e6ed;
+            font-family: 'Share Tech Mono', monospace;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 10px;
+            padding: 12px;
             overflow-x: hidden;
         }
 
+        /* Panel Superior / Head-Up Display (HUD) */
         header {
             width: 100%;
-            max-width: 960px;
+            max-width: 1000px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--panel-bg);
-            backdrop-filter: blur(14px);
-            border: 2px solid var(--border-glow);
-            padding: 10px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-holo);
+            padding: 12px 20px;
             border-radius: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 0 20px rgba(255, 42, 109, 0.25);
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-holo), inset 0 0 15px rgba(0, 243, 255, 0.05);
             z-index: 10;
             gap: 15px;
         }
@@ -53,88 +59,83 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .brand-logo {
-            height: 28px;
+            height: 32px;
             width: auto;
             object-fit: contain;
-            filter: drop-shadow(0 0 6px var(--primary-color));
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
         }
 
         .brand-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 0.65rem;
-            color: var(--primary-color);
-            text-shadow: 0 0 8px var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 0.8rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-magenta);
+            letter-spacing: 2px;
         }
 
         .header-controls {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .control-group {
             display: flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 4px 10px;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 6px 12px;
             border-radius: 6px;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
         }
 
         .control-group label {
             font-size: 0.7rem;
-            color: var(--secondary-color);
+            color: var(--neon-cyan);
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .control-group select, select, .btn-action {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--secondary-color);
+            background: transparent;
+            border: none;
             color: #fff;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
             cursor: pointer;
             outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .control-group select {
-            border: none;
-            background: transparent;
-            color: #fff;
-            padding: 0;
-            cursor: pointer;
         }
 
         .control-group select option {
-            background: #12091f;
+            background: #080812;
             color: #fff;
-        }
-
-        select:hover, .btn-action:hover {
-            background: var(--secondary-color);
-            color: #000;
-            box-shadow: 0 0 8px var(--secondary-color);
         }
 
         .btn-action {
-            border-color: var(--primary-color);
-            white-space: nowrap;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1), rgba(157, 0, 255, 0.2));
+            border: 1px solid var(--neon-cyan);
+            padding: 7px 14px;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.15);
         }
-        
+
         .btn-action:hover {
-            background: var(--primary-color);
-            box-shadow: 0 0 8px var(--primary-color);
-            color: #fff;
+            background: var(--neon-cyan);
+            color: #020205;
+            box-shadow: 0 0 20px var(--neon-cyan);
+            text-shadow: none;
         }
 
         .file-upload-wrapper {
@@ -148,31 +149,35 @@
             left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
         }
 
+        /* Núcleo Holo-Arcade (Estación de Juego) */
         .arcade-station {
             position: relative;
             width: 100%;
-            max-width: 960px;
-            height: 500px;
-            background-color: #090514;
-            background-image: url('https://images.wallpapersden.com/image/wxl-call-of-duty-4-modern-warfare_93329.jpg');
+            max-width: 1000px;
+            height: 540px;
+            background-color: #030308;
+            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
-            border-radius: 14px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 35px var(--border-glow);
+            border-radius: 16px;
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.9), 
+                0 0 40px rgba(0, 243, 255, 0.2),
+                inset 0 0 50px rgba(0,0,0,0.9);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 3px solid var(--primary-color);
+            border: 2px solid var(--neon-cyan);
             z-index: 10;
-            transition: background-image 0.4s ease;
+            transition: all 0.4s ease;
         }
 
         .arcade-station::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle, rgba(10,5,20,0.2) 30%, rgba(5,5,8,0.9) 100%);
+            background: radial-gradient(circle, rgba(2,2,5,0.4) 30%, rgba(2,2,5,0.95) 95%);
             z-index: 1;
             pointer-events: none;
         }
@@ -182,115 +187,109 @@
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
             background-size: 100% 4px;
             z-index: 4;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         #game-container {
-            width: 680px;
-            max-width: 80%;
-            height: 100%;
+            width: 720px;
+            max-width: 85%;
+            height: 92%;
             position: relative;
             z-index: 2;
-            box-shadow: 0 0 40px rgba(0,0,0,0.95);
+            box-shadow: 0 0 30px rgba(0,0,0,0.95), 0 0 15px rgba(0, 243, 255, 0.2);
             background: #000;
-            border-left: 2px solid rgba(255,255,255,0.08);
-            border-right: 2px solid rgba(255,255,255,0.08);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 6px;
+            overflow: hidden;
         }
 
-        .placeholder-msg {
-            color: var(--secondary-color);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 0.75rem;
-            text-align: center;
-            line-height: 1.6;
-            padding: 20px;
-        }
+        #game { width: 100%; height: 100%; }
 
-        #game-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
+        /* Paneles de telemetría inferiores */
         .footer-info {
             width: 100%;
-            max-width: 960px;
+            max-width: 1000px;
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 12px;
             z-index: 10;
         }
 
         .panel-box {
-            background: var(--panel-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 10px;
-            padding: 10px 15px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 18px;
             font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .panel-box h4 {
-            margin: 0 0 6px 0;
-            color: var(--secondary-color);
-            font-size: 0.95rem;
+            margin: 0 0 8px 0;
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            letter-spacing: 1px;
         }
 
         .gamepad-indicator {
-            font-size: 0.75rem;
-            padding: 2px 8px;
+            font-size: 0.7rem;
+            padding: 3px 10px;
             border-radius: 4px;
-            background: rgba(255,255,255,0.08);
-            color: #a4b0be;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #8892b0;
+            text-transform: uppercase;
         }
         .gamepad-indicator.active {
-            background: #2ed573;
-            color: #000;
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
             font-weight: 700;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
         }
 
         .shortcuts-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
         }
 
         .shortcut-chip {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 2px 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            padding: 4px 10px;
             border-radius: 4px;
-            color: #dfe4ea;
-            font-size: 0.8rem;
+            color: #ccd6f6;
+            font-size: 0.85rem;
         }
-        .shortcut-chip b { color: var(--accent-color); }
+        .shortcut-chip b { color: var(--neon-magenta); }
 
+        /* Controles táctiles estilo holograma */
         .touch-controls {
             display: none;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 10px;
             margin-top: auto;
             z-index: 10;
         }
 
-        .d-pad { position: relative; width: 110px; height: 110px; }
+        .d-pad { position: relative; width: 120px; height: 120px; }
         .btn-touch {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 243, 255, 0.05);
+            border: 2px solid var(--neon-cyan);
             color: white;
             font-weight: bold;
             border-radius: 50%;
@@ -300,19 +299,20 @@
             user-select: none;
             cursor: pointer;
             touch-action: manipulation;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
         }
-        .btn-touch:active { background: var(--primary-color); }
-        .d-btn { position: absolute; width: 38px; height: 38px; border-radius: 8px; font-size: 1rem; }
-        .d-up { top: 0; left: 36px; }
-        .d-down { bottom: 0; left: 36px; }
-        .d-left { top: 36px; left: 0; }
-        .d-right { top: 36px; right: 0; }
+        .btn-touch:active { background: var(--neon-magenta); border-color: var(--neon-magenta); box-shadow: 0 0 20px var(--neon-magenta); }
+        .d-btn { position: absolute; width: 40px; height: 40px; border-radius: 8px; font-size: 1rem; }
+        .d-up { top: 0; left: 40px; }
+        .d-down { bottom: 0; left: 40px; }
+        .d-left { top: 40px; left: 0; }
+        .d-right { top: 40px; right: 0; }
         
-        .action-pad { display: grid; grid-template-columns: repeat(2, 48px); gap: 8px; }
-        .action-btn { width: 48px; height: 48px; background: rgba(255, 42, 109, 0.4); border-color: var(--primary-color); }
+        .action-pad { display: grid; grid-template-columns: repeat(2, 50px); gap: 10px; }
+        .action-btn { width: 50px; height: 50px; background: rgba(255, 0, 85, 0.1); border-color: var(--neon-magenta); box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
         
-        .center-controls { display: flex; flex-direction: column; gap: 6px; }
-        .small-btn { width: 48px; height: 22px; border-radius: 10px; font-size: 0.55rem; background: rgba(255,255,255,0.1); }
+        .center-controls { display: flex; flex-direction: column; gap: 8px; }
+        .small-btn { width: 50px; height: 24px; border-radius: 6px; font-size: 0.55rem; background: rgba(0, 243, 255, 0.1); border-color: var(--neon-cyan); }
 
         @media (max-width: 850px) {
             header { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -324,15 +324,17 @@
 </head>
 <body>
 
+    <!-- HUD / Panel Superior -->
     <header>
         <div class="brand-container">
             <img src="https://github.com/StreamOne01/Streamone/blob/main/ChatGPT%20Image%2020%20sept%202026,%2018_31_02.png?raw=true" alt="StreamOne Logo" class="brand-logo">
-            <span class="brand-title">BATTLESTATION</span>
+            <span class="brand-title">STREAMONE // QUANTUM</span>
         </div>
         
         <div class="header-controls">
+            <!-- Selector de Consola -->
             <div class="control-group">
-                <label for="consoleSelect">Consola</label>
+                <label for="consoleSelect">Núcleo</label>
                 <select id="consoleSelect">
                     <option value="snes" selected>SNES</option>
                     <option value="gba">GBA</option>
@@ -340,19 +342,21 @@
                     <option value="segaMD">Genesis</option>
                     <option value="gb">Game Boy</option>
                     <option value="psx">PSX</option>
-                    <option value="n64">N64 (3D)</option>
-                    <option value="nds">Nintendo DS</option>
+                    <option value="n64">N64</option>
                     <option value="arcade">Arcade</option>
+                    <option value="nds">Nintendo DS</option>
+                    <option value="neogeo">Neo Geo</option>
                 </select>
             </div>
 
+            <!-- Selector de Estilo Holo -->
             <div class="control-group">
-                <label for="themeSelect">Estilo</label>
+                <label for="themeSelect">Espectro</label>
                 <select id="themeSelect">
-                    <option value="synthwave" selected>Synthwave</option>
-                    <option value="cyberpunk">Cyberpunk</option>
-                    <option value="arcadeclassic">Classic</option>
-                    <option value="matrix">Matrix</option>
+                    <option value="synthwave" selected>Cyber Cyan</option>
+                    <option value="cyberpunk">Laser Magenta</option>
+                    <option value="arcadeclassic">Void Purple</option>
+                    <option value="matrix">Matrix Green</option>
                 </select>
             </div>
 
@@ -363,22 +367,21 @@
                 <input type="file" id="romFile">
             </div>
 
-            <button class="btn-action" id="fullscreenBtn">⛶ Pantalla</button>
+            <button class="btn-action" id="fullscreenBtn">⛶ PANTALLA</button>
         </div>
     </header>
 
+    <!-- Estación Central de Juego -->
     <div class="arcade-station crt-filter" id="arcadeStation">
         <div id="game-container">
-            <div class="placeholder-msg" id="placeholderMsg">
-                SELECCIONA UNA CONSOLA Y CARGA TU ARCHIVO ROM PARA EMPEZAR
-            </div>
-            <iframe id="game-frame" style="display:none;" allow="autoplay; gamepad"></iframe>
+            <div id="game"></div>
         </div>
     </div>
 
+    <!-- Panel inferior de telemetría -->
     <div class="footer-info">
         <div class="panel-box">
-            <h4>⌨️ Atajos de Control Rápido</h4>
+            <h4>⌨️ Comandos de Entrada</h4>
             <div class="shortcuts-grid">
                 <div class="shortcut-chip">Mover: <b>Flechas</b></div>
                 <div class="shortcut-chip">Acción A: <b>Z</b></div>
@@ -388,13 +391,14 @@
             </div>
         </div>
         <div class="panel-box">
-            <h4>🎮 Gamepad USB / Bluetooth</h4>
+            <h4>🎮 Enlace Gamepad</h4>
             <div style="margin-top: 6px;">
                 <span class="gamepad-indicator" id="gamepadStatus">Desconectado</span>
             </div>
         </div>
     </div>
 
+    <!-- Controles táctiles móviles -->
     <div class="touch-controls" id="touchControls">
         <div class="d-pad">
             <div class="btn-touch d-btn d-up" data-key="ArrowUp">⬆️</div>
@@ -412,76 +416,69 @@
         </div>
     </div>
 
+    <!-- Configuración inicial del emulador -->
+    <script>
+        let currentCore = "snes";
+        let currentGameUrl = "";
+
+        window.EJS_player = "#game";
+        window.EJS_core = currentCore;
+        window.EJS_gameUrl = currentGameUrl;
+        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+        window.EJS_gamepad = true;
+        window.EJS_startOnLoaded = true;
+    </script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+
     <script>
         const consoleSelect = document.getElementById('consoleSelect');
         const station = document.getElementById('arcadeStation');
-        const placeholderMsg = document.getElementById('placeholderMsg');
-        let currentCore = "snes";
 
         consoleSelect.addEventListener('change', (e) => {
             currentCore = e.target.value;
             if (currentCore === 'n64' || currentCore === 'nds' || currentCore === 'psx') {
                 if (station.classList.contains('crt-filter')) {
                     station.classList.remove('crt-filter');
-                    document.getElementById('crtToggleBtn').style.borderColor = '#555';
+                    document.getElementById('crtToggleBtn').style.borderColor = 'rgba(0, 243, 255, 0.3)';
                 }
             }
+            alert(`Núcleo cambiado a: ${consoleSelect.options[consoleSelect.selectedIndex].text}. Carga tu archivo ROM.`);
         });
 
-        // Generación dinámica de Iframe para aislamiento total del emulador
         document.getElementById('romFile').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const fileUrl = URL.createObjectURL(file);
             
-            if (placeholderMsg) placeholderMsg.style.display = 'none';
+            const container = document.getElementById('game-container');
+            container.innerHTML = '<div id="game"></div>';
 
-            const iframe = document.getElementById('game-frame');
-            iframe.style.display = 'block';
+            window.EJS_player = "#game";
+            window.EJS_core = currentCore;
+            window.EJS_gameUrl = fileUrl;
+            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            window.EJS_gamepad = true;
+            window.EJS_startOnLoaded = true;
 
-            // Documento HTML inyectado dentro del iframe sin depender de URLs externas propensas a 404
-            const iframeContent = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-                        #game { width:100%; height:100%; }
-                    </style>
-                </head>
-                <body>
-                    <div id="game"></div>
-                    <script>
-                        window.EJS_player = "#game";
-                        window.EJS_core = "${currentCore}";
-                        window.EJS_gameUrl = "${fileUrl}";
-                        window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-                        window.EJS_gamepad = true;
-                        window.EJS_threads = true;
-                        window.EJS_startOnLoaded = true;
-                    <\/script>
-                    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"><\/script>
-                </body>
-                </html>
-            `;
-
-            iframe.srcdoc = iframeContent;
+            const script = document.createElement('script');
+            script.src = "https://cdn.emulatorjs.org/stable/data/loader.js?" + new Date().getTime();
+            document.body.appendChild(script);
         });
 
         const themeSelect = document.getElementById('themeSelect');
         const themes = {
-            synthwave: { primary: '#ff2a6d', secondary: '#05d9e8', bg: 'url("https://plus.unsplash.com/premium_photo-1687854992749-e15cba89631d?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D")' },
-            cyberpunk: { primary: '#fee140', secondary: '#fa709a', bg: 'url("https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop")' },
-            arcadeclassic: { primary: '#ff4757', secondary: '#2ed573', bg: 'url("https://images.wallpapersden.com/image/download/neon-arcade-room_bWplaGyUmZqaraWkpJRmbmdlrWZlbWU.jpg")' },
-            matrix: { primary: '#00ff66', secondary: '#00ffff', bg: 'url("https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1600&auto=format&fit=crop")' }
+            synthwave: { cyan: '#00f3ff', magenta: '#ff0055', bg: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600&auto=format&fit=crop")' },
+            cyberpunk: { cyan: '#fee140', magenta: '#fa709a', bg: 'url("https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop")' },
+            arcadeclassic: { cyan: '#9d00ff', magenta: '#00f3ff', bg: 'url("https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1600&auto=format&fit=crop")' },
+            matrix: { cyan: '#00ff66', magenta: '#00ffff', bg: 'url("https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1600&auto=format&fit=crop")' }
         };
 
         themeSelect.addEventListener('change', (e) => {
             const theme = themes[e.target.value];
             if (theme) {
-                document.documentElement.style.setProperty('--primary-color', theme.primary);
-                document.documentElement.style.setProperty('--secondary-color', theme.secondary);
+                document.documentElement.style.setProperty('--neon-cyan', theme.cyan);
+                document.documentElement.style.setProperty('--neon-magenta', theme.magenta);
                 station.style.backgroundImage = theme.bg;
             }
         });
@@ -489,7 +486,7 @@
         const crtToggleBtn = document.getElementById('crtToggleBtn');
         crtToggleBtn.addEventListener('click', () => {
             station.classList.toggle('crt-filter');
-            crtToggleBtn.style.borderColor = station.classList.contains('crt-filter') ? 'var(--secondary-color)' : '#555';
+            crtToggleBtn.style.borderColor = station.classList.contains('crt-filter') ? 'var(--neon-cyan)' : 'rgba(0, 243, 255, 0.3)';
         });
 
         const fullscreenBtn = document.getElementById('fullscreenBtn');

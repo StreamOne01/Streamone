@@ -1,804 +1,460 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trincheras - Multi-Emu PS3 Dynamic</title>
-    <!-- FontAwesome Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --wii-blue: #00d2ff;
-            --wii-cyan: #3a7bd5;
-            --wii-glow: rgba(0, 210, 255, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.22);
-            --text-main: #ffffff;
-            --text-muted: #b0c4de;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TRINCHERAS HANDHELD - 60FPS Turbo Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      height: 100vh;
+      height: 100svh;
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      font-family: 'Outfit', sans-serif;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        /* FONDO DINÁMICO ESTILO PLAYSTATION 3 (XMB WAVE) */
-        body {
-            background: #000;
-            color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
+    .console-casing {
+      width: 100vw;
+      height: 100vh;
+      height: 100svh;
+      max-width: 920px;
+      max-height: min(100svh, 450px);
+      background: linear-gradient(135deg, #3b5bdb 0%, #2b3990 60%, #1e2563 100%);
+      box-shadow: 
+        inset 0 3px 6px rgba(255, 255, 255, 0.4),
+        inset 0 -6px 12px rgba(0, 0, 0, 0.7),
+        0 20px 40px rgba(0, 0, 0, 0.8);
+      border: 3px solid #1a2252;
+      border-radius: 0;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transform: translateZ(0);
+      will-change: transform;
+    }
 
-        #ps3-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+    @media (min-width: 650px) {
+      .console-casing {
+        border-radius: 36px;
+        height: auto;
+        aspect-ratio: 16 / 7.2;
+        max-height: 500px;
+        padding: 12px 18px;
+      }
+    }
 
-        /* Header Estilo Cristal */
-        .navbar {
-            height: 65px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-            z-index: 10;
-            flex-shrink: 0;
-        }
+    .lcd-font {
+      font-family: 'Press Start 2P', monospace;
+    }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 800;
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            text-shadow: 0 0 12px var(--wii-glow);
-        }
+    .shoulder-trigger {
+      background: linear-gradient(180deg, #4c6ef5 0%, #2b3990 100%);
+      border: 2px solid #1a2252;
+      box-shadow: inset 0 2px 3px rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.5);
+    }
+    .shoulder-trigger:active, .shoulder-trigger.pressed {
+      transform: translateY(2px);
+    }
 
-        .brand i { color: var(--wii-blue); }
+    .lcd-frame {
+      background: #0b0f19;
+      border: 3px solid #151b2b;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.9);
+      border-radius: 12px;
+    }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+    .lcd-screen {
+      background-color: #000;
+      position: relative;
+    }
 
-        .badge-ps4 {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
+    .glass-glare {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 40%, transparent 40%);
+      pointer-events: none;
+    }
 
-        .badge-ps4.connected {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.5);
-            color: #10b981;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-        }
+    .switch-btn {
+      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+      color: #343a40;
+      box-shadow: 
+        0 3px 0 #adb5bd,
+        0 5px 8px rgba(0, 0, 0, 0.35),
+        inset 0 2px 2px rgba(255, 255, 255, 0.8);
+      transition: transform 0.03s ease;
+      border: 1px solid #ced4da;
+    }
+    .switch-btn:active, .switch-btn.pressed {
+      transform: translateY(2px);
+      box-shadow: 
+        0 1px 0 #adb5bd,
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
 
-        .btn-header {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
-            transition: all 0.25s ease;
-        }
+    .analog-stick {
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e9ecef 60%, #ced4da 100%);
+      border: 2px solid #adb5bd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.8);
+      touch-action: none;
+      will-change: transform;
+    }
+    .analog-stick:active, .analog-stick.pressed {
+      transform: scale(0.92);
+    }
 
-        .btn-header:hover {
-            background: rgba(0, 210, 255, 0.3);
-            border-color: var(--wii-blue);
-            box-shadow: 0 0 20px var(--wii-glow);
-            transform: translateY(-2px);
-        }
+    .sys-btn {
+      background: linear-gradient(145deg, #2b3548, #182030);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 2px 0 #0d121c, 0 3px 5px rgba(0,0,0,0.4);
+      color: #e2e8f0;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      transition: transform 0.03s ease;
+    }
+    .sys-btn:active, .sys-btn.pressed {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #0d121c;
+    }
 
-        /* Workspace Principal */
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 20px;
-            z-index: 5;
-            overflow: hidden;
-        }
-
-        #launcher-view {
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            text-align: center;
-        }
-
-        .hero-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff 40%, var(--wii-blue) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
-        }
-
-        .hero-subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: -6px;
-        }
-
-        /* BARRA HORIZONTAL DE CONSOLAS */
-        .system-bar-horizontal {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            overflow-x: auto;
-            max-width: 100%;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            backdrop-filter: blur(15px);
-            scrollbar-width: thin;
-            scrollbar-color: var(--wii-blue) transparent;
-        }
-
-        .system-bar-horizontal::-webkit-scrollbar {
-            height: 4px;
-        }
-        .system-bar-horizontal::-webkit-scrollbar-thumb {
-            background: var(--wii-blue);
-            border-radius: 4px;
-        }
-
-        .sys-chip {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.25s ease;
-        }
-
-        .sys-chip:hover {
-            background: rgba(0, 210, 255, 0.2);
-            color: #fff;
-            border-color: var(--wii-blue);
-        }
-
-        .sys-chip.active {
-            background: linear-gradient(135deg, var(--wii-blue), var(--wii-cyan));
-            color: #fff;
-            border-color: #fff;
-            box-shadow: 0 0 15px var(--wii-glow);
-        }
-
-        .sys-chip .count-badge {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-        }
-
-        /* Slider 3D */
-        .carousel-container {
-            width: 100%;
-            height: 380px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 1000px;
-            margin: 5px 0;
-        }
-
-        .carousel-track {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .cover-card {
-            position: absolute;
-            width: 220px;
-            height: 310px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .cover-card img {
-            width: 100%;
-            height: 230px;
-            object-fit: cover;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .cover-card .card-info {
-            padding: 10px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(5, 11, 20, 0.85);
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .cover-card .card-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #fff;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-
-        .cover-card .card-system {
-            font-size: 0.7rem;
-            color: var(--wii-blue);
-            font-weight: 600;
-            margin-top: 2px;
-            text-transform: uppercase;
-        }
-
-        /* Botones Neón */
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(12px);
-            transition: all 0.25s ease;
-        }
-
-        .slider-btn:hover {
-            background: var(--wii-blue);
-            box-shadow: 0 0 25px var(--wii-blue);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .slider-btn.prev { left: 20px; }
-        .slider-btn.next { right: 20px; }
-
-        .upload-zone {
-            background: rgba(255, 255, 255, 0.06);
-            border: 2px dashed var(--glass-border);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 45px;
-            width: 100%;
-            max-width: 550px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .upload-zone:hover {
-            border-color: var(--wii-blue);
-            box-shadow: 0 0 35px var(--wii-glow);
-            background: rgba(0, 210, 255, 0.08);
-        }
-
-        .hidden-inputs { display: none; }
-
-        /* Emulador Ajustado a Pantalla Completa PC */
-        #emulator-view {
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
-        }
-
-        #emulator-target { 
-            width: 100%; 
-            flex: 1; 
-            position: relative;
-        }
-
-        .emulator-bar {
-            height: 52px;
-            background: rgba(5, 11, 20, 0.95);
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            flex-shrink: 0;
-        }
-
-        .bar-left, .bar-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .bar-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .bar-btn:hover {
-            background: rgba(0, 210, 255, 0.25);
-            border-color: var(--wii-blue);
-        }
-
-        .bar-btn.danger {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.4);
-            color: #ef4444;
-        }
-
-        .bar-btn.danger:hover { background: rgba(239, 68, 68, 0.3); }
-    </style>
+    #emulator-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      transform: translateZ(0);
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Canvas para el fondo dinámico de PS3 -->
-    <canvas id="ps3-canvas"></canvas>
+  <!-- Consola Principal Horizontal Optimizada -->
+  <div class="console-casing select-none">
+    
+    <!-- Gatillos Superiores L & R -->
+    <div class="w-full flex justify-between px-6 -mt-4 mb-1">
+      <button id="btn-l" data-key="q" class="shoulder-trigger w-24 h-5 rounded-t-lg text-[9px] font-black text-white/90">L</button>
+      <button id="btn-r" data-key="e" class="shoulder-trigger w-24 h-5 rounded-t-lg text-[9px] font-black text-white/90">R</button>
+    </div>
 
-    <!-- Header Navigation -->
-    <header class="navbar">
-        <div class="brand">
-            <i class="fa-solid fa-layer-group"></i>
-            <span>TRINCHERAS <span style="color: var(--wii-blue);">RETRO GAMER</span></span>
+    <!-- Cuerpo Central -->
+    <div class="flex items-center justify-between w-full h-full gap-2 sm:gap-4">
+      
+      <!-- ZONA IZQUIERDA: Joystick Funcional + D-Pad -->
+      <div class="flex flex-col items-center justify-around w-[110px] sm:w-[140px] h-full py-0.5">
+        <button id="stick-left" class="analog-stick w-10 h-10 sm:w-13 sm:h-13 rounded-full flex items-center justify-center cursor-pointer relative">
+          <div class="w-5 h-5 bg-gray-300 rounded-full shadow-inner pointer-events-none"></div>
+        </button>
+
+        <!-- D-Pad -->
+        <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
+          <button id="btn-up" data-key="ArrowUp" class="switch-btn absolute top-0 w-8 h-8 sm:w-9 sm:h-9 rounded-md flex items-center justify-center text-xs font-bold">▲</button>
+          <button id="btn-left" data-key="ArrowLeft" class="switch-btn absolute left-0 w-8 h-8 sm:w-9 sm:h-9 rounded-md flex items-center justify-center text-xs font-bold">◄</button>
+          <div class="w-8 h-8 bg-transparent"></div>
+          <button id="btn-right" data-key="ArrowRight" class="switch-btn absolute right-0 w-8 h-8 sm:w-9 sm:h-9 rounded-md flex items-center justify-center text-xs font-bold">►</button>
+          <button id="btn-down" data-key="ArrowDown" class="switch-btn absolute bottom-0 w-8 h-8 sm:w-9 sm:h-9 rounded-md flex items-center justify-center text-xs font-bold">▼</button>
         </div>
-        <div class="header-actions">
-            <button class="btn-header" onclick="document.getElementById('dir-input').click();">
-                <i class="fa-solid fa-folder-open"></i> Escanear Carpeta
-            </button>
-            <div class="badge-ps4" id="ps4-badge">
-                <i class="fa-brands fa-playstation"></i>
-                <span id="ps4-status-text">Buscando Mando PS4...</span>
-            </div>
-        </div>
-    </header>
+      </div>
 
-    <!-- Main Container -->
-    <main class="main-container">
-
-        <!-- LAUNCHER VIEW -->
-        <div id="launcher-view">
-            <div>
-                <h1 class="hero-title"> Emulación Multiconsola</h1>
-                <p class="hero-subtitle">Modo locales</p>
-            </div>
-
-            <!-- BARRA HORIZONTAL DE SELECCIÓN DE CONSOLA -->
-            <div class="system-bar-horizontal" id="system-bar">
-                <button class="sys-chip active" onclick="selectSystem('all', this)">
-                    <i class="fa-solid fa-cubes"></i> Todas <span class="count-badge" id="count-all">0</span>
-                </button>
-                <button class="sys-chip" onclick="selectSystem('n64', this)">
-                    <i class="fa-solid fa-gamepad"></i> N64 <span class="count-badge" id="count-n64">0</span>
-                </button>
-                <button class="sys-chip" onclick="selectSystem('psx', this)">
-                    <i class="fa-brands fa-playstation"></i> PS1 <span class="count-badge" id="count-psx">0</span>
-                </button>
-                <button class="sys-chip" onclick="selectSystem('gba', this)">
-                    <i class="fa-solid fa-mobile-screen"></i> GBA <span class="count-badge" id="count-gba">0</span>
-                </button>
-                <button class="sys-chip" onclick="selectSystem('snes', this)">
-                    <i class="fa-solid fa-tv"></i> SNES <span class="count-badge" id="count-snes">0</span>
-                </button>
-                <button class="sys-chip" onclick="selectSystem('nes', this)">
-                 <i class="fa-solid fa-microchip"></i> NES <span class="count-badge" id="count-nes">0</span>
-                </button>
-            </div>
-
-            <!-- CAROUSEL SLIDER -->
-            <div id="carousel-wrapper" style="display: none; width: 100%;">
-                <div class="carousel-container">
-                    <button class="slider-btn prev" onclick="moveSlider(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                    <div class="carousel-track" id="carousel-track"></div>
-                    <button class="slider-btn next" onclick="moveSlider(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                </div>
-            </div>
-
-            <!-- DRAG & DROP INICIAL -->
-            <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click();">
-                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3.2rem; color: var(--wii-blue); margin-bottom: 12px; filter: drop-shadow(0 0 10px var(--wii-glow));"></i>
-                <h3 style="font-size: 1.25rem; font-weight: 700;">Seleccionar o Arrastrar Juego</h3>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">N64, PS1, GBA, SNES, Genesis, NES</p>
-            </div>
-
-            <input type="file" id="file-input" class="hidden-inputs" accept=".z64,.n64,.v64,.iso,.bin,.cue,.gba,.sfc,.smc,.md,.nes">
-            <input type="file" id="dir-input" class="hidden-inputs" webkitdirectory directory multiple>
-        </div>
-
-        <!-- EMULATOR VIEW -->
-        <div id="emulator-view">
-            <div id="emulator-target"></div>
-            <div class="emulator-bar">
-                <div class="bar-left">
-                    <button class="bar-btn danger" onclick="returnToMenu()">
-                        <i class="fa-solid fa-arrow-left"></i> Volver al Menú
-                    </button>
-                    <span id="current-game-name" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">---</span>
-                </div>
-                <div class="bar-right">
-                    <button class="bar-btn" onclick="toggleFullscreen()">
-                        <i class="fa-solid fa-expand"></i> Pantalla Completa
-                    </button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <script>
-        /* SCRIPT DE FONDO PS3 XMB WAVE ENGINE */
-        (function() {
-            const canvas = document.getElementById('ps3-canvas');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let step = 0;
-
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            // Partículas de polvo/destellos
-            const particles = Array.from({ length: 45 }, () => ({
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                size: Math.random() * 2 + 0.5,
-                speedY: Math.random() * 0.3 + 0.1,
-                opacity: Math.random() * 0.5 + 0.2
-            }));
-
-            function drawPS3Wave() {
-                ctx.clearRect(0, 0, width, height);
-
-                // Gradiente de fondo PS3
-                const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-                bgGrad.addColorStop(0, '#020611');
-                bgGrad.addColorStop(0.5, '#07152b');
-                bgGrad.addColorStop(1, '#01040a');
-                ctx.fillStyle = bgGrad;
-                ctx.fillRect(0, 0, width, height);
-
-                step += 0.008;
-
-                // Dibujar 3 capas de olas entrelazadas
-                for (let l = 0; l < 3; l++) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, height);
-
-                    for (let x = 0; x <= width; x += 15) {
-                        const y = Math.sin(x * 0.002 + step + l) * 70 
-                                + Math.cos(x * 0.001 + step * 0.8) * 50 
-                                + (height * 0.5) + (l * 35);
-                        ctx.lineTo(x, y);
-                    }
-
-                    ctx.lineTo(width, height);
-                    ctx.closePath();
-
-                    const waveGrad = ctx.createLinearGradient(0, height * 0.2, width, height);
-                    if (l === 0) {
-                        waveGrad.addColorStop(0, 'rgba(0, 180, 255, 0.15)');
-                        waveGrad.addColorStop(1, 'rgba(10, 50, 120, 0.02)');
-                    } else if (l === 1) {
-                        waveGrad.addColorStop(0, 'rgba(0, 225, 255, 0.2)');
-                        waveGrad.addColorStop(1, 'rgba(0, 90, 180, 0.05)');
-                    } else {
-                        waveGrad.addColorStop(0, 'rgba(120, 200, 255, 0.12)');
-                        waveGrad.addColorStop(1, 'rgba(5, 20, 50, 0.01)');
-                    }
-
-                    ctx.fillStyle = waveGrad;
-                    ctx.fill();
-                }
-
-                // Dibujar partículas flotantes
-                particles.forEach(p => {
-                    p.y -= p.speedY;
-                    if (p.y < 0) p.y = height;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-                    ctx.fill();
-                });
-
-                requestAnimationFrame(drawPS3Wave);
-            }
-
-            drawPS3Wave();
-        })();
-
-        /* LÓGICA DE TU CÓDIGO ORIGINAL */
-        let allFiles = [];
-        let imageFiles = [];
-        let filteredRomList = [];
-        let currentSystemFilter = 'all';
-        let currentIndex = 0;
-        let currentGameUrl = null;
-
-        const SYSTEM_MAP = {
-            'z64': { core: 'n64', name: 'Nintendo 64', repo: 'Nintendo%20-%20Nintendo%2064' },
-            'n64': { core: 'n64', name: 'Nintendo 64', repo: 'Nintendo%20-%20Nintendo%2064' },
-            'v64': { core: 'n64', name: 'Nintendo 64', repo: 'Nintendo%20-%20Nintendo%2064' },
-            'gba': { core: 'gba', name: 'Game Boy Advance', repo: 'Nintendo%20-%20Game%20Boy%20Advance' },
-            'sfc': { core: 'snes', name: 'Super Nintendo', repo: 'Nintendo%20-%20Super%20Nintendo%20Entertainment%20System' },
-            'smc': { core: 'snes', name: 'Super Nintendo', repo: 'Nintendo%20-%20Super%20Nintendo%20Entertainment%20System' },
-            'bin': { core: 'psx', name: 'PlayStation 1', repo: 'Sony%20-%20PlayStation' },
-            'cue': { core: 'psx', name: 'PlayStation 1', repo: 'Sony%20-%20PlayStation' },
-            'iso': { core: 'psx', name: 'PlayStation 1', repo: 'Sony%20-%20PlayStation' },
-            'md':  { core: 'megadrive', name: 'Sega Genesis', repo: 'Sega%20-%20Mega%20Drive%20-%20Genesis' },
-            'nes': { core: 'nes', name: 'NES', repo: 'Nintendo%20-%20Nintendo%20Entertainment%20System' }
-        };
-
-        // Detector Mando PS4
-        window.addEventListener("gamepadconnected", (e) => {
-            const badge = document.getElementById("ps4-badge");
-            const text = document.getElementById("ps4-status-text");
-            badge.classList.add("connected");
-            text.textContent = "Mando PS4 Conectado";
-        });
-
-        window.addEventListener("gamepaddisconnected", (e) => {
-            const badge = document.getElementById("ps4-badge");
-            const text = document.getElementById("ps4-status-text");
-            badge.classList.remove("connected");
-            text.textContent = "Buscando Mando PS4...";
-        });
-
-        // Carga de Juego Individual
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) launchGame(file);
-        });
-
-        // Escaneo de Carpeta Completa
-        document.getElementById('dir-input').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            allFiles = files.filter(f => {
-                const ext = f.name.split('.').pop().toLowerCase();
-                return SYSTEM_MAP[ext];
-            });
+      <!-- ZONA CENTRAL: Pantalla Panorámica + Select / Start -->
+      <div class="flex flex-col flex-1 h-full justify-between py-0.5">
+        <div class="lcd-frame w-full flex-1 p-1.5 relative overflow-hidden flex flex-col">
+          <div class="glass-glare absolute inset-0 z-20"></div>
+          
+          <div id="lcd-display" class="lcd-screen w-full h-full rounded flex flex-col items-center justify-center relative overflow-hidden">
             
-            imageFiles = files.filter(f => f.name.endsWith('.png') || f.name.endsWith('.jpg') || f.name.endsWith('.jpeg') || f.name.endsWith('.webp'));
+            <!-- ROM File Picker Overlay -->
+            <div id="rom-menu" class="absolute inset-0 bg-[#151b2b] flex flex-col items-center justify-center p-3 text-center z-30">
+              <div class="lcd-font text-[10px] sm:text-[12px] text-blue-400 mb-1.5 font-bold uppercase tracking-wider">TRINCHERAS 60FPS</div>
+              <div class="text-[9px] sm:text-[10px] text-gray-300 font-medium mb-3">Carga tu ROM para iniciar la partida</div>
+              
+              <label class="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-[10px] sm:text-xs py-2 px-5 rounded-xl shadow-md uppercase tracking-wider transition">
+                SELECCIONAR JUEGO
+                <input type="file" id="rom-file-input" accept=".z64,.n64,.v64,.gba,.sfc,.smc,.bin,.cue,.iso,.md,.nes" class="hidden" />
+              </label>
+            </div>
 
-            if (allFiles.length > 0) {
-                document.getElementById('upload-zone').style.display = 'none';
-                document.getElementById('carousel-wrapper').style.display = 'block';
-                updateSystemCounts();
-                filterSystem();
-            } else {
-                alert('No se encontraron juegos compatibles en la carpeta seleccionada.');
-            }
-        });
+            <!-- Emulator Container Target -->
+            <div id="emulator-target" class="w-full h-full"></div>
 
-        function updateSystemCounts() {
-            const counts = { all: allFiles.length, n64: 0, psx: 0, gba: 0, snes: 0, megadrive: 0, nes: 0 };
-            allFiles.forEach(f => {
-                const ext = f.name.split('.').pop().toLowerCase();
-                if (SYSTEM_MAP[ext]) {
-                    const sys = SYSTEM_MAP[ext].core;
-                    if (counts[sys] !== undefined) counts[sys]++;
-                }
-            });
+          </div>
+        </div>
 
-            for (const sys in counts) {
-                const el = document.getElementById(`count-${sys}`);
-                if (el) el.textContent = counts[sys];
-            }
-        }
+        <!-- Botones Select y Start -->
+        <div class="flex justify-center items-center gap-6 py-1">
+          <button id="btn-select" data-key="Shift" class="sys-btn px-5 py-1 rounded-full uppercase">SELECT</button>
+          <button id="btn-start" data-key="Enter" class="sys-btn px-5 py-1 rounded-full uppercase">START</button>
+        </div>
+      </div>
 
-        function selectSystem(systemKey, el) {
-            currentSystemFilter = systemKey;
-            document.querySelectorAll('.sys-chip').forEach(chip => chip.classList.remove('active'));
-            el.classList.add('active');
-            filterSystem();
-        }
+      <!-- ZONA DERECHA: Botones de Acción + Joystick Derecho Funcional -->
+      <div class="flex flex-col items-center justify-around w-[110px] sm:w-[140px] h-full py-0.5">
+        <!-- Botones de Acción -->
+        <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
+          <button id="btn-x" data-key="x" class="switch-btn absolute top-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full font-black text-xs flex items-center justify-center">X</button>
+          <button id="btn-y" data-key="y" class="switch-btn absolute left-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full font-black text-xs flex items-center justify-center">Y</button>
+          <button id="btn-a" data-key="z" class="switch-btn absolute right-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full font-black text-xs flex items-center justify-center">A</button>
+          <button id="btn-b" data-key="a" class="switch-btn absolute bottom-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full font-black text-xs flex items-center justify-center">B</button>
+        </div>
 
-        function filterSystem() {
-            if (currentSystemFilter === 'all') {
-                filteredRomList = [...allFiles];
-            } else {
-                filteredRomList = allFiles.filter(f => {
-                    const ext = f.name.split('.').pop().toLowerCase();
-                    return SYSTEM_MAP[ext] && SYSTEM_MAP[ext].core === currentSystemFilter;
-                });
-            }
+        <button id="stick-right" class="analog-stick w-10 h-10 sm:w-13 sm:h-13 rounded-full flex items-center justify-center cursor-pointer relative">
+          <div class="w-5 h-5 bg-gray-300 rounded-full shadow-inner pointer-events-none"></div>
+        </button>
+      </div>
 
-            currentIndex = 0;
-            renderCarousel();
-        }
+    </div>
 
-        function renderCarousel() {
-            const track = document.getElementById('carousel-track');
-            track.innerHTML = '';
+    <!-- Barra Inferior -->
+    <div class="w-full flex justify-between items-center px-1 pt-1 border-t border-blue-900/40 text-[8px] sm:text-[9px] text-blue-200/80 font-bold">
+      <span id="status-label" class="lcd-font truncate max-w-[180px]">LISTO</span>
+      <div class="flex items-center gap-2">
+        <span class="tracking-widest hidden sm:inline">TURBO 60FPS</span>
+        <button id="btn-reset" class="bg-red-600/80 hover:bg-red-600 text-white px-2 py-0.5 rounded text-[7px] uppercase font-extrabold cursor-pointer">Salir</button>
+      </div>
+    </div>
 
-            if (filteredRomList.length === 0) {
-                track.innerHTML = '<p style="color: var(--text-muted); font-size: 1rem;">No hay juegos escaneados para esta consola.</p>';
-                return;
-            }
+  </div>
 
-            filteredRomList.forEach((file, index) => {
-                const card = document.createElement('div');
-                card.className = 'cover-card';
+  <script>
+    const SYSTEM_MAP = {
+      'z64': { core: 'n64', name: 'N64' },
+      'n64': { core: 'n64', name: 'N64' },
+      'v64': { core: 'n64', name: 'N64' },
+      'gba': { core: 'gba', name: 'GBA' },
+      'sfc': { core: 'snes', name: 'SNES' },
+      'smc': { core: 'snes', name: 'SNES' },
+      'bin': { core: 'psx', name: 'PS1' },
+      'cue': { core: 'psx', name: 'PS1' },
+      'iso': { core: 'psx', name: 'PS1' },
+      'md':  { core: 'megadrive', name: 'Genesis' },
+      'nes': { core: 'nes', name: 'NES' }
+    };
+
+    const romFileInput = document.getElementById('rom-file-input');
+    const romMenu = document.getElementById('rom-menu');
+    const target = document.getElementById('emulator-target');
+    const statusLabel = document.getElementById('status-label');
+
+    let currentGameUrl = null;
+    let emulatorIframeWindow = null;
+
+    romFileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      const sysInfo = SYSTEM_MAP[ext] || { core: 'snes', name: 'Retro' };
+
+      statusLabel.innerText = "CARGANDO...";
+
+      if (currentGameUrl) URL.revokeObjectURL(currentGameUrl);
+      currentGameUrl = URL.createObjectURL(file);
+
+      romMenu.classList.add('hidden');
+      statusLabel.innerText = file.name.substring(0, 12).toUpperCase();
+
+      target.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.id = 'emulator-frame';
+      
+      // PERMISOS CLAVE DE HARDWARE PARA LIBERAR LOS 60 FPS EN LA TABLET
+      iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; pointer-lock; accelerometer; gyroscope');
+      iframe.setAttribute('scrolling', 'no');
+      
+      target.appendChild(iframe);
+
+      const iframeDoc = iframe.contentWindow.document;
+      emulatorIframeWindow = iframe.contentWindow;
+
+      iframeDoc.open();
+      iframeDoc.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; display: flex; justify-content: center; align-items: center; }
+                #game { width: 100%; height: 100%; }
+                canvas { image-rendering: pixelated; image-rendering: crisp-edges; transform: translateZ(0); }
+            </style>
+        </head>
+        <body>
+            <div id="game"></div>
+            <script>
+                window.EJS_player = '#game';
+                window.EJS_core = '${sysInfo.core}';
+                window.EJS_gameUrl = '${currentGameUrl}';
+                window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+                window.EJS_startOnLoaded = true;
                 
-                const ext = file.name.split('.').pop().toLowerCase();
-                const sysInfo = SYSTEM_MAP[ext] || { core: 'n64', name: 'Retro', repo: 'Nintendo%20-%20Nintendo%2064' };
-                
-                const rawFileName = file.name.substring(0, file.name.lastIndexOf('.'));
-                const cleanName = rawFileName.replace(/\(.*\)|\[.*\]/g, '').trim();
+                // Banderas de optimización nativa para evitar caídas de fotogramas
+                window.EJS_mouse = false;
+                window.EJS_multitouch = false;
+                window.EJS_netplay = false;
 
-                const localImage = imageFiles.find(img => {
-                    const imgName = img.name.substring(0, img.name.lastIndexOf('.')).trim();
-                    return imgName.toLowerCase() === rawFileName.toLowerCase() || 
-                           imgName.toLowerCase() === cleanName.toLowerCase();
-                });
-
-                let coverUrl = localImage ? URL.createObjectURL(localImage) : `https://raw.githubusercontent.com/libretro/libretro-thumbnails/master/${sysInfo.repo}/Named_Boxarts/${encodeURIComponent(cleanName)}.png`;
-
-                card.onclick = () => {
-                    if (index === currentIndex) {
-                        launchGame(file);
-                    } else {
-                        currentIndex = index;
-                        updateCarouselPositions();
-                    }
+                window.EJS_defaultControls = {
+                    0: {
+                        0: { value: 'a', value2: 'BUTTON_2' },
+                        1: { value: 'y', value2: 'BUTTON_4' },
+                        2: { value: 'shift', value2: 'SELECT' },
+                        3: { value: 'enter', value2: 'START' },
+                        4: { value: 'up arrow', value2: 'DPAD_UP' },
+                        5: { value: 'down arrow', value2: 'DPAD_DOWN' },
+                        6: { value: 'left arrow', value2: 'DPAD_LEFT' },
+                        7: { value: 'right arrow', value2: 'DPAD_RIGHT' },
+                        8: { value: 'z', value2: 'BUTTON_1' },
+                        9: { value: 'x', value2: 'BUTTON_3' },
+                        10: { value: 'q', value2: 'BUTTON_5' },
+                        11: { value: 'e', value2: 'BUTTON_6' }
+                    },
+                    1: {}, 2: {}, 3: {}
                 };
+            <\/script>
+            <script src="https://cdn.emulatorjs.org/stable/data/loader.js"><\/script>
+        </body>
+        </html>
+      `);
+      iframeDoc.close();
+    });
 
-                card.innerHTML = `
-                    <img src="${coverUrl}" onerror="this.src='https://placehold.co/220x230/050b14/00d2ff?text=${encodeURIComponent(cleanName)}'">
-                    <div class="card-info">
-                        <div class="card-title">${cleanName}</div>
-                        <div class="card-system">${sysInfo.name}</div>
-                    </div>
-                `;
-                track.appendChild(card);
-            });
+    const BUTTON_INDEX = {
+      a: 8, b: 0, x: 9, y: 1,
+      ArrowUp: 4, ArrowDown: 5, ArrowLeft: 6, ArrowRight: 7,
+      Enter: 3, Shift: 2, q: 10, e: 11
+    };
 
-            updateCarouselPositions();
+    function sendControl(key, pressed) {
+      const w = emulatorIframeWindow;
+      if (!w) return false;
+      try {
+        const manager = w.EJS_emulator && w.EJS_emulator.gameManager;
+        const index = BUTTON_INDEX[key];
+        if (manager && typeof manager.simulateInput === 'function' && index !== undefined) {
+          manager.simulateInput(0, index, pressed ? 1 : 0);
+          return true;
         }
+      } catch (err) {}
+      try {
+        const aliases = {
+          ArrowUp: ['ArrowUp','ArrowUp',38], ArrowDown: ['ArrowDown','ArrowDown',40],
+          ArrowLeft: ['ArrowLeft','ArrowLeft',37], ArrowRight: ['ArrowRight','ArrowRight',39],
+          Enter: ['Enter','Enter',13], Shift: ['Shift','ShiftLeft',16],
+          q: ['q','KeyQ',81], e: ['e','KeyE',69], x: ['x','KeyX',88],
+          y: ['y','KeyY',89], z: ['z','KeyZ',90], a: ['a','KeyA',65]
+        };
+        const info = aliases[key] || [key, key, 0];
+        const init = { key: info[0], code: info[1], keyCode: info[2], which: info[2], bubbles: true, cancelable: true };
+        const target = w.document.activeElement || w.document.querySelector('canvas') || w.document;
+        target.dispatchEvent(new w.KeyboardEvent(pressed ? 'keydown' : 'keyup', init));
+        return true;
+      } catch (err) { return false; }
+    }
 
-        function updateCarouselPositions() {
-            const cards = document.querySelectorAll('.cover-card');
-            cards.forEach((card, i) => {
-                const offset = i - currentIndex;
-                const absOffset = Math.abs(offset);
+    document.querySelectorAll('[data-key]').forEach(btn => {
+      const key = btn.getAttribute('data-key');
+      let isPressed = false;
+      const press = (e) => { if(e.cancelable) e.preventDefault(); if(isPressed) return; isPressed=true; btn.classList.add('pressed'); sendControl(key, true); };
+      const release = (e) => { if(e && e.cancelable) e.preventDefault(); if(!isPressed) return; isPressed=false; btn.classList.remove('pressed'); sendControl(key, false); };
+      btn.addEventListener('pointerdown', press, { passive: false });
+      btn.addEventListener('pointerup', release, { passive: false });
+      btn.addEventListener('pointercancel', release, { passive: false });
+    });
 
-                if (absOffset > 2) {
-                    card.style.opacity = '0';
-                    card.style.pointerEvents = 'none';
-                    card.style.transform = `translateX(${offset * 150}px) scale(0.5) zIndex(-1)`;
-                } else {
-                    card.style.opacity = '1';
-                    card.style.pointerEvents = 'auto';
-                    card.style.transform = `translateX(${offset * 160}px) scale(${1 - absOffset * 0.18}) rotateY(${offset * -15}deg)`;
-                    card.style.zIndex = 10 - absOffset;
-                    card.style.borderColor = offset === 0 ? 'var(--wii-blue)' : 'var(--glass-border)';
-                    card.style.boxShadow = offset === 0 ? '0 0 30px var(--wii-glow)' : '0 20px 40px rgba(0,0,0,0.5)';
-                }
-            });
+    function setupAnalogStick(stickId, upKey, downKey, leftKey, rightKey) {
+      const stick = document.getElementById(stickId);
+      if (!stick) return;
+      let activeXKey = null;
+      let activeYKey = null;
+
+      stick.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        stick.setPointerCapture(e.pointerId);
+        stick.classList.add('pressed');
+      });
+
+      stick.addEventListener('pointermove', (e) => {
+        const rect = stick.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = e.clientX - centerX;
+        const dy = e.clientY - centerY;
+        
+        const maxDist = 18;
+        const dist = Math.min(Math.sqrt(dx*dx + dy*dy), maxDist);
+        const angle = Math.atan2(dy, dx);
+        const moveX = Math.cos(angle) * dist;
+        const moveY = Math.sin(angle) * dist;
+        stick.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) scale(0.95)`;
+
+        const threshold = 6;
+        let newXKey = null;
+        let newYKey = null;
+
+        if (dx < -threshold) newXKey = leftKey;
+        else if (dx > threshold) newXKey = rightKey;
+
+        if (dy < -threshold) newYKey = upKey;
+        else if (dy > threshold) newYKey = downKey;
+
+        if (activeXKey !== newXKey) {
+          if (activeXKey) sendControl(activeXKey, false);
+          activeXKey = newXKey;
+          if (activeXKey) sendControl(activeXKey, true);
         }
-
-        function moveSlider(direction) {
-            if (filteredRomList.length === 0) return;
-            currentIndex = (currentIndex + direction + filteredRomList.length) % filteredRomList.length;
-            updateCarouselPositions();
+        if (activeYKey !== newYKey) {
+          if (activeYKey) sendControl(activeYKey, false);
+          activeYKey = newYKey;
+          if (activeYKey) sendControl(activeYKey, true);
         }
+      });
 
-        function launchGame(file) {
-            const ext = file.name.split('.').pop().toLowerCase();
-            const sysInfo = SYSTEM_MAP[ext] || { core: 'n64' };
+      const resetStick = (e) => {
+        stick.style.transform = 'translate3d(0px, 0px, 0) scale(1)';
+        stick.classList.remove('pressed');
+        if (activeXKey) { sendControl(activeXKey, false); activeXKey = null; }
+        if (activeYKey) { sendControl(activeYKey, false); activeYKey = null; }
+      };
 
-            document.getElementById('launcher-view').style.display = 'none';
-            const emuView = document.getElementById('emulator-view');
-            emuView.style.display = 'flex';
-            document.getElementById('current-game-name').textContent = file.name;
+      stick.addEventListener('pointerup', resetStick);
+      stick.addEventListener('pointercancel', resetStick);
+    }
 
-            if (currentGameUrl) URL.revokeObjectURL(currentGameUrl);
-            currentGameUrl = URL.createObjectURL(file);
+    setupAnalogStick('stick-left', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight');
+    setupAnalogStick('stick-right', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight');
 
-            window.EJS_player = '#emulator-target';
-            window.EJS_core = sysInfo.core;
-            window.EJS_gameUrl = currentGameUrl;
-            window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-            window.EJS_startOnLoaded = true;
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+      sendControl(e.key, true);
+    });
+    window.addEventListener('keyup', (e) => {
+      sendControl(e.key, false);
+    });
 
-            const script = document.createElement('script');
-            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
-            document.body.appendChild(script);
-        }
-
-        function returnToMenu() {
-            if (confirm("¿Deseas salir del juego y regresar al menú principal?")) {
-                location.reload();
-            }
-        }
-
-        function toggleFullscreen() {
-            const emuView = document.getElementById('emulator-view');
-            if (!document.fullscreenElement) {
-                emuView.requestFullscreen().catch(err => alert(err.message));
-            } else {
-                document.exitFullscreen();
-            }
-        }
-    </script>
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (currentGameUrl) { URL.revokeObjectURL(currentGameUrl); currentGameUrl = null; }
+      target.innerHTML = '';
+      romMenu.classList.remove('hidden');
+      statusLabel.innerText = "LISTO";
+    });
+  </script>
 </body>
 </html>
